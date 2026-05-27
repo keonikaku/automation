@@ -35,18 +35,26 @@ a full-featured practice e-commerce site.
 ## How To Run
 
 **Install dependencies:**
+```
 pip3 install playwright pytest pytest-html
 playwright install
+```
 
 **Run the full suite:**
+```
 pytest test_shopsmart_suite.py -v
+```
 
 **Run with visual HTML report:**
+```
 pytest test_shopsmart_suite.py -v --html=report.html --self-contained-html
+```
 
 **Run individual scripts:**
+```
 pytest test_login.py -v
 pytest test_mobile_login.py -v
+```
 
 ## Test Report
 
@@ -55,6 +63,8 @@ Open it in any browser to see full test results with pass/fail
 status and timing.
 
 ## Project Structure
+
+```
 shopsmart-qa-automation/
 ├── test_shopsmart_suite.py   # Full 10-test suite
 ├── test_login.py             # Login automation
@@ -63,6 +73,7 @@ shopsmart-qa-automation/
 ├── test_contact_form.py      # Contact form automation
 ├── test_mobile_login.py      # Mobile web — iPhone 13 simulation
 └── report.html               # Latest test run results
+```
 
 ## Author
 
