@@ -3,6 +3,8 @@
 Playwright Python automation suite covering web and mobile testing 
 for a full e-commerce platform.
 
+![Test Results](test_results.png)
+
 ## About This Project
 
 ShopSmart is a simulated e-commerce platform used to demonstrate 
