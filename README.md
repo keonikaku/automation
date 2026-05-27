@@ -68,4 +68,4 @@ shopsmart-qa-automation/
 
 Keoni Kakugawa — QA & Release Management Leader  
 15+ years of QA and delivery experience  
-[LinkedIn](https://www.linkedin.com/in/YOUR_LINKEDIN_HERE)
+[LinkedIn](https://www.linkedin.com/in/keonikaku)
