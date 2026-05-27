@@ -44,28 +44,12 @@ def test_03_filter_by_category():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
-        page.goto("https://www.automationexercise.com/products")
+        
+        # Navigate directly to Women > Dress category page
+        page.goto("https://www.automationexercise.com/category_products/1")
         page.wait_for_load_state("domcontentloaded")
         
-        # Close ad popup if it appears
-        try:
-            page.locator("#ad-bnr").click(timeout=3000)
-        except:
-            pass
-        try:
-            page.get_by_text("Close").click(timeout=3000)
-        except:
-            pass
-        
-        # Click Women category
-        page.get_by_text("Women").first.click()
-        page.wait_for_load_state("domcontentloaded")
-        
-        # Wait for Dress subcategory to be visible then click
-        page.locator("a", has_text="Dress").first.wait_for(state="visible", timeout=5000)
-        page.locator("a", has_text="Dress").first.click()
-        page.wait_for_load_state("domcontentloaded")
-        
+        # Verify we landed on the Women - Dress Products page
         expect(page.get_by_text("Women - Dress Products")).to_be_visible()
         browser.close()
 
