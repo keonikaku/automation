@@ -33,6 +33,7 @@ a full-featured practice e-commerce site.
 | test_08_invalid_login | Negative | Wrong password — error message displays |
 | test_09_empty_login_fields | Negative | Empty fields — form does not submit |
 | test_10_search_no_results | Negative | No matching search term — empty results |
+| test_11_ios_native | Native iOS | Appium XCUITest — footer navigation on iPhone 17 Simulator |
 
 ## How To Run
 
@@ -74,6 +75,7 @@ shopsmart-qa-automation/
 ├── test_add_to_cart.py       # Cart automation
 ├── test_contact_form.py      # Contact form automation
 ├── test_mobile_login.py      # Mobile web — iPhone 13 simulation
+├── test_11_ios_native.py     # Native iOS — Appium XCUITest on iPhone 17 Simulator
 └── report.html               # Latest test run results
 ```
 
