@@ -18,6 +18,8 @@ a full-featured practice e-commerce site.
 - Playwright
 - pytest
 - pytest-html (visual test reporting)
+- Appium (native iOS testing)
+
 
 ## Test Coverage
 
@@ -57,6 +59,9 @@ pytest test_shopsmart_suite.py -v --html=report.html --self-contained-html
 ```
 pytest test_login.py -v
 pytest test_mobile_login.py -v
+
+**Run native iOS test (requires Appium running):**
+pytest test_11_ios_native.py -v
 ```
 
 ## Test Report
