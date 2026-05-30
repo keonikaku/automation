@@ -73,7 +73,7 @@ status and timing.
 ## Project Structure
 
 ```
-shopsmart-qa-automation/
+automation/
 ├── test_shopsmart_suite.py   # Full 10-test suite
 ├── test_login.py             # Login automation
 ├── test_search.py            # Search automation
@@ -88,4 +88,5 @@ shopsmart-qa-automation/
 
 Keoni Kakugawa — QA & Release Management Leader  
 15+ years of QA and delivery experience  
+github.com/keonikaku/automation
 [LinkedIn](https://www.linkedin.com/in/keonikaku)
