@@ -70,18 +70,44 @@ Run the suite with the --html flag above to generate report.html.
 Open it in any browser to see full test results with pass/fail 
 status and timing.
 
+## Screen Recording
+
+Every test run records video automatically — no changes to individual
+test files required.
+
+- **Playwright tests** (web + mobile web): `conftest.py` wraps every
+  browser context with Playwright's built-in video recording. Each
+  recording is saved to `recordings/` as `<test_name>_<timestamp>.webm`.
+- **Native iOS test** (`test_11_ios_native.py`): uses Appium's
+  `start_recording_screen()` / `stop_recording_screen()` around the
+  test body. The result is decoded from base64 and saved to
+  `recordings/ios_native_<timestamp>.mp4`.
+
+**Disable video for a run:**
+```
+RECORD_VIDEO=0 pytest test_shopsmart_suite.py -v
+```
+(This only affects the Playwright tests — the iOS native test always
+records, since Appium's screen recording has no per-run toggle here.)
+
+Recording files themselves aren't committed (`recordings/*.webm` and
+`recordings/*.mp4` are gitignored) — the `recordings/` folder is kept
+in the repo via `.gitkeep` so it always exists locally.
+
 ## Project Structure
 
 ```
 automation/
-├── test_shopsmart_suite.py   # Full 10-test suite
-├── test_login.py             # Login automation
-├── test_search.py            # Search automation
-├── test_add_to_cart.py       # Cart automation
-├── test_contact_form.py      # Contact form automation
-├── test_mobile_login.py      # Mobile web — iPhone 13 simulation
-├── test_11_ios_native.py     # Native iOS — Appium XCUITest on iPhone 17 Simulator
-└── report.html               # Latest test run results
+├── conftest.py                # Pytest fixture — enables video recording for Playwright tests
+├── test_shopsmart_suite.py    # Full 10-test suite
+├── test_login.py              # Login automation
+├── test_search.py             # Search automation
+├── test_add_to_cart.py        # Cart automation
+├── test_contact_form.py       # Contact form automation
+├── test_mobile_login.py       # Mobile web — iPhone 13 simulation
+├── test_11_ios_native.py      # Native iOS — Appium XCUITest on iPhone 17 Simulator
+├── recordings/                # Test run video recordings (gitignored contents)
+└── report.html                # Latest test run results
 ```
 
 ## Author

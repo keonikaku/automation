@@ -1,7 +1,12 @@
 from appium import webdriver
 from appium.options.ios import XCUITestOptions
 from appium.webdriver.common.appiumby import AppiumBy
+import base64
+import os
 import time
+from datetime import datetime
+
+RECORDINGS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "recordings")
 
 def test_ios_navigation():
     options = XCUITestOptions()
@@ -13,6 +18,7 @@ def test_ios_navigation():
     options.no_reset = True
 
     driver = webdriver.Remote("http://127.0.0.1:4723", options=options)
+    driver.start_recording_screen()
 
     try:
         driver.implicitly_wait(10)
@@ -32,4 +38,13 @@ def test_ios_navigation():
         print("iOS native navigation test passed — all footer tabs verified")
 
     finally:
-        driver.quit()
+        try:
+            video_base64 = driver.stop_recording_screen()
+            os.makedirs(RECORDINGS_DIR, exist_ok=True)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            video_path = os.path.join(RECORDINGS_DIR, f"ios_native_{timestamp}.mp4")
+            with open(video_path, "wb") as f:
+                f.write(base64.b64decode(video_base64))
+            print(f"Screen recording saved — {video_path}")
+        finally:
+            driver.quit()

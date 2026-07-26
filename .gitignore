@@ -1,3 +1,5 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+recordings/*.webm
+recordings/*.mp4
