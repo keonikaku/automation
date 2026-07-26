@@ -83,6 +83,10 @@ test files required.
   test body. The result is decoded from base64 and saved to
   `recordings/ios_native_<timestamp>.mp4`.
 
+Videos are captured for **failed** tests as well as passing ones, which
+is usually when you most want them — the recording shows exactly what the
+browser was doing when the assertion or timeout hit.
+
 **Disable video for a run:**
 ```
 RECORD_VIDEO=0 pytest test_shopsmart_suite.py -v
