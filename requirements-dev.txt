@@ -1,0 +1,11 @@
+# Development and CI tooling, on top of the runtime dependencies.
+-r requirements.txt
+
+# Linting and formatting, enforced on every pull request.
+ruff==0.16.0
+
+# Retries for the scheduled live-site run only. The practice site is a third
+# party: it serves interstitial ads and it goes down. Retries absorb that.
+# They do not absorb a real defect — a genuinely broken test fails all three
+# attempts. See docs/quality-gates.md.
+pytest-rerunfailures==16.4

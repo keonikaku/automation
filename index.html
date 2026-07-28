@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ShopSmart QA Automation Suite — Recorded test runs</title>
-<meta name="description" content="Real screen recordings of the ShopSmart QA automation suite — 8 Playwright + pytest tests recorded on 2026-07-28, unedited." />
+<meta name="description" content="Real screen recordings of the ShopSmart QA automation suite — 10 Playwright + pytest tests recorded headless on 2026-07-28, unedited." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -146,27 +146,37 @@
 
   <div class="runbar">
     <div class="stat"><span class="k">Run date</span><span class="v">2026-07-28</span></div>
-    <div class="stat"><span class="k">Result</span><span class="v ok">8 of 8 run passed</span></div>
+    <div class="stat"><span class="k">Result</span><span class="v ok">10 of 10 passed</span></div>
     <div class="stat"><span class="k">Suite</span><span class="v">10 web tests total</span></div>
     <div class="stat"><span class="k">Runner</span><span class="v">pytest 9.0.3 · Python 3.14</span></div>
-    <div class="stat"><span class="k">Browser</span><span class="v">Chromium (headed, local)</span></div>
+    <div class="stat"><span class="k">Browser</span><span class="v">Chromium (headless, local)</span></div>
   </div>
 
   <div class="scope">
     <h2>What is and isn't on this page</h2>
     <ul>
       <li>
-        <b>8 of the 10 web tests</b> in <code>test_shopsmart_suite.py</code> are recorded here, and all 8 passed
-        on this run. The two that are missing, and why, are listed at the bottom of the page — they are not hidden.
+        <b>All 10 web tests</b> in <code>tests/ui/</code> are recorded here, and all 10 passed on this run.
+        The one test with no recording, and why, is listed at the bottom of the page — it is not hidden.
       </li>
       <li>
-        <b>These recordings are automatic, not curated for looks.</b> <code>conftest.py</code> wraps every
-        Playwright browser context with built-in video recording, so a run records itself. Failing tests get
-        recorded the same way passing ones do.
+        <b>These recordings are automatic, not curated for looks.</b> A pytest fixture in
+        <code>tests/conftest.py</code> hands each test a browser context configured for video and closes it
+        afterwards, so a run records itself. Failing tests get recorded the same way passing ones do.
       </li>
       <li>
-        <b>There is no CI pipeline.</b> This suite runs locally on a Mac, started by hand. Nothing on this page
-        was verified by a build server, and no badge on this site claims otherwise.
+        <b>This run was headless</b> — the same way it runs unattended. The suite defaults to headless and takes
+        <code>--headed</code> when a human wants to watch it.
+      </li>
+      <li>
+        <b>A build server checks the repository, not this page.</b> The
+        <a href="https://github.com/keonikaku/automation/actions/workflows/ci.yml">CI workflow</a> gates lint,
+        unit tests and collection integrity on every commit; the live web suite runs
+        <a href="https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml">on a nightly
+        schedule</a> and is reported rather than gated, because it drives a third-party practice site that can
+        go down for reasons no commit here controls. The reasoning is written up in
+        <a href="https://github.com/keonikaku/automation/blob/main/docs/quality-gates.md">quality-gates.md</a>.
+        The videos above are a recording of one local run on a stated date, not a live status.
       </li>
       <li>
         <b>The videos have no audio and no cursor overlay</b> — Playwright records the browser viewport only,
@@ -177,10 +187,31 @@
 
   <div class="section-head">
     <h2>The runs</h2>
-    <span>8 videos · ~950 KB total · recorded 2026-07-28</span>
+    <span>10 videos · ~1.1 MB total · recorded 2026-07-28</span>
   </div>
 
   <div class="grid">
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_01_login</span>
+        <span class="tag happy">Happy path</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_01_login_20260728_120809.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_01_login_20260728_120809.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Logs in with valid credentials and verifies the site returns an authenticated session.</p>
+        <div class="assert">expect(page).to_have_url(f"{settings.base_url}/")
+expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
+        <p class="vnote">The account is created by the test run itself. A fixture registers a throwaway account
+        before the test and deletes it afterwards, in a separate browser context so the test still has to log in
+        for real. This test was previously dead — it depended on one hand-made account on a public practice site,
+        and it stopped working the day that account was deleted.</p>
+      </div>
+    </div>
 
     <div class="vcard">
       <div class="vhead">
@@ -188,13 +219,15 @@
         <span class="tag happy">Happy path</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_02_search_20260728_113050.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_02_search_20260728_120840.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_02_search_20260728_113050.webm">Download the recording</a>.
+        <a href="recordings/published/test_02_search_20260728_120840.webm">Download the recording</a>.
       </video>
       <div class="vbody">
-        <p>Searches the product catalogue for <code>dress</code> and verifies the search results page renders.</p>
-        <div class="assert">expect(page.get_by_text("Searched Products")).to_be_visible()</div>
+        <p>Searches the product catalogue for <code>dress</code> and verifies the results page renders
+        <em>and actually returns matches</em>.</p>
+        <div class="assert">expect(products.results_heading).to_be_visible()
+assert products.result_count() &gt; 0</div>
       </div>
     </div>
 
@@ -204,9 +237,9 @@
         <span class="tag happy">Happy path</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_03_filter_by_category_20260728_113055.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_03_filter_by_category_20260728_120836.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_03_filter_by_category_20260728_113055.webm">Download the recording</a>.
+        <a href="recordings/published/test_03_filter_by_category_20260728_120836.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Loads the Women &rsaquo; Dress category and verifies the correct category page is served.</p>
@@ -222,9 +255,9 @@
         <span class="tag happy">Happy path</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_04_add_to_cart_20260728_113102.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_04_add_to_cart_20260728_120827.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_04_add_to_cart_20260728_113102.webm">Download the recording</a>.
+        <a href="recordings/published/test_04_add_to_cart_20260728_120827.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Adds the first product to the cart, follows the confirmation modal's <b>View Cart</b> link, and
@@ -239,9 +272,9 @@
         <span class="tag neg">Negative</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_05_checkout_requires_login_20260728_113110.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_05_checkout_requires_login_20260728_120834.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_05_checkout_requires_login_20260728_113110.webm">Download the recording</a>.
+        <a href="recordings/published/test_05_checkout_requires_login_20260728_120834.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Adds an item as a guest and attempts checkout, verifying the site blocks it and demands an account
@@ -258,16 +291,36 @@
         <span class="tag happy">Happy path</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_06_contact_form_20260728_113117.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_06_contact_form_20260728_120838.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_06_contact_form_20260728_113117.webm">Download the recording</a>.
+        <a href="recordings/published/test_06_contact_form_20260728_120838.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Fills and submits the contact form, then verifies the success banner appears.</p>
         <div class="assert">expect(page.locator(".status.alert.alert-success")).to_be_visible()</div>
-        <p class="vnote">The form fires a native browser confirm dialog on submit. The test arms a dialog
+        <p class="vnote">The form fires a native browser confirm dialog on submit. The page object arms a dialog
         handler beforehand — <code>page.on("dialog", …accept())</code> — because an unhandled dialog blocks
         Playwright and the test would hang rather than fail cleanly.</p>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_07_mobile_login</span>
+        <span class="tag happy">Mobile web</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_07_mobile_login_20260728_120817.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_07_mobile_login_20260728_120817.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>The same login flow under Playwright's iPhone 13 device emulation — viewport, user agent and touch
+        support — verifying the mobile layout authenticates the same way the desktop one does.</p>
+        <div class="assert">expect(mobile_page).to_have_url(f"{settings.base_url}/")
+expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
+        <p class="vnote">Registers and deletes its own account, like <code>test_01_login</code>. The narrow
+        viewport in the recording is the emulated device, not a resized window.</p>
       </div>
     </div>
 
@@ -277,9 +330,9 @@
         <span class="tag neg">Negative</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_08_invalid_login_20260728_113210.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_08_invalid_login_20260728_120820.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_08_invalid_login_20260728_113210.webm">Download the recording</a>.
+        <a href="recordings/published/test_08_invalid_login_20260728_120820.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Attempts login with an address that was never registered and verifies the site rejects it with the
@@ -299,9 +352,9 @@
         <span class="tag neg">Negative</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_09_empty_login_fields_20260728_113135.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_09_empty_login_fields_20260728_120823.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_09_empty_login_fields_20260728_113135.webm">Download the recording</a>.
+        <a href="recordings/published/test_09_empty_login_fields_20260728_120823.webm">Download the recording</a>.
       </video>
       <div class="vbody">
         <p>Submits the login form with both fields empty and verifies the browser stays on the login page —
@@ -316,14 +369,17 @@
         <span class="tag neg">Negative</span>
         <span class="tag pass">Pass</span>
       </div>
-      <video controls preload="metadata" playsinline src="recordings/published/test_10_search_no_results_20260728_113140.webm">
+      <video controls preload="metadata" playsinline src="recordings/published/test_10_search_no_results_20260728_120842.webm">
         Your browser can't play WebM.
-        <a href="recordings/published/test_10_search_no_results_20260728_113140.webm">Download the recording</a>.
+        <a href="recordings/published/test_10_search_no_results_20260728_120842.webm">Download the recording</a>.
       </video>
       <div class="vbody">
-        <p>Searches for a term with no matches and verifies the results page still renders cleanly instead of
-        erroring on an empty result set.</p>
-        <div class="assert">expect(page.get_by_text("Searched Products")).to_be_visible()</div>
+        <p>Searches for a term with no matches and verifies the results grid actually comes back empty.</p>
+        <div class="assert">expect(products.results_heading).to_be_visible()
+assert products.result_count() == 0</div>
+        <p class="vnote">The count is the load-bearing assertion. The &ldquo;Searched Products&rdquo; heading
+        renders whether or not anything matched, so a test that checked only the heading would pass even if the
+        site returned the entire catalogue — which is exactly what this test used to do.</p>
       </div>
     </div>
 
@@ -332,32 +388,17 @@
   <div class="gaps">
     <div class="section-head">
       <h2>Not in this set</h2>
-      <span>three tests exist in the repo but have no recording here</span>
+      <span>one test exists in the repo but has no recording here</span>
     </div>
     <div class="gap-list">
 
       <div class="gap">
-        <span class="why">No account</span>
-        <h3>test_01_login</h3>
-        <p>Logs in with valid credentials. The practice-site account it was written against has been deleted, so
-        there are no valid credentials to supply and the test currently fails. The fix — registering a throwaway
-        account at setup instead of depending on a long-lived one — is the next scheduled piece of work.</p>
-      </div>
-
-      <div class="gap">
-        <span class="why">No account</span>
-        <h3>test_07_mobile_login</h3>
-        <p>The same login flow under Playwright's iPhone 13 device emulation, and blocked by the same deleted
-        account. It is fixed by the same self-registration change. Publishing an old recording of it would show
-        a run that can no longer be reproduced, so it isn't published.</p>
-      </div>
-
-      <div class="gap">
         <span class="why">Local only</span>
         <h3>test_11_ios_native</h3>
-        <p>Native iOS via Appium / XCUITest against the Sauce Labs demo app. It needs a booted iPhone Simulator
-        with an Appium server attached, so it can't run as part of a batch like this one — it is run locally and
-        by hand. No recording from this run exists.</p>
+        <p>Native iOS via Appium / XCUITest against the Sauce Labs demo app. It needs macOS, Xcode, a booted
+        iPhone Simulator and a running Appium server, so it can't run as part of a browser batch like this one
+        and it is excluded from CI by design rather than by accident. It is run locally and by hand. No
+        recording from this run exists.</p>
       </div>
 
     </div>
@@ -372,9 +413,9 @@
       practice site. The video files are committed unmodified at
       <a href="https://github.com/keonikaku/automation/tree/main/recordings/published"><code>recordings/published/</code></a>;
       the tests that produced them are in
-      <a href="https://github.com/keonikaku/automation/blob/main/test_shopsmart_suite.py"><code>test_shopsmart_suite.py</code></a>
+      <a href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>tests/ui/</code></a>
       and the recording fixture is in
-      <a href="https://github.com/keonikaku/automation/blob/main/conftest.py"><code>conftest.py</code></a>.
+      <a href="https://github.com/keonikaku/automation/blob/main/tests/conftest.py"><code>tests/conftest.py</code></a>.
       A practice site can change or go down at any time, so these recordings are evidence of a run on a stated
       date, not a live status.
     </p>

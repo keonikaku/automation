@@ -1,8 +1,14 @@
 __pycache__/
 .pytest_cache/
+.ruff_cache/
 *.pyc
 
-# Credentials — never commit
+# Virtualenvs
+.venv/
+venv/
+
+# The suite registers and deletes its own accounts, so there is no credential
+# to configure. This stays as a backstop against one ever being introduced.
 .env
 
 # Test run output / build artifacts

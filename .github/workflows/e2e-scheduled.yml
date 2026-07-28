@@ -1,0 +1,93 @@
+name: E2E (scheduled)
+
+# The live end-to-end run: the real Playwright suite against the real
+# automationexercise.com.
+#
+# It runs on a schedule rather than on every pull request, and it is reported
+# rather than gated. The target is a third-party practice site that serves
+# interstitial ads and periodically goes down. Wiring a pull-request gate — or
+# a public badge — to it would produce red for reasons that have nothing to do
+# with this repository, and a badge nobody trusts is worse than no badge.
+#
+# What this job does NOT do: hide failures. There is no continue-on-error
+# anywhere in it. When a test genuinely breaks, this workflow goes red, and
+# that red is visible in the Actions tab of this repository.
+#
+# See docs/quality-gates.md.
+
+on:
+  schedule:
+    # 11:17 UTC — early morning US Pacific. Off the hour, because scheduled
+    # jobs queue at :00 and get delayed.
+    - cron: "17 11 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-scheduled
+  cancel-in-progress: false
+
+jobs:
+  web-e2e:
+    name: Web E2E against automationexercise.com
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      # Headless by default — nothing here sets HEADED. Video recording is on,
+      # which is the point: the artifact below is produced by the same code
+      # path that produces the recordings published on the site.
+      #
+      # Retries cover genuine third-party flake (an ad overlay, a slow
+      # response). They cannot cover a real defect: a broken test fails all
+      # three attempts and the job goes red.
+      - name: Run the web suite
+        run: |
+          pytest -m ui \
+            --reruns 2 --reruns-delay 5 \
+            --html=report.html --self-contained-html
+
+      - name: Upload report and recordings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-run-${{ github.run_number }}
+          path: |
+            report.html
+            recordings/*.webm
+          retention-days: 14
+          if-no-files-found: warn
+
+  # Native iOS is excluded from CI by architecture, not by omission.
+  #
+  # tests/native/test_ios_native.py drives the Sauce Labs demo app through
+  # Appium/XCUITest on an iPhone Simulator. That needs a macOS runner with
+  # Xcode, a booted simulator and the app installed on it. GitHub-hosted macOS
+  # minutes bill at roughly ten times Linux, and the app build is not
+  # published, so the job could not be made to work at any price worth paying.
+  #
+  # It is therefore carried by the `native` marker, which pytest.ini
+  # deselects by default and which no workflow in this repository ever
+  # selects. It is run locally and its recording is published. There is no
+  # scenario in which a CI run silently skips it and reports green as though
+  # it had passed.

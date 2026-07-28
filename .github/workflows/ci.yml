@@ -1,0 +1,103 @@
+name: CI
+
+# The deterministic gate. Everything in this workflow is a function of the
+# code in the commit — no third-party site, no browser binaries, no
+# simulator, no network beyond installing dependencies. That is deliberate:
+# this is the badge published on keonikaku.github.io, and a badge is only
+# worth having if red always means "something in this repo is wrong."
+#
+# Live end-to-end coverage runs in e2e-scheduled.yml and is reported
+# separately. See docs/quality-gates.md for the full rationale.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    name: Quality gate (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # Two versions, because "it works on my machine" is exactly the claim
+        # this repo needs to disprove.
+        python-version: ["3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      # Proves the clean-clone install story in the README actually resolves.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      # NOTE: `playwright install` is deliberately absent from this job.
+      # No browser binaries exist here, so if any module ever launches a
+      # browser at import time — the defect that used to open a window during
+      # `pytest --collect-only` — the collection step below fails hard rather
+      # than hanging.
+      - name: Assert no browser binaries are present
+        run: |
+          if [ -d "$HOME/.cache/ms-playwright" ]; then
+            echo "Browsers are installed; the collection guard below would be toothless."
+            exit 1
+          fi
+          echo "No browser binaries — collection must be side-effect free to pass."
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format
+        run: ruff format --check .
+
+      - name: Unit tests
+        run: pytest -m unit
+
+      - name: Collection integrity
+        run: |
+          set -euo pipefail
+
+          count() { pytest --collect-only -q "$@" | grep -c '::' || true; }
+
+          default=$(count)
+          unit=$(count -m unit)
+          ui=$(count -m ui)
+          native=$(count -m native)
+
+          echo "default=$default unit=$unit ui=$ui native=$native"
+
+          # The web suite is 10 tests. If that number moves, it moves in a
+          # commit that says so.
+          [ "$ui" -eq 10 ] || { echo "expected 10 ui tests, found $ui"; exit 1; }
+
+          # Exactly one native test, and it must not be collected by default —
+          # a clean clone has no Appium server to talk to.
+          [ "$native" -eq 1 ] || { echo "expected 1 native test, found $native"; exit 1; }
+
+          # Every collected test carries exactly one location marker, so
+          # nothing can arrive unmarked and get swept into the wrong job.
+          [ "$default" -eq "$((unit + ui))" ] || {
+            echo "unmarked tests detected: default=$default unit+ui=$((unit + ui))"; exit 1; }
+
+          [ "$unit" -ge 20 ] || { echo "unit suite has shrunk to $unit"; exit 1; }

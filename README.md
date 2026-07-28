@@ -1,181 +1,193 @@
 # ShopSmart QA Automation Suite
 
-Playwright Python automation suite covering web and mobile testing 
-for a full e-commerce platform.
+[![CI](https://github.com/keonikaku/automation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/keonikaku/automation/actions/workflows/ci.yml)
+[![E2E (scheduled)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml/badge.svg)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml)
 
-## Known state
+Playwright + pytest automation covering desktop web, mobile web, and native iOS
+against a public practice e-commerce site.
 
-The two valid-login tests (`test_01_login`, `test_07_mobile_login`, plus
-the standalone `test_login.py` / `test_mobile_login.py` scripts)
-**currently fail.** The practice-site account they were written against
-has been deleted, so there are no valid credentials to supply.
+**Two badges, deliberately.** `CI` is the deterministic gate — lint, unit tests,
+and collection integrity, on every commit, dependent on nothing but this
+repository. `E2E (scheduled)` drives the live third-party practice site nightly;
+it can go amber for reasons no commit here controls, so it reports rather than
+gates. Only the first is published on the portfolio site. The reasoning is in
+[`docs/quality-gates.md`](docs/quality-gates.md).
 
-This is a known, tracked gap — not a broken commit. The fix is a setup
-step that registers its own throwaway account per run rather than
-depending on a long-lived one; that work is scheduled alongside the
-framework restructure.
+## Quick start
 
-**Everything else in `test_shopsmart_suite.py` passes on a clean clone
-with no environment setup** — run that file by name, as shown below. A
-bare `pytest` is not the same thing: it also collects the standalone
-root scripts (one of which calls its test function at module scope and
-launches a browser during collection) and `test_11_ios_native.py`, which
-needs an Appium server on `127.0.0.1:4723`. Both are tracked for the
-framework restructure.
+```bash
+git clone https://github.com/keonikaku/automation.git
+cd automation
+pip install -r requirements.txt
+playwright install chromium
+pytest
+```
 
-The negative-path login tests (`test_08_invalid_login`,
-`test_09_empty_login_fields`) deliberately do not read credentials —
-authenticating badly is their entire purpose, so `test_08` uses a
-hardcoded fake address (`INVALID_EMAIL`) and `test_09` submits an empty
-form. A negative test that depends on a real account stops working the
-moment that account does, and silently changes what it asserts.
+That is the whole setup. No account to create, no credentials to supply, no
+`.env` to fill in — the suite registers the accounts it needs and deletes them
+again. `pytest` runs the unit suite and the 10 web tests; the native iOS test is
+deselected by default because it needs macOS and a running Appium server.
 
-Credentials are read from environment variables (`SHOPSMART_EMAIL`,
-`SHOPSMART_PASSWORD`) by the valid-login tests only. See `.env.example`.
-Nothing secret is committed.
+**Watch it run:**
 
-Last full local run: **2026-07-28 — 8 of 8 runnable web tests passed.**
-Recordings of that run are published at
-[`recordings/published/`](recordings/published) and on the
-[walkthrough page](https://keonikaku.github.io/automation/).
-There is no CI pipeline; the suite is run locally by hand.
+```bash
+pytest --headed          # or: HEADED=1 pytest
+pytest --headed -m ui    # just the browser tests
+SLOW_MO=250 pytest --headed -m ui
+```
 
-## About This Project
+Headless is the default so the suite runs unattended.
 
-ShopSmart is a simulated e-commerce platform used to demonstrate 
-end-to-end QA automation skills. All scripts automate against 
-[AutomationExercise.com](https://www.automationexercise.com) — 
-a full-featured practice e-commerce site.
+## What runs where
 
-## Tools and Technologies
+| | Command | Needs |
+|---|---|---|
+| Deterministic checks | `pytest -m unit` | nothing but Python |
+| Web suite (desktop + mobile) | `pytest -m ui` | Chromium, network |
+| Native iOS | `pytest -m native` | macOS, Xcode, a booted Simulator, `appium` running |
+| Everything except native | `pytest` | Chromium, network |
 
-- Python 3.14
-- Playwright
-- pytest
-- pytest-html (visual test reporting)
-- Appium (native iOS testing)
+## Test coverage
 
-
-## Test Coverage
+Web suite — `tests/ui/`:
 
 | Test | Type | Description |
 |------|------|-------------|
-| test_01_login | Happy Path | Valid credentials — successful login |
-| test_02_search | Happy Path | Search for a product — results display |
-| test_03_filter_by_category | Happy Path | Filter by Women category |
-| test_04_add_to_cart | Happy Path | Add product to cart — cart page loads |
-| test_05_checkout_requires_login | Negative | Guest checkout redirects to login modal |
-| test_06_contact_form | Happy Path | Submit contact form — success message |
-| test_07_mobile_login | Mobile Web | iPhone 13 simulation — login flow |
-| test_08_invalid_login | Negative | Unregistered account — error message displays |
-| test_09_empty_login_fields | Negative | Empty fields — form does not submit |
-| test_10_search_no_results | Negative | No matching search term — empty results |
-| test_11_ios_native | Native iOS | Appium XCUITest — footer navigation on iPhone 17 Simulator |
+| test_01_login | Happy path | Valid credentials — successful login |
+| test_02_search | Happy path | Search returns matching products |
+| test_03_filter_by_category | Happy path | Women › Dress category page |
+| test_04_add_to_cart | Happy path | Add product to cart — cart page loads |
+| test_05_checkout_requires_login | Negative | Guest checkout is blocked |
+| test_06_contact_form | Happy path | Contact form success message |
+| test_07_mobile_login | Mobile web | iPhone 13 emulation — login flow |
+| test_08_invalid_login | Negative | Unregistered account is rejected |
+| test_09_empty_login_fields | Negative | Empty form does not submit |
+| test_10_search_no_results | Negative | Non-matching term returns nothing |
 
-## How To Run
+Native — `tests/native/`:
 
-**Install dependencies:**
-```
-pip3 install playwright pytest pytest-html
-playwright install
-```
+| Test | Type | Description |
+|------|------|-------------|
+| test_11_ios_native | Native iOS | Appium XCUITest — footer navigation, Sauce Labs demo app |
 
-**Set credentials:**
-```
-cp .env.example .env      # then edit .env with your own test account
-export SHOPSMART_EMAIL="your-test-account@example.com"
-export SHOPSMART_PASSWORD="..."
-```
-Register your own account on the practice site. `.env` is gitignored.
-See "Known state" above for why the login tests fail today.
+Framework — `tests/unit/`: settings resolution, simulator-selection rules, and
+static contracts on the repository itself. These are the tests that gate every
+commit. See [`docs/quality-gates.md`](docs/quality-gates.md) for what each one
+covers and why.
 
-**Run the full suite:**
-```
-pytest test_shopsmart_suite.py -v
-```
-
-**Run with visual HTML report:**
-```
-pytest test_shopsmart_suite.py -v --html=report.html --self-contained-html
-```
-
-**Run individual scripts:**
-```
-pytest test_login.py -v
-pytest test_mobile_login.py -v
-
-**Run native iOS test (requires Appium running):**
-pytest test_11_ios_native.py -v
-```
-
-## Test Report
-
-Run the suite with the --html flag above to generate report.html. 
-Open it in any browser to see full test results with pass/fail 
-status and timing.
-
-## Screen Recording
-
-Every test run records video automatically — no changes to individual
-test files required.
-
-- **Playwright tests** (web + mobile web): `conftest.py` wraps every
-  browser context with Playwright's built-in video recording. Each
-  recording is saved to `recordings/` as `<test_name>_<timestamp>.webm`.
-- **Native iOS test** (`test_11_ios_native.py`): uses Appium's
-  `start_recording_screen()` / `stop_recording_screen()` around the
-  test body. The result is decoded from base64 and saved to
-  `recordings/ios_native_<timestamp>.mp4`.
-
-Videos are captured for **failed** tests as well as passing ones, which
-is usually when you most want them — the recording shows exactly what the
-browser was doing when the assertion or timeout hit.
-
-**Disable video for a run:**
-```
-RECORD_VIDEO=0 pytest test_shopsmart_suite.py -v
-```
-(This only affects the Playwright tests — the iOS native test always
-records, since Appium's screen recording has no per-run toggle here.)
-
-### What gets committed
-
-Raw run output is **not** committed: `recordings/*.webm` and
-`recordings/*.mp4` are gitignored, and those patterns are deliberately
-non-recursive so a stray run can't sweep itself into the repo. The
-`recordings/` folder is kept via `.gitkeep` so it always exists locally.
-
-Recordings chosen for publication are moved by hand into
-**`recordings/published/`**, which *is* tracked. Publishing a recording
-is therefore always a deliberate act rather than a side effect of
-running the suite. The eight files there are the unedited output of the
-2026-07-28 run and back the
-[walkthrough page](https://keonikaku.github.io/automation/).
-
-## Project Structure
+## How it is put together
 
 ```
 automation/
-├── .env.example               # Credential template — copy to .env (gitignored)
-├── conftest.py                # Pytest fixture — enables video recording for Playwright tests
-├── test_shopsmart_suite.py    # Full 10-test suite
-├── test_login.py              # Login automation
-├── test_search.py             # Search automation
-├── test_add_to_cart.py        # Cart automation
-├── test_contact_form.py       # Contact form automation
-├── test_mobile_login.py       # Mobile web — iPhone 13 simulation
-├── test_11_ios_native.py      # Native iOS — Appium XCUITest on iPhone 17 Simulator
-├── index.html                 # Walkthrough page — the published recordings, served by GitHub Pages
-└── recordings/                # Raw test run recordings (gitignored)
-    └── published/             # Curated recordings backing the walkthrough page (tracked)
+├── .github/workflows/
+│   ├── ci.yml                  # deterministic gate — every push and PR
+│   └── e2e-scheduled.yml       # live web suite — nightly, reported not gated
+├── shopsmart/
+│   ├── config.py               # settings resolution (headless default, base URL)
+│   ├── ios.py                  # Simulator discovery — no hardcoded UDIDs
+│   └── pages/                  # page objects; the only place selectors live
+├── tests/
+│   ├── conftest.py             # browser, context, page and account fixtures
+│   ├── unit/                   # deterministic — no network, no browser
+│   ├── ui/                     # Playwright web tests
+│   └── native/                 # Appium iOS
+├── conftest.py                 # CLI options and location-based markers
+├── pytest.ini                  # markers, default deselection, strict config
+├── requirements.txt            # runtime deps, pinned
+├── requirements-dev.txt        # + lint and retry plugin, pinned
+├── docs/quality-gates.md       # what blocks a merge, what doesn't, why
+├── index.html                  # walkthrough page — the published recordings
+└── recordings/                 # raw run output (gitignored)
+    └── published/              # curated recordings backing the page (tracked)
 ```
 
-`report.html` and `test_results.png` are generated output and are no
-longer committed — run the suite with `--html` to produce your own.
+**Page objects.** Tests describe intent; page objects own selectors. There is a
+unit test that fails the build if a raw selector appears in a test file.
+
+**Fixtures, not monkeypatching.** An earlier version of this suite patched
+`Browser.new_page`, `Browser.new_context` and `Browser.close` at runtime to bolt
+video recording onto tests that managed their own browsers. Nothing is patched
+now. `tests/conftest.py` owns the browser lifecycle, and because a fixture
+closes each context before the test finishes, Playwright flushes video to disk
+on its own — which is the only thing the patch was buying.
+
+**Self-registering accounts.** The `registered_account` fixture creates a
+throwaway account on the practice site, hands the credentials to the test, and
+deletes the account at teardown. Registration happens in a separate browser
+context, so the test still has to log in for real. There are no credentials in
+this repository and none to configure.
+
+The one deliberate exception is `test_08_invalid_login`, which hardcodes a fake
+unregistered address. Authenticating badly is the entire point of that test, so
+it must not depend on an account existing — or on the environment deciding which
+scenario it runs.
+
+**Simulator discovery.** The native iOS test used to carry a hardcoded UDID,
+which meant it ran on exactly one Mac. `shopsmart/ios.py` now discovers a
+simulator at runtime — preferring one that is already booted, then the model
+named by `IOS_DEVICE_NAME`, then any available iPhone — and the selection rules
+are unit-tested on Linux because parsing is split from the `xcrun` call.
+
+## Configuration
+
+Everything is optional; every default works on a clean clone.
+
+| Variable | Default | Effect |
+|---|---|---|
+| `HEADED` | unset | `1` shows the browser window (same as `--headed`) |
+| `SLOW_MO` | `0` | milliseconds of delay between actions, for watching a run |
+| `RECORD_VIDEO` | `1` | `0` disables video recording |
+| `SHOPSMART_BASE_URL` | the practice site | point the suite at another host |
+| `MOBILE_DEVICE` | `iPhone 13` | Playwright device descriptor for mobile tests |
+| `IOS_DEVICE_NAME` | `iPhone 17` | preferred Simulator model |
+| `IOS_UDID` | unset | pin a specific Simulator, skipping discovery |
+| `APPIUM_SERVER` | `http://127.0.0.1:4723` | Appium endpoint |
+
+## Screen recording
+
+Every web test records itself. The context fixture configures Playwright's
+built-in video recording and closes the context at teardown, which is what
+flushes the file; recordings land in `recordings/` as
+`<test_name>_<timestamp>.webm`. **Failing tests are recorded the same way
+passing ones are** — which is usually when you most want the video.
+
+Recording works headless, which is what makes the scheduled CI run able to
+upload video artifacts.
+
+### What gets committed
+
+Raw run output is **not** committed: `recordings/*.webm` and `recordings/*.mp4`
+are gitignored, and those patterns are deliberately non-recursive so a stray run
+can't sweep itself into the repo. Recordings chosen for publication are moved by
+hand into **`recordings/published/`**, which *is* tracked — so publishing a
+recording is always a deliberate act rather than a side effect of running the
+suite.
+
+The ten files there are the unedited output of one headless run on 2026-07-28 in
+which all ten web tests passed. They back the
+[walkthrough page](https://keonikaku.github.io/automation/).
+
+## Test report
+
+```bash
+pytest -m ui --html=report.html --self-contained-html
+```
+
+`report.html` is generated output and is not committed. The scheduled CI run
+produces one on every execution and uploads it as a build artifact.
+
+## Tools
+
+Python 3.12–3.14 · Playwright · pytest · pytest-html · Appium (native iOS) ·
+ruff · GitHub Actions
+
+Versions are pinned in `requirements.txt` and `requirements-dev.txt`; CI proves
+the pin set installs on Python 3.12 and 3.13 on a machine that is not the
+author's.
 
 ## Author
 
-Keoni Kakugawa — QA & Release Management Leader  
-20+ years in software, 15 in QA, ~6 in release management  
-github.com/keonikaku/automation
+Keoni Kakugawa — QA & Release Management Leader
+20+ years in software, 15 in QA, ~6 in release management
+[github.com/keonikaku/automation](https://github.com/keonikaku/automation) ·
 [LinkedIn](https://www.linkedin.com/in/keonikaku)

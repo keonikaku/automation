@@ -1,0 +1,21 @@
+# Lint and format configuration. Enforced on every pull request by
+# .github/workflows/ci.yml.
+
+line-length = 92
+target-version = "py311"
+extend-exclude = ["recordings"]
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # import ordering
+    "B",   # bugbear — mutable defaults, silent excepts, loop-variable capture
+    "UP",  # pyupgrade
+]
+
+[lint.per-file-ignores]
+# Page objects deliberately import each other lazily inside methods to avoid
+# an import cycle between a listing page and the page it navigates to.
+"shopsmart/pages/*.py" = ["PLC0415"]
