@@ -21,11 +21,6 @@ on:
     # jobs queue at :00 and get delayed.
     - cron: "17 11 * * *"
   workflow_dispatch:
-  # TEMPORARY — removed before this branch merges. schedule and
-  # workflow_dispatch only fire from the default branch, so this is the only
-  # way to prove the job actually runs before asking anyone to trust it.
-  push:
-    branches: [phase2/framework-and-ci]
 
 permissions:
   contents: read
