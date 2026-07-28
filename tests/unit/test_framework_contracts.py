@@ -37,18 +37,36 @@ PAGE_CLASSES = [
 ]
 
 
+#: Directories that hold this project's own code. Deliberately an allow-list
+#: rather than an rglob of the repository root: a developer who creates a
+#: virtualenv inside the clone would otherwise have these guards scanning
+#: site-packages, and third-party code would fail rules it never agreed to.
+PROJECT_DIRECTORIES = ("shopsmart", "tests")
+
+
 def python_sources() -> list[Path]:
     """Every Python file that is part of this project."""
-    return sorted(
+    found = list(REPO_ROOT.glob("*.py"))
+    for directory in PROJECT_DIRECTORIES:
+        found.extend((REPO_ROOT / directory).rglob("*.py"))
+    return sorted(path for path in found if "__pycache__" not in path.parts)
+
+
+def test_the_source_scan_finds_this_project_and_nothing_else():
+    """Guard the guards: an empty or over-broad glob makes every scan below lie."""
+    relative = {str(path.relative_to(REPO_ROOT)) for path in python_sources()}
+
+    # It must reach the three layers the rules below are about.
+    for expected in ("conftest.py", "shopsmart/config.py", "tests/ui/test_auth.py"):
+        assert expected in relative, f"source scan missed {expected}"
+
+    # And it must not reach anything vendored or installed.
+    strays = [
         path
-        for path in REPO_ROOT.rglob("*.py")
-        if "__pycache__" not in path.parts and ".git" not in path.parts
-    )
-
-
-def test_the_repository_has_python_to_check():
-    """Guard the guards: an empty glob would make every scan below vacuous."""
-    assert len(python_sources()) >= 10
+        for path in relative
+        if any(part in path for part in ("site-packages", ".venv", "venv/", "node_modules"))
+    ]
+    assert not strays, f"source scan escaped the project: {strays[:5]}"
 
 
 # ── defect 1: every browser launched with a visible window ────────────
