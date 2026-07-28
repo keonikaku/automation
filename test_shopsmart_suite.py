@@ -20,9 +20,14 @@ PASSWORD = os.environ.get("SHOPSMART_PASSWORD", "")
 # Negative-path tests must never depend on real credentials — authenticating
 # badly is the whole point of them. This address is deliberately fake and
 # deliberately hardcoded so test_08 is self-contained and passes on a clean
-# clone with no environment setup. Do not replace it with EMAIL: an empty or
-# valid address makes the site raise a different error and the assertion
-# stops testing what it claims to test.
+# clone with no environment setup.
+#
+# Do not replace it with EMAIL. Doing so lets the environment decide which
+# scenario the test runs: unset, the login field's own required/type=email
+# validation blocks the submit, so the test never reaches the credential
+# check and silently duplicates test_09; set to a registered address, it
+# tests a wrong password against a valid account. Only a hardcoded
+# unregistered address tests what the docstring says it tests.
 INVALID_EMAIL = "nonexistent-user@example.com"
 INVALID_PASSWORD = "wrongpassword123"
 # ───────────────────────────────────────────────────────────────

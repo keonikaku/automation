@@ -15,7 +15,14 @@ step that registers its own throwaway account per run rather than
 depending on a long-lived one; that work is scheduled alongside the
 framework restructure.
 
-**Everything else passes on a clean clone with no environment setup.**
+**Everything else in `test_shopsmart_suite.py` passes on a clean clone
+with no environment setup** — run that file by name, as shown below. A
+bare `pytest` is not the same thing: it also collects the standalone
+root scripts (one of which calls its test function at module scope and
+launches a browser during collection) and `test_11_ios_native.py`, which
+needs an Appium server on `127.0.0.1:4723`. Both are tracked for the
+framework restructure.
+
 The negative-path login tests (`test_08_invalid_login`,
 `test_09_empty_login_fields`) deliberately do not read credentials —
 authenticating badly is their entire purpose, so `test_08` uses a
