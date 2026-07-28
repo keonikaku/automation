@@ -9,13 +9,22 @@ from playwright.sync_api import sync_playwright, expect
 # ─── CREDENTIALS ───────────────────────────────────────────────
 # Read from the environment — never commit credentials. See .env.example.
 #
-# KNOWN: the login tests (01, 07, 08) currently fail. The practice-site
+# KNOWN: the two valid-login tests (01, 07) currently fail. The practice-site
 # account these tests were written against has been deleted, so there are
 # no valid credentials to supply. This is a known, tracked gap, not a
 # broken commit — the fix is a test that registers its own account at
 # setup, which is scheduled work. See README "Known state".
 EMAIL = os.environ.get("SHOPSMART_EMAIL", "")
 PASSWORD = os.environ.get("SHOPSMART_PASSWORD", "")
+
+# Negative-path tests must never depend on real credentials — authenticating
+# badly is the whole point of them. This address is deliberately fake and
+# deliberately hardcoded so test_08 is self-contained and passes on a clean
+# clone with no environment setup. Do not replace it with EMAIL: an empty or
+# valid address makes the site raise a different error and the assertion
+# stops testing what it claims to test.
+INVALID_EMAIL = "nonexistent-user@example.com"
+INVALID_PASSWORD = "wrongpassword123"
 # ───────────────────────────────────────────────────────────────
 
 
@@ -136,14 +145,17 @@ def test_07_mobile_login():
 
 
 def test_08_invalid_login():
-    """Wrong password — verify error message displays"""
+    """Unregistered account — verify error message displays
+
+    Self-contained: uses a hardcoded fake address, no credentials required.
+    """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
         page.goto("https://www.automationexercise.com/login")
         page.wait_for_load_state("domcontentloaded")
-        page.fill("[data-qa='login-email']", EMAIL)
-        page.fill("[data-qa='login-password']", "wrongpassword123")
+        page.fill("[data-qa='login-email']", INVALID_EMAIL)
+        page.fill("[data-qa='login-password']", INVALID_PASSWORD)
         page.click("[data-qa='login-button']")
         page.wait_for_load_state("domcontentloaded")
         expect(page.get_by_text(
