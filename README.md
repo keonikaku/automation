@@ -5,19 +5,33 @@ for a full e-commerce platform.
 
 ## Known state
 
-The three login tests (`test_01_login`, `test_07_mobile_login`,
-`test_08_invalid_login`, plus the standalone `test_login.py` /
-`test_mobile_login.py` scripts) **currently fail.** The practice-site
-account they were written against has been deleted, so there are no
-valid credentials to supply.
+The two valid-login tests (`test_01_login`, `test_07_mobile_login`, plus
+the standalone `test_login.py` / `test_mobile_login.py` scripts)
+**currently fail.** The practice-site account they were written against
+has been deleted, so there are no valid credentials to supply.
 
 This is a known, tracked gap — not a broken commit. The fix is a setup
 step that registers its own throwaway account per run rather than
 depending on a long-lived one; that work is scheduled alongside the
-framework restructure. Everything else in the suite passes.
+framework restructure.
+
+**Everything else passes on a clean clone with no environment setup.**
+The negative-path login tests (`test_08_invalid_login`,
+`test_09_empty_login_fields`) deliberately do not read credentials —
+authenticating badly is their entire purpose, so `test_08` uses a
+hardcoded fake address (`INVALID_EMAIL`) and `test_09` submits an empty
+form. A negative test that depends on a real account stops working the
+moment that account does, and silently changes what it asserts.
 
 Credentials are read from environment variables (`SHOPSMART_EMAIL`,
-`SHOPSMART_PASSWORD`). See `.env.example`. Nothing secret is committed.
+`SHOPSMART_PASSWORD`) by the valid-login tests only. See `.env.example`.
+Nothing secret is committed.
+
+Last full local run: **2026-07-28 — 8 of 8 runnable web tests passed.**
+Recordings of that run are published at
+[`recordings/published/`](recordings/published) and on the
+[walkthrough page](https://keonikaku.github.io/automation/).
+There is no CI pipeline; the suite is run locally by hand.
 
 ## About This Project
 
@@ -46,7 +60,7 @@ a full-featured practice e-commerce site.
 | test_05_checkout_requires_login | Negative | Guest checkout redirects to login modal |
 | test_06_contact_form | Happy Path | Submit contact form — success message |
 | test_07_mobile_login | Mobile Web | iPhone 13 simulation — login flow |
-| test_08_invalid_login | Negative | Wrong password — error message displays |
+| test_08_invalid_login | Negative | Unregistered account — error message displays |
 | test_09_empty_login_fields | Negative | Empty fields — form does not submit |
 | test_10_search_no_results | Negative | No matching search term — empty results |
 | test_11_ios_native | Native iOS | Appium XCUITest — footer navigation on iPhone 17 Simulator |
@@ -117,9 +131,19 @@ RECORD_VIDEO=0 pytest test_shopsmart_suite.py -v
 (This only affects the Playwright tests — the iOS native test always
 records, since Appium's screen recording has no per-run toggle here.)
 
-Recording files themselves aren't committed (`recordings/*.webm` and
-`recordings/*.mp4` are gitignored) — the `recordings/` folder is kept
-in the repo via `.gitkeep` so it always exists locally.
+### What gets committed
+
+Raw run output is **not** committed: `recordings/*.webm` and
+`recordings/*.mp4` are gitignored, and those patterns are deliberately
+non-recursive so a stray run can't sweep itself into the repo. The
+`recordings/` folder is kept via `.gitkeep` so it always exists locally.
+
+Recordings chosen for publication are moved by hand into
+**`recordings/published/`**, which *is* tracked. Publishing a recording
+is therefore always a deliberate act rather than a side effect of
+running the suite. The eight files there are the unedited output of the
+2026-07-28 run and back the
+[walkthrough page](https://keonikaku.github.io/automation/).
 
 ## Project Structure
 
@@ -134,7 +158,9 @@ automation/
 ├── test_contact_form.py       # Contact form automation
 ├── test_mobile_login.py       # Mobile web — iPhone 13 simulation
 ├── test_11_ios_native.py      # Native iOS — Appium XCUITest on iPhone 17 Simulator
-└── recordings/                # Test run video recordings (gitignored contents)
+├── index.html                 # Walkthrough page — the published recordings, served by GitHub Pages
+└── recordings/                # Raw test run recordings (gitignored)
+    └── published/             # Curated recordings backing the walkthrough page (tracked)
 ```
 
 `report.html` and `test_results.png` are generated output and are no

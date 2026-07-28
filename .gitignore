@@ -6,6 +6,12 @@ __pycache__/
 .env
 
 # Test run output / build artifacts
+#
+# Raw recordings land in recordings/ on every run and are never committed —
+# these patterns are deliberately non-recursive so a stray run can't sweep
+# itself into the repo. Recordings that back the published walkthrough are
+# moved by hand into recordings/published/, which IS tracked. Publishing a
+# recording is therefore always a deliberate act, never a side effect.
 recordings/*.webm
 recordings/*.mp4
 report.html

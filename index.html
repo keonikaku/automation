@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ShopSmart QA Automation Suite — Animated Walkthrough</title>
-<meta name="description" content="Animated walkthrough of the ShopSmart QA automation suite — Playwright + Python across web, mobile web, and native iOS." />
+<title>ShopSmart QA Automation Suite — Recorded test runs</title>
+<meta name="description" content="Real screen recordings of the ShopSmart QA automation suite — 8 Playwright + pytest tests recorded on 2026-07-28, unedited." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -27,19 +27,20 @@
   }
   a{color:var(--accent);text-decoration:none;}
   a:hover{color:#fff;}
-  .wrap{max-width:1340px;margin:0 auto;padding:26px 22px 60px;}
+  code{font-family:var(--mono);}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px;}
 
   /* ---------- Header ---------- */
   header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
   .title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;}
   h1{font-size:clamp(21px,2.6vw,27px);font-weight:800;letter-spacing:-.02em;margin:0;}
-  .sim-badge{
+  .real-badge{
     display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--amber);
-    background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.35);padding:4px 10px;border-radius:100px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--green);
+    background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.35);padding:4px 10px;border-radius:100px;
   }
-  .sub{color:var(--muted);font-size:14.5px;max-width:680px;}
-  .sub code{font-family:var(--mono);font-size:13px;color:var(--accent-2);}
+  .sub{color:var(--muted);font-size:14.5px;max-width:760px;margin:0;}
+  .sub code{font-size:13px;color:var(--accent-2);}
   .head-links{display:flex;gap:10px;flex-wrap:wrap;}
   .head-links a{
     font-size:13.5px;font-weight:600;color:var(--txt);background:var(--panel);
@@ -47,220 +48,78 @@
   }
   .head-links a:hover{border-color:var(--accent);background:var(--panel2);}
 
-  /* ---------- Control bar ---------- */
-  .controls{
-    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  /* ---------- Run summary ---------- */
+  .runbar{
+    display:flex;align-items:center;gap:26px;flex-wrap:wrap;
     background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:14px 18px;margin-bottom:18px;
+    padding:15px 20px;margin-bottom:16px;
   }
-  .play-btn{
-    display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);
-    font-size:15px;font-weight:700;color:#04141c;cursor:pointer;
-    background:linear-gradient(120deg,#4fd1ff,#34d399);border:none;
-    padding:11px 24px;border-radius:11px;transition:transform .15s, box-shadow .15s;
-    box-shadow:0 6px 20px -6px rgba(79,209,255,.6);
-  }
-  .play-btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px -6px rgba(79,209,255,.75);}
-  .play-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
-  .play-btn svg{width:15px;height:15px;}
-  .ghost-btn{
-    font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;
-    background:transparent;border:1px solid var(--line);padding:9px 15px;border-radius:9px;transition:.15s;
-  }
-  .ghost-btn:hover{color:var(--txt);border-color:var(--accent);}
-  .ghost-btn.on{color:var(--accent);border-color:var(--accent);background:rgba(79,209,255,.08);}
-  .progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:12px;}
-  .bar{flex:1;height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line-soft);}
-  .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .35s ease;border-radius:99px;}
-  .prog-label{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;}
+  .stat{display:flex;flex-direction:column;gap:1px;}
+  .stat .k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted-dim);font-weight:700;}
+  .stat .v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--txt);}
+  .stat .v.ok{color:var(--green);}
 
-  /* ---------- Layout ---------- */
-  .stage-grid{display:grid;grid-template-columns:1fr;gap:18px;}
-  @media (min-width:1040px){ .stage-grid{grid-template-columns:1.15fr .85fr;} }
+  /* ---------- Scope panel ---------- */
+  .scope{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-bottom:26px;
+  }
+  .scope h2{font-size:14px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;}
+  .scope ul{margin:0;padding-left:19px;color:var(--muted);font-size:13.5px;}
+  .scope li{margin-bottom:7px;}
+  .scope li:last-child{margin-bottom:0;}
+  .scope b{color:var(--txt);font-weight:600;}
+  .scope code{font-size:12.5px;color:var(--accent-2);}
 
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
-  .panel-head{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:11px 16px;border-bottom:1px solid var(--line-soft);background:var(--panel2);
+  /* ---------- Video grid ---------- */
+  .section-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 14px;}
+  .section-head h2{font-size:16px;font-weight:700;margin:0;letter-spacing:-.01em;}
+  .section-head span{font-size:13px;color:var(--muted-dim);}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media (min-width:880px){ .grid{grid-template-columns:1fr 1fr;} }
+
+  .vcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;}
+  .vhead{
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    padding:11px 15px;border-bottom:1px solid var(--line-soft);background:var(--panel2);
   }
-  .panel-title{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-dim);font-weight:700;}
-  .runner-chip{
-    font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;
-    background:rgba(124,156,255,.12);color:var(--accent-2);border:1px solid rgba(124,156,255,.3);
+  .vname{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--txt);flex:1;min-width:0;word-break:break-all;}
+  .tag{
+    font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:3px 8px;border-radius:6px;background:var(--panel);color:var(--muted-dim);border:1px solid var(--line);
+  }
+  .tag.happy{color:var(--accent);border-color:rgba(79,209,255,.3);}
+  .tag.neg{color:var(--accent-2);border-color:rgba(124,156,255,.3);}
+  .tag.pass{color:var(--green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.09);}
+  video{display:block;width:100%;background:#070b11;aspect-ratio:16/9;}
+  .vbody{padding:13px 15px 15px;}
+  .vbody p{margin:0 0 10px;font-size:13.5px;color:var(--muted);}
+  .assert{
+    font-family:var(--mono);font-size:11px;line-height:1.65;color:#c9d5e3;background:#070b11;
+    border:1px solid var(--line-soft);border-radius:8px;padding:9px 11px;overflow-x:auto;white-space:pre;
+  }
+  .assert::-webkit-scrollbar{height:7px;} .assert::-webkit-scrollbar-thumb{background:#243044;border-radius:9px;}
+  .vnote{margin:9px 0 0;font-size:12px;color:var(--muted-dim);}
+
+  /* ---------- Not covered ---------- */
+  .gaps{margin-top:34px;}
+  .gap-list{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media (min-width:880px){ .gap-list{grid-template-columns:1fr 1fr 1fr;} }
+  .gap{
+    background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--amber);
+    border-radius:12px;padding:14px 16px;
+  }
+  .gap h3{font-family:var(--mono);font-size:12.5px;font-weight:700;margin:0 0 7px;color:var(--txt);word-break:break-all;}
+  .gap p{margin:0;font-size:13px;color:var(--muted);}
+  .gap .why{
+    display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--amber);background:rgba(251,191,36,.1);
+    border:1px solid rgba(251,191,36,.3);padding:2px 8px;border-radius:6px;margin-bottom:8px;
   }
 
-  /* ---------- Device stage ---------- */
-  .stage{
-    position:relative;background:#070b11;min-height:498px;
-    display:flex;align-items:center;justify-content:center;padding:20px;
-  }
-  .device{position:relative;transition:width .5s cubic-bezier(.4,0,.2,1), height .5s cubic-bezier(.4,0,.2,1);}
-  .device.desktop{width:100%;max-width:620px;height:420px;}
-  .device.phone{width:250px;height:456px;}
-
-  .chrome{
-    width:100%;height:100%;background:#fff;border-radius:10px;overflow:hidden;
-    display:flex;flex-direction:column;box-shadow:0 24px 60px -18px rgba(0,0,0,.85);
-  }
-  .device.phone .chrome{border-radius:28px;border:8px solid #1b2431;}
-  .chrome-bar{
-    display:flex;align-items:center;gap:8px;padding:8px 11px;background:#e9edf2;
-    border-bottom:1px solid #d3dae3;flex-shrink:0;
-  }
-  .device.phone .chrome-bar{padding:6px 9px;}
-  .dots{display:flex;gap:5px;}
-  .dots i{width:9px;height:9px;border-radius:50%;display:block;}
-  .dots i:nth-child(1){background:#ff5f57;} .dots i:nth-child(2){background:#febc2e;} .dots i:nth-child(3){background:#28c840;}
-  .urlbar{
-    flex:1;background:#fff;border:1px solid #d3dae3;border-radius:6px;
-    padding:4px 10px;font-family:var(--mono);font-size:10.5px;color:#4a5666;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
-  .device.phone .urlbar{font-size:9px;}
-  .viewport{flex:1;position:relative;overflow:hidden;background:#fff;}
-  .screen{position:absolute;inset:0;padding:16px;overflow:hidden;opacity:0;transition:opacity .3s;pointer-events:none;color:#1d2733;}
-  .screen.active{opacity:1;}
-
-  /* site mock bits */
-  .site-nav{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:2px solid #eceff3;margin-bottom:14px;}
-  .logo{font-weight:800;font-size:14px;color:#e4573d;letter-spacing:-.02em;}
-  .site-nav span{font-size:10.5px;color:#7a8798;font-weight:600;}
-  .mock-h{font-size:15px;font-weight:800;margin:0 0 12px;color:#26313f;}
-  .field{margin-bottom:9px;}
-  .field label{display:block;font-size:9.5px;color:#8b97a8;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
-  .field .inp{
-    height:29px;border:1px solid #ccd4de;border-radius:5px;background:#fbfcfd;
-    display:flex;align-items:center;padding:0 9px;font-family:var(--mono);font-size:11px;color:#2b3644;
-    transition:border-color .2s, box-shadow .2s;
-  }
-  .field .inp.focus{border-color:#4fa8ff;box-shadow:0 0 0 3px rgba(79,168,255,.18);}
-  .btn-mock{
-    display:inline-flex;align-items:center;justify-content:center;
-    background:#e4573d;color:#fff;font-size:11.5px;font-weight:700;
-    padding:8px 20px;border-radius:5px;margin-top:5px;transition:transform .1s, filter .1s;
-  }
-  .btn-mock.pressed{transform:scale(.95);filter:brightness(.85);}
-  .searchrow{display:flex;gap:0;margin-bottom:14px;}
-  .searchrow .inp{flex:1;border-radius:5px 0 0 5px;}
-  .searchrow .btn-mock{border-radius:0 5px 5px 0;margin-top:0;padding:8px 14px;background:#6c7a89;}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
-  .device.phone .grid{grid-template-columns:repeat(2,1fr);}
-  .pcard{border:1px solid #e6eaef;border-radius:6px;overflow:hidden;background:#fbfcfd;transition:.2s;}
-  .pcard .ph{height:44px;background:linear-gradient(135deg,#dde4ec,#eef2f6);}
-  .pcard .pb{padding:6px 7px;}
-  .pcard .pn{font-size:9px;font-weight:700;color:#3a4757;margin-bottom:2px;line-height:1.3;}
-  .pcard .pp{font-size:9.5px;font-weight:800;color:#e4573d;}
-  .pcard .atc{
-    margin-top:5px;font-size:8px;font-weight:700;color:#fff;background:#e4573d;
-    padding:3px 0;border-radius:3px;text-align:center;transition:transform .1s;
-  }
-  .pcard.hot{border-color:#e4573d;box-shadow:0 3px 10px rgba(228,87,61,.2);}
-  .banner{
-    padding:8px 11px;border-radius:5px;font-size:10.5px;font-weight:700;margin-bottom:11px;
-    display:flex;align-items:center;gap:7px;
-  }
-  .banner.ok{background:#e5f7ee;color:#1a7f4f;border:1px solid #b6e6cd;}
-  .banner.err{background:#fdeaea;color:#c0392b;border:1px solid #f5c4c0;}
-  .banner.warn{background:#fff5e0;color:#9a6a00;border:1px solid #ffe0a3;}
-  .cart-row{display:flex;align-items:center;gap:9px;border:1px solid #e6eaef;border-radius:6px;padding:8px;margin-bottom:9px;background:#fbfcfd;}
-  .cart-row .th{width:38px;height:34px;border-radius:4px;background:linear-gradient(135deg,#dde4ec,#eef2f6);flex-shrink:0;}
-  .cart-row .cn{font-size:10px;font-weight:700;color:#3a4757;}
-  .cart-row .cp{font-size:10px;font-weight:800;color:#e4573d;margin-left:auto;}
-  .ta{height:52px;border:1px solid #ccd4de;border-radius:5px;background:#fbfcfd;padding:7px 9px;font-family:var(--mono);font-size:10px;color:#2b3644;}
-
-  /* iOS native app mock */
-  .ios-app{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;}
-  .ios-status{height:22px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9px;font-weight:700;color:#111;flex-shrink:0;}
-  .ios-title{padding:10px 14px;font-size:15px;font-weight:800;color:#1d2733;border-bottom:1px solid #eceff3;flex-shrink:0;}
-  .ios-body{flex:1;padding:12px;overflow:hidden;}
-  .ios-tabs{
-    display:flex;border-top:1px solid #e2e6ec;background:#f7f9fb;flex-shrink:0;padding-bottom:5px;
-  }
-  .ios-tab{
-    flex:1;text-align:center;padding:8px 0 4px;font-size:8.5px;font-weight:700;color:#98a3b3;transition:.2s;
-  }
-  .ios-tab .ic{display:block;font-size:15px;line-height:1.1;margin-bottom:1px;filter:grayscale(1) opacity(.55);transition:.2s;}
-  .ios-tab.active{color:#e4573d;}
-  .ios-tab.active .ic{filter:none;transform:scale(1.12);}
-
-  /* cursor */
-  .cursor{
-    position:absolute;width:19px;height:19px;pointer-events:none;z-index:40;
-    transition:left .55s cubic-bezier(.34,.6,.3,1), top .55s cubic-bezier(.34,.6,.3,1), opacity .3s;
-    opacity:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
-  }
-  .cursor.show{opacity:1;}
-  .ripple{
-    position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);
-    pointer-events:none;z-index:39;opacity:0;transform:translate(-50%,-50%) scale(.3);
-  }
-  .ripple.go{animation:rip .55s ease-out;}
-  @keyframes rip{0%{opacity:.9;transform:translate(-50%,-50%) scale(.3);}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4);}}
-
-  .stage-tag{
-    position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:10.5px;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);z-index:30;
-    background:rgba(10,14,20,.75);border:1px solid rgba(79,209,255,.3);padding:4px 9px;border-radius:6px;
-    backdrop-filter:blur(6px);
-  }
-  .idle-overlay{
-    position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:16px;background:rgba(7,11,17,.9);backdrop-filter:blur(4px);text-align:center;padding:20px;transition:opacity .4s;
-  }
-  .idle-overlay.hide{opacity:0;pointer-events:none;}
-  .idle-overlay p{color:var(--muted);font-size:14px;margin:0;max-width:340px;}
-
-  /* ---------- Right column ---------- */
-  .right-col{display:flex;flex-direction:column;gap:18px;}
-  .term{
-    background:#070b11;font-family:var(--mono);font-size:11.5px;line-height:1.75;
-    padding:14px 16px;height:286px;overflow-y:auto;scroll-behavior:smooth;
-  }
-  .term::-webkit-scrollbar{width:7px;} .term::-webkit-scrollbar-thumb{background:#243044;border-radius:9px;}
-  .tline{white-space:pre-wrap;word-break:break-word;animation:fade .25s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:none;}}
-  .c-dim{color:#5c6c81;} .c-cyan{color:var(--accent);} .c-green{color:var(--green);}
-  .c-red{color:var(--red);} .c-amber{color:var(--amber);} .c-pur{color:var(--accent-2);} .c-txt{color:#c9d5e3;}
-  .c-white{color:#fff;font-weight:700;}
-
-  .tests{max-height:300px;overflow-y:auto;padding:6px 0;}
-  .tests::-webkit-scrollbar{width:7px;} .tests::-webkit-scrollbar-thumb{background:#243044;border-radius:9px;}
-  .trow{
-    display:flex;align-items:center;gap:11px;padding:8px 16px;font-size:12.5px;
-    border-left:2px solid transparent;transition:.2s;
-  }
-  .trow.run{background:rgba(79,209,255,.07);border-left-color:var(--accent);}
-  .trow.pass{border-left-color:var(--green);}
-  .tdot{
-    width:8px;height:8px;border-radius:50%;background:#2b3849;flex-shrink:0;transition:.25s;
-  }
-  .trow.run .tdot{background:var(--accent);box-shadow:0 0 0 3px rgba(79,209,255,.2);animation:pulse 1s infinite;}
-  .trow.pass .tdot{background:var(--green);box-shadow:0 0 0 3px rgba(52,211,153,.16);}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-  .tname{font-family:var(--mono);font-size:11.5px;color:var(--muted);flex:1;transition:.2s;}
-  .trow.run .tname,.trow.pass .tname{color:var(--txt);}
-  .tkind{
-    font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-    padding:2px 7px;border-radius:5px;background:var(--panel2);color:var(--muted-dim);border:1px solid var(--line);
-  }
-  .tkind.web{color:var(--accent);border-color:rgba(79,209,255,.3);}
-  .tkind.mob{color:var(--accent-2);border-color:rgba(124,156,255,.3);}
-  .tkind.ios{color:var(--green);border-color:rgba(52,211,153,.3);}
-  .tdur{font-family:var(--mono);font-size:10.5px;color:var(--muted-dim);min-width:44px;text-align:right;}
-  .tstat{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--green);opacity:0;transition:.25s;min-width:34px;}
-  .trow.pass .tstat{opacity:1;}
-
-  .summary{
-    padding:14px 18px;border-top:1px solid var(--line-soft);background:var(--panel2);
-    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-    opacity:0;transition:opacity .5s;
-  }
-  .summary.show{opacity:1;}
-  .sum-main{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--green);}
-  .sum-sub{font-size:11.5px;color:var(--muted);}
-
-  footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:13px;}
-  footer .note{font-size:12.5px;color:var(--muted-dim);max-width:760px;margin-top:8px;}
+  footer{margin-top:38px;padding-top:20px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:13px;}
+  footer .note{font-size:12.5px;color:var(--muted-dim);max-width:820px;margin-top:8px;}
 </style>
 </head>
 <body>
@@ -270,9 +129,14 @@
     <div>
       <div class="title-row">
         <h1>ShopSmart QA Automation Suite</h1>
-        <span class="sim-badge">Simulated replay</span>
+        <span class="real-badge">Real recorded runs</span>
       </div>
-      <p class="sub">An animated walkthrough of the real <code>pytest</code> suite — Playwright + Python across desktop web, mobile web, and native iOS (Appium / XCUITest). Every URL, selector, and assertion below is taken verbatim from the actual test files.</p>
+      <p class="sub">
+        Unedited screen recordings produced by the suite itself. Every video below is the raw
+        <code>.webm</code> that Playwright wrote while <code>pytest</code> drove the browser against
+        <a href="https://www.automationexercise.com">automationexercise.com</a> — no re-enactment,
+        no editing, no narration.
+      </p>
     </div>
     <div class="head-links">
       <a href="https://github.com/keonikaku/automation">View source</a>
@@ -280,181 +144,223 @@
     </div>
   </header>
 
-  <div class="controls">
-    <button class="play-btn" id="playBtn">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      <span id="playLabel">Run the suite</span>
-    </button>
-    <button class="ghost-btn" id="speedBtn">1&times; speed</button>
-    <button class="ghost-btn" id="resetBtn">Reset</button>
-    <div class="progress-wrap">
-      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
-      <span class="prog-label" id="progLabel">0 / 11</span>
-    </div>
+  <div class="runbar">
+    <div class="stat"><span class="k">Run date</span><span class="v">2026-07-28</span></div>
+    <div class="stat"><span class="k">Result</span><span class="v ok">8 of 8 run passed</span></div>
+    <div class="stat"><span class="k">Suite</span><span class="v">10 web tests total</span></div>
+    <div class="stat"><span class="k">Runner</span><span class="v">pytest 9.0.3 · Python 3.14</span></div>
+    <div class="stat"><span class="k">Browser</span><span class="v">Chromium (headed, local)</span></div>
   </div>
 
-  <div class="stage-grid">
+  <div class="scope">
+    <h2>What is and isn't on this page</h2>
+    <ul>
+      <li>
+        <b>8 of the 10 web tests</b> in <code>test_shopsmart_suite.py</code> are recorded here, and all 8 passed
+        on this run. The two that are missing, and why, are listed at the bottom of the page — they are not hidden.
+      </li>
+      <li>
+        <b>These recordings are automatic, not curated for looks.</b> <code>conftest.py</code> wraps every
+        Playwright browser context with built-in video recording, so a run records itself. Failing tests get
+        recorded the same way passing ones do.
+      </li>
+      <li>
+        <b>There is no CI pipeline.</b> This suite runs locally on a Mac, started by hand. Nothing on this page
+        was verified by a build server, and no badge on this site claims otherwise.
+      </li>
+      <li>
+        <b>The videos have no audio and no cursor overlay</b> — Playwright records the browser viewport only,
+        which is why input focus and page transitions are the only visible signal.
+      </li>
+    </ul>
+  </div>
 
-    <!-- LEFT: device stage -->
-    <div class="panel">
-      <div class="panel-head">
-        <span class="panel-title">Browser under test</span>
-        <span class="runner-chip" id="runnerChip">chromium · 1280×720</span>
+  <div class="section-head">
+    <h2>The runs</h2>
+    <span>8 videos · ~950 KB total · recorded 2026-07-28</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_02_search</span>
+        <span class="tag happy">Happy path</span>
+        <span class="tag pass">Pass</span>
       </div>
-      <div class="stage" id="stage">
-        <div class="stage-tag" id="stageTag">idle</div>
-
-        <div class="device desktop" id="device">
-          <div class="chrome">
-            <div class="chrome-bar">
-              <div class="dots"><i></i><i></i><i></i></div>
-              <div class="urlbar" id="urlbar">about:blank</div>
-            </div>
-            <div class="viewport" id="viewport">
-
-              <!-- login -->
-              <div class="screen" data-screen="login">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span><span>Signup / Login</span></div>
-                <div class="mock-h">Login to your account</div>
-                <div class="field"><label>Email Address</label><div class="inp" id="f-email"></div></div>
-                <div class="field"><label>Password</label><div class="inp" id="f-pass"></div></div>
-                <div class="btn-mock" id="b-login">Login</div>
-              </div>
-
-              <!-- login error -->
-              <div class="screen" data-screen="loginError">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span><span>Signup / Login</span></div>
-                <div class="mock-h">Login to your account</div>
-                <div class="banner err">✕ Your email or password is incorrect!</div>
-                <div class="field"><label>Email Address</label><div class="inp" id="f-email2"></div></div>
-                <div class="field"><label>Password</label><div class="inp" id="f-pass2"></div></div>
-                <div class="btn-mock" id="b-login2">Login</div>
-              </div>
-
-              <!-- home -->
-              <div class="screen" data-screen="home">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span><span>Logged in as Keoni</span></div>
-                <div class="banner ok">✓ Logged in as Keoni Kakugawa</div>
-                <div class="grid" id="homeGrid"></div>
-              </div>
-
-              <!-- products -->
-              <div class="screen" data-screen="products">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="searchrow"><div class="inp" id="f-search"></div><div class="btn-mock" id="b-search">Search</div></div>
-                <div class="grid" id="prodGrid"></div>
-              </div>
-
-              <!-- search results -->
-              <div class="screen" data-screen="results">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="mock-h" id="resultsHeading">Searched Products</div>
-                <div class="grid" id="resGrid"></div>
-              </div>
-
-              <!-- category -->
-              <div class="screen" data-screen="category">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="mock-h">Women - Dress Products</div>
-                <div class="grid" id="catGrid"></div>
-              </div>
-
-              <!-- cart -->
-              <div class="screen" data-screen="cart">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="mock-h">Shopping Cart</div>
-                <div class="cart-row"><div class="th"></div><div><div class="cn">Blue Top</div><div style="font-size:9px;color:#8b97a8">Qty 1</div></div><div class="cp">Rs. 500</div></div>
-                <div class="btn-mock" id="b-checkout" style="background:#5cb85c">Proceed To Checkout</div>
-              </div>
-
-              <!-- checkout modal -->
-              <div class="screen" data-screen="checkoutModal">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="mock-h">Shopping Cart</div>
-                <div class="banner warn">Register / Login account to proceed on checkout.</div>
-                <div class="cart-row"><div class="th"></div><div><div class="cn">Blue Top</div><div style="font-size:9px;color:#8b97a8">Qty 1</div></div><div class="cp">Rs. 500</div></div>
-              </div>
-
-              <!-- contact -->
-              <div class="screen" data-screen="contact">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Contact us</span></div>
-                <div class="mock-h">Get In Touch</div>
-                <div class="field"><div class="inp" id="f-name"></div></div>
-                <div class="field"><div class="inp" id="f-cemail"></div></div>
-                <div class="field"><div class="inp" id="f-subj"></div></div>
-                <div class="field"><div class="ta" id="f-msg"></div></div>
-                <div class="btn-mock" id="b-submit">Submit</div>
-              </div>
-
-              <!-- contact success -->
-              <div class="screen" data-screen="contactOk">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Contact us</span></div>
-                <div class="mock-h">Get In Touch</div>
-                <div class="banner ok">✓ Success! Your details have been submitted successfully.</div>
-              </div>
-
-              <!-- no results -->
-              <div class="screen" data-screen="noResults">
-                <div class="site-nav"><span class="logo">ShopSmart</span><span>Products</span><span>Cart</span></div>
-                <div class="mock-h">Searched Products</div>
-                <div style="text-align:center;padding:38px 10px;color:#98a3b3;font-size:11px;">No products matched<br><b style="color:#6c7a89">“zzzznotaproduct”</b></div>
-              </div>
-
-              <!-- iOS native -->
-              <div class="screen" data-screen="ios">
-                <div class="ios-app">
-                  <div class="ios-status"><span>9:41</span><span>▮▮▮ ᯤ ▰</span></div>
-                  <div class="ios-title" id="iosTitle">Catalog</div>
-                  <div class="ios-body"><div class="grid" id="iosGrid"></div></div>
-                  <div class="ios-tabs">
-                    <div class="ios-tab active" id="tab-catalog"><span class="ic">🛍</span>Catalog</div>
-                    <div class="ios-tab" id="tab-cart"><span class="ic">🛒</span>Cart</div>
-                    <div class="ios-tab" id="tab-more"><span class="ic">☰</span>More</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-          <div class="cursor" id="cursor">
-            <svg viewBox="0 0 24 24" fill="#fff" stroke="#0a0e14" stroke-width="1.4"><path d="M5 2l6.5 17 2.2-6.9L21 9.8z"/></svg>
-          </div>
-          <div class="ripple" id="ripple"></div>
-        </div>
-
-        <div class="idle-overlay" id="idleOverlay">
-          <button class="play-btn" id="playBtn2">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            <span>Run the suite</span>
-          </button>
-          <p>11 automated tests across desktop web, mobile web, and native iOS — about 70 seconds.</p>
-        </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_02_search_20260728_113050.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_02_search_20260728_113050.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Searches the product catalogue for <code>dress</code> and verifies the search results page renders.</p>
+        <div class="assert">expect(page.get_by_text("Searched Products")).to_be_visible()</div>
       </div>
     </div>
 
-    <!-- RIGHT: terminal + test list -->
-    <div class="right-col">
-      <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">pytest output</span>
-          <span class="runner-chip">python 3.14 · pytest 9.0.3</span>
-        </div>
-        <div class="term" id="term"><div class="tline c-dim">$ waiting to start…</div></div>
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_03_filter_by_category</span>
+        <span class="tag happy">Happy path</span>
+        <span class="tag pass">Pass</span>
       </div>
-
-      <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">Test cases</span>
-          <span class="runner-chip" id="passChip">0 passed</span>
-        </div>
-        <div class="tests" id="tests"></div>
-        <div class="summary" id="summary">
-          <span class="sum-main" id="sumMain">11 passed in 68.42s</span>
-          <span class="sum-sub">videos → <code style="font-family:var(--mono);color:var(--accent)">recordings/</code></span>
-        </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_03_filter_by_category_20260728_113055.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_03_filter_by_category_20260728_113055.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Loads the Women &rsaquo; Dress category and verifies the correct category page is served.</p>
+        <div class="assert">expect(page.get_by_text("Women - Dress Products")).to_be_visible()</div>
+        <p class="vnote">Navigates straight to the category URL rather than clicking through the menu — the
+        practice site injects ads over the nav, and a click path there tests the ad network, not the site.</p>
       </div>
     </div>
 
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_04_add_to_cart</span>
+        <span class="tag happy">Happy path</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_04_add_to_cart_20260728_113102.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_04_add_to_cart_20260728_113102.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Adds the first product to the cart, follows the confirmation modal's <b>View Cart</b> link, and
+        verifies the browser lands on the cart page.</p>
+        <div class="assert">expect(page).to_have_url("https://www.automationexercise.com/view_cart")</div>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_05_checkout_requires_login</span>
+        <span class="tag neg">Negative</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_05_checkout_requires_login_20260728_113110.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_05_checkout_requires_login_20260728_113110.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Adds an item as a guest and attempts checkout, verifying the site blocks it and demands an account
+        instead of letting an unauthenticated order through.</p>
+        <div class="assert">expect(page.get_by_text(
+    "Register / Login account to proceed on checkout."
+)).to_be_visible()</div>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_06_contact_form</span>
+        <span class="tag happy">Happy path</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_06_contact_form_20260728_113117.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_06_contact_form_20260728_113117.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Fills and submits the contact form, then verifies the success banner appears.</p>
+        <div class="assert">expect(page.locator(".status.alert.alert-success")).to_be_visible()</div>
+        <p class="vnote">The form fires a native browser confirm dialog on submit. The test arms a dialog
+        handler beforehand — <code>page.on("dialog", …accept())</code> — because an unhandled dialog blocks
+        Playwright and the test would hang rather than fail cleanly.</p>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_08_invalid_login</span>
+        <span class="tag neg">Negative</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_08_invalid_login_20260728_113210.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_08_invalid_login_20260728_113210.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Attempts login with an address that was never registered and verifies the site rejects it with the
+        expected error rather than failing open.</p>
+        <div class="assert">expect(page.get_by_text(
+    "Your email or password is incorrect!"
+)).to_be_visible()</div>
+        <p class="vnote">Self-contained by design: the fake address is hardcoded in the test, not read from the
+        environment. A negative-path test that needs real credentials to run is a test that stops working the
+        moment the account does.</p>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_09_empty_login_fields</span>
+        <span class="tag neg">Negative</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_09_empty_login_fields_20260728_113135.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_09_empty_login_fields_20260728_113135.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Submits the login form with both fields empty and verifies the browser stays on the login page —
+        field validation blocks the submit.</p>
+        <div class="assert">expect(page).to_have_url("https://www.automationexercise.com/login")</div>
+      </div>
+    </div>
+
+    <div class="vcard">
+      <div class="vhead">
+        <span class="vname">test_10_search_no_results</span>
+        <span class="tag neg">Negative</span>
+        <span class="tag pass">Pass</span>
+      </div>
+      <video controls preload="metadata" playsinline src="recordings/published/test_10_search_no_results_20260728_113140.webm">
+        Your browser can't play WebM.
+        <a href="recordings/published/test_10_search_no_results_20260728_113140.webm">Download the recording</a>.
+      </video>
+      <div class="vbody">
+        <p>Searches for a term with no matches and verifies the results page still renders cleanly instead of
+        erroring on an empty result set.</p>
+        <div class="assert">expect(page.get_by_text("Searched Products")).to_be_visible()</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="gaps">
+    <div class="section-head">
+      <h2>Not in this set</h2>
+      <span>three tests exist in the repo but have no recording here</span>
+    </div>
+    <div class="gap-list">
+
+      <div class="gap">
+        <span class="why">No account</span>
+        <h3>test_01_login</h3>
+        <p>Logs in with valid credentials. The practice-site account it was written against has been deleted, so
+        there are no valid credentials to supply and the test currently fails. The fix — registering a throwaway
+        account at setup instead of depending on a long-lived one — is the next scheduled piece of work.</p>
+      </div>
+
+      <div class="gap">
+        <span class="why">No account</span>
+        <h3>test_07_mobile_login</h3>
+        <p>The same login flow under Playwright's iPhone 13 device emulation, and blocked by the same deleted
+        account. It is fixed by the same self-registration change. Publishing an old recording of it would show
+        a run that can no longer be reproduced, so it isn't published.</p>
+      </div>
+
+      <div class="gap">
+        <span class="why">Local only</span>
+        <h3>test_11_ios_native</h3>
+        <p>Native iOS via Appium / XCUITest against the Sauce Labs demo app. It needs a booted iPhone Simulator
+        with an Appium server attached, so it can't run as part of a batch like this one — it is run locally and
+        by hand. No recording from this run exists.</p>
+      </div>
+
+    </div>
   </div>
 
   <footer>
@@ -462,359 +368,18 @@
     <a href="https://github.com/keonikaku/automation">github.com/keonikaku/automation</a> ·
     <a href="https://keonikaku.github.io">Portfolio</a>
     <p class="note">
-      This page is an animated reconstruction, not a live test run — browsers can't drive a real Playwright
-      session from a static page. The test names, URLs, selectors, and assertions are taken verbatim from
-      <code style="font-family:var(--mono)">test_shopsmart_suite.py</code> and
-      <code style="font-family:var(--mono)">test_11_ios_native.py</code> in the repository. The real suite runs
-      headed via pytest and records genuine video of every run to <code style="font-family:var(--mono)">recordings/</code>.
+      Recorded 2026-07-28 against <a href="https://www.automationexercise.com">automationexercise.com</a>, a public
+      practice site. The video files are committed unmodified at
+      <a href="https://github.com/keonikaku/automation/tree/main/recordings/published"><code>recordings/published/</code></a>;
+      the tests that produced them are in
+      <a href="https://github.com/keonikaku/automation/blob/main/test_shopsmart_suite.py"><code>test_shopsmart_suite.py</code></a>
+      and the recording fixture is in
+      <a href="https://github.com/keonikaku/automation/blob/main/conftest.py"><code>conftest.py</code></a>.
+      A practice site can change or go down at any time, so these recordings are evidence of a run on a stated
+      date, not a live status.
     </p>
   </footer>
 
 </div>
-
-<script>
-(function(){
-  "use strict";
-
-  const PRODUCTS = [
-    ["Blue Top","Rs. 500"],["Men Tshirt","Rs. 400"],["Sleeveless Dress","Rs. 1000"],
-    ["Stylish Dress","Rs. 1500"],["Winter Top","Rs. 600"],["Summer White Top","Rs. 400"]
-  ];
-  const DRESSES = [
-    ["Sleeveless Dress","Rs. 1000"],["Stylish Dress","Rs. 1500"],["Cotton Mul Dress","Rs. 1200"],
-    ["Rose Dress","Rs. 1400"],["Flare Dress","Rs. 1100"],["Georgette Dress","Rs. 1600"]
-  ];
-  const IOS_ITEMS = [
-    ["Sauce Labs Backpack","$29.99"],["Bike Light","$9.99"],["Bolt T-Shirt","$15.99"],["Fleece Jacket","$49.99"]
-  ];
-
-  function fillGrid(el, items, withAtc){
-    if(!el) return;
-    el.innerHTML = items.map((p,i)=>
-      `<div class="pcard" data-i="${i}"><div class="ph"></div><div class="pb">
-       <div class="pn">${p[0]}</div><div class="pp">${p[1]}</div>
-       ${withAtc?'<div class="atc">Add to cart</div>':''}</div></div>`).join("");
-  }
-  fillGrid(document.getElementById("homeGrid"), PRODUCTS.slice(0,6), false);
-  fillGrid(document.getElementById("prodGrid"), PRODUCTS, true);
-  fillGrid(document.getElementById("resGrid"), DRESSES, true);
-  fillGrid(document.getElementById("catGrid"), DRESSES, true);
-  fillGrid(document.getElementById("iosGrid"), IOS_ITEMS, false);
-
-  // ---- real suite definition (mirrors the repo) ----
-  const S = "https://www.automationexercise.com";
-  const T = [
-    { id:"test_01_login", kind:"web", dur:"6.21s", desc:"Valid credentials — successful login",
-      steps:[
-        {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
-        {a:"type", el:"f-pass", text:"•••••••••", code:`page.fill("[data-qa='login-password']", PASSWORD)`},
-        {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
-        {a:"nav", url:S+"/", screen:"home", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page).to_have_url("${S}/")`}
-      ]},
-    { id:"test_02_search", kind:"web", dur:"4.87s", desc:"Search for a product — results display",
-      steps:[
-        {a:"nav", url:S+"/products", screen:"products", code:`page.goto("${S}/products")`},
-        {a:"type", el:"f-search", text:"dress", code:`page.fill("#search_product", "dress")`},
-        {a:"click", el:"b-search", code:`page.click("#submit_search")`},
-        {a:"nav", url:S+"/products?search=dress", screen:"results", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page.get_by_text("Searched Products")).to_be_visible()`}
-      ]},
-    { id:"test_03_filter_by_category", kind:"web", dur:"3.94s", desc:"Filter by Women category",
-      steps:[
-        {a:"nav", url:S+"/category_products/1", screen:"category", code:`page.goto("${S}/category_products/1")`},
-        {a:"assert", code:`expect(page.get_by_text("Women - Dress Products")).to_be_visible()`}
-      ]},
-    { id:"test_04_add_to_cart", kind:"web", dur:"7.02s", desc:"Add product to cart — cart page loads",
-      steps:[
-        {a:"nav", url:S+"/products", screen:"products", code:`page.goto("${S}/products")`},
-        {a:"clickCard", el:"prodGrid", code:`page.locator(".add-to-cart").first.click()`},
-        {a:"log", cls:"c-dim", text:"    modal → View Cart"},
-        {a:"nav", url:S+"/view_cart", screen:"cart", code:`page.get_by_text("View Cart").click()`},
-        {a:"assert", code:`expect(page).to_have_url("${S}/view_cart")`}
-      ]},
-    { id:"test_05_checkout_requires_login", kind:"web", dur:"7.48s", desc:"Guest checkout redirects to login",
-      steps:[
-        {a:"nav", url:S+"/view_cart", screen:"cart", code:`page.locator(".add-to-cart").first.click()`},
-        {a:"click", el:"b-checkout", code:`page.locator(".check_out").click()`},
-        {a:"nav", url:S+"/view_cart", screen:"checkoutModal", code:`page.wait_for_timeout(2000)`},
-        {a:"assert", code:`expect(page.get_by_text(\n    "Register / Login account to proceed on checkout."\n)).to_be_visible()`}
-      ]},
-    { id:"test_06_contact_form", kind:"web", dur:"6.63s", desc:"Submit contact form — success message",
-      steps:[
-        {a:"nav", url:S+"/contact_us", screen:"contact", code:`page.goto("${S}/contact_us")`},
-        {a:"type", el:"f-name", text:"Keoni Kakugawa", code:`page.fill("[data-qa='name']", "Keoni Kakugawa")`},
-        {a:"type", el:"f-cemail", text:"keoni@example.com", code:`page.fill("[data-qa='email']", "keoni@example.com")`},
-        {a:"type", el:"f-subj", text:"Test Inquiry", code:`page.fill("[data-qa='subject']", "Test Inquiry")`},
-        {a:"type", el:"f-msg", text:"This is an automated test message.", code:`page.fill("#message", "…")`},
-        {a:"log", cls:"c-amber", text:"    dialog handler armed → dialog.accept()"},
-        {a:"click", el:"b-submit", code:`page.click("[data-qa='submit-button']")`},
-        {a:"nav", url:S+"/contact_us", screen:"contactOk", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page.locator(".status.alert.alert-success")).to_be_visible()`}
-      ]},
-    { id:"test_07_mobile_login", kind:"mob", dur:"5.76s", desc:"iPhone 13 simulation — login flow",
-      device:"phone", runner:"chromium · iPhone 13 · 390×664",
-      steps:[
-        {a:"log", cls:"c-pur", text:"    iphone = p.devices[\"iPhone 13\"]"},
-        {a:"log", cls:"c-pur", text:"    context = browser.new_context(**iphone)"},
-        {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
-        {a:"type", el:"f-pass", text:"•••••••••", code:`page.fill("[data-qa='login-password']", PASSWORD)`},
-        {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
-        {a:"nav", url:S+"/", screen:"home", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page).to_have_url("${S}/")`}
-      ]},
-    { id:"test_08_invalid_login", kind:"web", dur:"4.55s", desc:"Wrong password — error displays",
-      steps:[
-        {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
-        {a:"type", el:"f-pass", text:"••••••••••••••••", code:`page.fill("[data-qa='login-password']", "wrongpassword123")`},
-        {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
-        {a:"nav", url:S+"/login", screen:"loginError", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page.get_by_text(\n    "Your email or password is incorrect!"\n)).to_be_visible()`}
-      ]},
-    { id:"test_09_empty_login_fields", kind:"web", dur:"3.31s", desc:"Empty fields — form does not submit",
-      steps:[
-        {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
-        {a:"log", cls:"c-dim", text:"    HTML5 validation blocked submit — still on /login"},
-        {a:"assert", code:`expect(page).to_have_url("${S}/login")`}
-      ]},
-    { id:"test_10_search_no_results", kind:"web", dur:"4.19s", desc:"No matching term — empty results",
-      steps:[
-        {a:"nav", url:S+"/products", screen:"products", code:`page.goto("${S}/products")`},
-        {a:"type", el:"f-search", text:"zzzznotaproduct", code:`page.fill("#search_product", "zzzznotaproduct")`},
-        {a:"click", el:"b-search", code:`page.click("#submit_search")`},
-        {a:"nav", url:S+"/products?search=zzzznotaproduct", screen:"noResults", code:`page.wait_for_load_state("domcontentloaded")`},
-        {a:"assert", code:`expect(page.get_by_text("Searched Products")).to_be_visible()`}
-      ]},
-    { id:"test_11_ios_native", kind:"ios", dur:"14.46s", desc:"Appium XCUITest — footer navigation",
-      device:"phone", runner:"Appium · XCUITest · iPhone 17 Simulator",
-      steps:[
-        {a:"log", cls:"c-pur", text:"    options.platform_name = \"iOS\""},
-        {a:"log", cls:"c-pur", text:"    options.device_name = \"iPhone 17\""},
-        {a:"log", cls:"c-pur", text:"    options.bundle_id = \"com.saucelabs.mydemo.app.ios\""},
-        {a:"log", cls:"c-dim", text:"    → webdriver.Remote(\"http://127.0.0.1:4723\")"},
-        {a:"nav", url:"com.saucelabs.mydemo.app.ios", screen:"ios", code:`driver.start_recording_screen()`},
-        {a:"iosTab", el:"tab-catalog", title:"Catalog", code:`driver.find_element(AppiumBy.ACCESSIBILITY_ID, "Catalog-tab-item").click()`},
-        {a:"log", cls:"c-green", text:"    Step 1 passed — Catalog tab tapped"},
-        {a:"iosTab", el:"tab-cart", title:"Cart", code:`driver.find_element(AppiumBy.ACCESSIBILITY_ID, "Cart-tab-item").click()`},
-        {a:"log", cls:"c-green", text:"    Step 2 passed — Cart tab tapped"},
-        {a:"iosTab", el:"tab-more", title:"More", code:`driver.find_element(AppiumBy.ACCESSIBILITY_ID, "More-tab-item").click()`},
-        {a:"log", cls:"c-green", text:"    Step 3 passed — More tab tapped"},
-        {a:"log", cls:"c-cyan", text:"    driver.stop_recording_screen() → recordings/ios_native_*.mp4"},
-        {a:"assert", code:`all footer tabs verified`}
-      ]}
-  ];
-
-  // ---- DOM refs ----
-  const $ = id => document.getElementById(id);
-  const term=$("term"), testsEl=$("tests"), device=$("device"), viewport=$("viewport"),
-        cursor=$("cursor"), ripple=$("ripple"), urlbar=$("urlbar"), stageTag=$("stageTag"),
-        barFill=$("barFill"), progLabel=$("progLabel"), passChip=$("passChip"),
-        summary=$("summary"), sumMain=$("sumMain"), idle=$("idleOverlay"),
-        playBtn=$("playBtn"), playBtn2=$("playBtn2"), playLabel=$("playLabel"),
-        speedBtn=$("speedBtn"), resetBtn=$("resetBtn"), runnerChip=$("runnerChip");
-
-  let running=false, token=0, speed=1;
-
-  // build test rows
-  testsEl.innerHTML = T.map(t=>`
-    <div class="trow" id="row-${t.id}">
-      <span class="tdot"></span>
-      <span class="tname">${t.id}</span>
-      <span class="tkind ${t.kind}">${t.kind==="web"?"web":t.kind==="mob"?"mobile":"iOS"}</span>
-      <span class="tdur" id="dur-${t.id}"></span>
-      <span class="tstat">PASS</span>
-    </div>`).join("");
-
-  const sleep = ms => new Promise(r=>setTimeout(r, ms/speed));
-
-  function log(text, cls){
-    const d=document.createElement("div");
-    d.className="tline "+(cls||"c-txt");
-    d.textContent=text;
-    term.appendChild(d);
-    term.scrollTop=term.scrollHeight;
-  }
-  function clearTerm(){ term.innerHTML=""; }
-
-  function showScreen(name){
-    viewport.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.dataset.screen===name));
-  }
-  function setInput(id, text){ const e=$(id); if(e) e.textContent=text; }
-  function clearInputs(){
-    ["f-email","f-pass","f-email2","f-pass2","f-search","f-name","f-cemail","f-subj","f-msg"]
-      .forEach(i=>setInput(i,""));
-  }
-
-  async function moveCursorTo(el){
-    if(!el) return;
-    const vr=device.getBoundingClientRect(), er=el.getBoundingClientRect();
-    cursor.classList.add("show");
-    cursor.style.left=(er.left-vr.left+er.width/2)+"px";
-    cursor.style.top=(er.top-vr.top+er.height/2)+"px";
-    await sleep(560);
-  }
-  async function clickAt(el){
-    await moveCursorTo(el);
-    const vr=device.getBoundingClientRect(), er=el.getBoundingClientRect();
-    ripple.style.left=(er.left-vr.left+er.width/2)+"px";
-    ripple.style.top=(er.top-vr.top+er.height/2)+"px";
-    ripple.classList.remove("go"); void ripple.offsetWidth; ripple.classList.add("go");
-    el.classList.add("pressed");
-    await sleep(190);
-    el.classList.remove("pressed");
-  }
-  async function typeInto(id, text, tk){
-    const el=$(id); if(!el) return;
-    await moveCursorTo(el);
-    el.classList.add("focus");
-    el.textContent="";
-    for(let i=0;i<text.length;i++){
-      if(tk!==token) return;
-      el.textContent+=text[i];
-      await sleep(34);
-    }
-    await sleep(150);
-    el.classList.remove("focus");
-  }
-
-  async function runStep(st, tk){
-    if(tk!==token) return;
-    switch(st.a){
-      case "nav":
-        urlbar.textContent=st.url;
-        showScreen(st.screen);
-        if(st.code) log("    "+st.code, "c-cyan");
-        await sleep(620);
-        break;
-      case "type":
-        log("    "+st.code, "c-cyan");
-        await typeInto(st.el, st.text, tk);
-        break;
-      case "click":
-        log("    "+st.code, "c-cyan");
-        await clickAt($(st.el));
-        await sleep(240);
-        break;
-      case "clickCard": {
-        log("    "+st.code, "c-cyan");
-        const card=document.querySelector("#"+st.el+" .pcard[data-i='0']");
-        if(card){ card.classList.add("hot"); await clickAt(card.querySelector(".atc")||card); }
-        await sleep(300);
-        break;
-      }
-      case "iosTab": {
-        log("    "+st.code, "c-cyan");
-        const tab=$(st.el);
-        document.querySelectorAll(".ios-tab").forEach(x=>x.classList.remove("active"));
-        await clickAt(tab);
-        tab.classList.add("active");
-        $("iosTitle").textContent=st.title;
-        await sleep(420);
-        break;
-      }
-      case "assert":
-        log("    "+st.code, "c-amber");
-        await sleep(430);
-        break;
-      case "log":
-        log(st.text, st.cls);
-        await sleep(300);
-        break;
-    }
-  }
-
-  async function run(){
-    if(running) return;
-    running=true; const tk=++token;
-    idle.classList.add("hide");
-    playBtn.disabled=true; playBtn2.disabled=true;
-    playLabel.textContent="Running…";
-    summary.classList.remove("show");
-    clearTerm(); clearInputs();
-    T.forEach(t=>{ $("row-"+t.id).className="trow"; $("dur-"+t.id).textContent=""; });
-    barFill.style.width="0%"; progLabel.textContent="0 / "+T.length; passChip.textContent="0 passed";
-
-    log("$ pytest test_shopsmart_suite.py test_11_ios_native.py -v", "c-white");
-    await sleep(420);
-    log("platform darwin — python 3.14.3, pytest-9.0.3, playwright 1.49", "c-dim");
-    log("rootdir: /Users/keoni/automation", "c-dim");
-    log("plugins: html-4.2.0, metadata-3.1.1", "c-dim");
-    log("collected " + T.length + " items", "c-dim");
-    log("", "c-dim");
-    await sleep(600);
-
-    let passed=0;
-    for(let i=0;i<T.length;i++){
-      const t=T[i];
-      if(tk!==token) return;
-
-      device.className="device "+(t.device==="phone"?"phone":"desktop");
-      runnerChip.textContent=t.runner||"chromium · 1280×720";
-      stageTag.textContent=t.kind==="ios"?"native iOS":t.kind==="mob"?"mobile web":"desktop web";
-      $("row-"+t.id).classList.add("run");
-      $("row-"+t.id).scrollIntoView({block:"nearest"});
-      clearInputs();
-
-      log(t.id + "  " + t.desc, "c-white");
-      await sleep(420);
-
-      for(const st of t.steps){
-        await runStep(st, tk);
-        if(tk!==token) return;
-      }
-
-      cursor.classList.remove("show");
-      passed++;
-      $("row-"+t.id).classList.remove("run");
-      $("row-"+t.id).classList.add("pass");
-      $("dur-"+t.id).textContent=t.dur;
-      log("  PASSED  [" + String(Math.round((i+1)/T.length*100)).padStart(3," ") + "%]  " + t.dur, "c-green");
-      log("", "c-dim");
-      barFill.style.width=((i+1)/T.length*100)+"%";
-      progLabel.textContent=(i+1)+" / "+T.length;
-      passChip.textContent=passed+" passed";
-      await sleep(560);
-    }
-
-    if(tk!==token) return;
-    log("=".repeat(46), "c-dim");
-    log(T.length + " passed in 68.42s", "c-green");
-    log("videos written → recordings/*.webm  ·  recordings/ios_native_*.mp4", "c-dim");
-    sumMain.textContent=T.length+" passed in 68.42s";
-    summary.classList.add("show");
-    stageTag.textContent="complete";
-    playLabel.textContent="Run again";
-    playBtn.disabled=false; playBtn2.disabled=false;
-    running=false;
-  }
-
-  function reset(){
-    token++; running=false;
-    clearTerm(); clearInputs();
-    log("$ waiting to start…","c-dim");
-    T.forEach(t=>{ $("row-"+t.id).className="trow"; $("dur-"+t.id).textContent=""; });
-    barFill.style.width="0%"; progLabel.textContent="0 / "+T.length;
-    passChip.textContent="0 passed"; summary.classList.remove("show");
-    device.className="device desktop"; runnerChip.textContent="chromium · 1280×720";
-    urlbar.textContent="about:blank"; stageTag.textContent="idle";
-    showScreen(""); cursor.classList.remove("show");
-    idle.classList.remove("hide");
-    playBtn.disabled=false; playBtn2.disabled=false; playLabel.textContent="Run the suite";
-  }
-
-  playBtn.addEventListener("click", run);
-  playBtn2.addEventListener("click", run);
-  resetBtn.addEventListener("click", reset);
-  speedBtn.addEventListener("click", ()=>{
-    speed = speed===1?2:speed===2?4:1;
-    speedBtn.textContent=speed+"× speed";
-    speedBtn.classList.toggle("on", speed!==1);
-  });
-})();
-</script>
 </body>
 </html>
