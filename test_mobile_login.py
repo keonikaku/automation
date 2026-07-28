@@ -1,5 +1,12 @@
 # Import the Playwright library so we can automate a browser
+import os
+
 from playwright.sync_api import sync_playwright, expect
+
+# Credentials come from the environment — never commit them. See .env.example.
+# KNOWN: this test currently fails; the practice-site account was deleted.
+EMAIL = os.environ.get("SHOPSMART_EMAIL", "")
+PASSWORD = os.environ.get("SHOPSMART_PASSWORD", "")
 
 def test_mobile_login():
     # Start Playwright
@@ -24,10 +31,10 @@ def test_mobile_login():
         page.wait_for_load_state("domcontentloaded")
         
         # Fill in the email field
-        page.fill("[data-qa='login-email']", "myfellowdude@gmail.com")
-        
+        page.fill("[data-qa='login-email']", EMAIL)
+
         # Fill in the password field
-        page.fill("[data-qa='login-password']", "Prime21*")
+        page.fill("[data-qa='login-password']", PASSWORD)
         
         # Click the Login button
         page.click("[data-qa='login-button']")

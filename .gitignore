@@ -1,5 +1,12 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+
+# Credentials — never commit
+.env
+
+# Test run output / build artifacts
 recordings/*.webm
 recordings/*.mp4
+report.html
+test_results.png

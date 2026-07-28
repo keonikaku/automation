@@ -3,7 +3,21 @@
 Playwright Python automation suite covering web and mobile testing 
 for a full e-commerce platform.
 
-![Test Results](test_results.png)
+## Known state
+
+The three login tests (`test_01_login`, `test_07_mobile_login`,
+`test_08_invalid_login`, plus the standalone `test_login.py` /
+`test_mobile_login.py` scripts) **currently fail.** The practice-site
+account they were written against has been deleted, so there are no
+valid credentials to supply.
+
+This is a known, tracked gap — not a broken commit. The fix is a setup
+step that registers its own throwaway account per run rather than
+depending on a long-lived one; that work is scheduled alongside the
+framework restructure. Everything else in the suite passes.
+
+Credentials are read from environment variables (`SHOPSMART_EMAIL`,
+`SHOPSMART_PASSWORD`). See `.env.example`. Nothing secret is committed.
 
 ## About This Project
 
@@ -44,6 +58,15 @@ a full-featured practice e-commerce site.
 pip3 install playwright pytest pytest-html
 playwright install
 ```
+
+**Set credentials:**
+```
+cp .env.example .env      # then edit .env with your own test account
+export SHOPSMART_EMAIL="your-test-account@example.com"
+export SHOPSMART_PASSWORD="..."
+```
+Register your own account on the practice site. `.env` is gitignored.
+See "Known state" above for why the login tests fail today.
 
 **Run the full suite:**
 ```
@@ -102,6 +125,7 @@ in the repo via `.gitkeep` so it always exists locally.
 
 ```
 automation/
+├── .env.example               # Credential template — copy to .env (gitignored)
 ├── conftest.py                # Pytest fixture — enables video recording for Playwright tests
 ├── test_shopsmart_suite.py    # Full 10-test suite
 ├── test_login.py              # Login automation
@@ -110,13 +134,15 @@ automation/
 ├── test_contact_form.py       # Contact form automation
 ├── test_mobile_login.py       # Mobile web — iPhone 13 simulation
 ├── test_11_ios_native.py      # Native iOS — Appium XCUITest on iPhone 17 Simulator
-├── recordings/                # Test run video recordings (gitignored contents)
-└── report.html                # Latest test run results
+└── recordings/                # Test run video recordings (gitignored contents)
 ```
+
+`report.html` and `test_results.png` are generated output and are no
+longer committed — run the suite with `--html` to produce your own.
 
 ## Author
 
 Keoni Kakugawa — QA & Release Management Leader  
-15+ years of QA and delivery experience  
+20+ years in software, 15 in QA, ~6 in release management  
 github.com/keonikaku/automation
 [LinkedIn](https://www.linkedin.com/in/keonikaku)

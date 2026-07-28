@@ -2,11 +2,20 @@
 # 10 test cases covering happy path, negative scenarios, and mobile
 # Target: https://www.automationexercise.com
 
+import os
+
 from playwright.sync_api import sync_playwright, expect
 
 # ─── CREDENTIALS ───────────────────────────────────────────────
-EMAIL = "myfellowdude@gmail.com"
-PASSWORD = "Prime21*"
+# Read from the environment — never commit credentials. See .env.example.
+#
+# KNOWN: the login tests (01, 07, 08) currently fail. The practice-site
+# account these tests were written against has been deleted, so there are
+# no valid credentials to supply. This is a known, tracked gap, not a
+# broken commit — the fix is a test that registers its own account at
+# setup, which is scheduled work. See README "Known state".
+EMAIL = os.environ.get("SHOPSMART_EMAIL", "")
+PASSWORD = os.environ.get("SHOPSMART_PASSWORD", "")
 # ───────────────────────────────────────────────────────────────
 
 

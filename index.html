@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ShopSmart QA Automation Suite — Live Demo</title>
+<title>ShopSmart QA Automation Suite — Animated Walkthrough</title>
 <meta name="description" content="Animated walkthrough of the ShopSmart QA automation suite — Playwright + Python across web, mobile web, and native iOS." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -507,7 +507,7 @@
     { id:"test_01_login", kind:"web", dur:"6.21s", desc:"Valid credentials — successful login",
       steps:[
         {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"myfellowdude@gmail.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
+        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
         {a:"type", el:"f-pass", text:"•••••••••", code:`page.fill("[data-qa='login-password']", PASSWORD)`},
         {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
         {a:"nav", url:S+"/", screen:"home", code:`page.wait_for_load_state("domcontentloaded")`},
@@ -559,7 +559,7 @@
         {a:"log", cls:"c-pur", text:"    iphone = p.devices[\"iPhone 13\"]"},
         {a:"log", cls:"c-pur", text:"    context = browser.new_context(**iphone)"},
         {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"myfellowdude@gmail.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
+        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
         {a:"type", el:"f-pass", text:"•••••••••", code:`page.fill("[data-qa='login-password']", PASSWORD)`},
         {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
         {a:"nav", url:S+"/", screen:"home", code:`page.wait_for_load_state("domcontentloaded")`},
@@ -568,7 +568,7 @@
     { id:"test_08_invalid_login", kind:"web", dur:"4.55s", desc:"Wrong password — error displays",
       steps:[
         {a:"nav", url:S+"/login", screen:"login", code:`page.goto("${S}/login")`},
-        {a:"type", el:"f-email", text:"myfellowdude@gmail.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
+        {a:"type", el:"f-email", text:"qa-account@example.com", code:`page.fill("[data-qa='login-email']", EMAIL)`},
         {a:"type", el:"f-pass", text:"••••••••••••••••", code:`page.fill("[data-qa='login-password']", "wrongpassword123")`},
         {a:"click", el:"b-login", code:`page.click("[data-qa='login-button']")`},
         {a:"nav", url:S+"/login", screen:"loginError", code:`page.wait_for_load_state("domcontentloaded")`},
