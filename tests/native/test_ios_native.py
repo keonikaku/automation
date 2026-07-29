@@ -3,8 +3,10 @@
 **This test never runs in CI, by design.** It needs macOS, Xcode, a booted
 iPhone Simulator and a running Appium server; GitHub-hosted macOS runners cost
 roughly ten times a Linux minute and still could not host the app build. It is
-excluded by the ``native`` marker, which ``pytest.ini`` deselects by default
-and which no CI workflow ever selects. See ``docs/quality-gates.md``.
+excluded by the ``native`` marker, which ``pytest.ini`` deselects by default.
+No workflow ever runs a native test; ``ci.yml`` passes ``-m native`` only to
+``pytest --collect-only``, to assert this test still exists. See
+``docs/quality-gates.md``.
 
 Run it locally with::
 

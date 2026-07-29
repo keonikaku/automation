@@ -8,6 +8,7 @@ no browser — which is what lets them gate every pull request.
 from __future__ import annotations
 
 import ast
+import html
 import re
 from pathlib import Path
 
@@ -26,6 +27,7 @@ from shopsmart.pages import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 UI_TESTS_DIR = REPO_ROOT / "tests" / "ui"
+WALKTHROUGH_PAGE = REPO_ROOT / "index.html"
 
 PAGE_CLASSES = [
     CartPage,
@@ -225,3 +227,61 @@ def test_markers_are_declared_and_native_is_deselected_by_default():
         assert marker in config, f"pytest.ini does not declare the {marker} marker"
     assert "--strict-markers" in config
     assert "not native" in config
+
+
+# ── the walkthrough page quotes this repository's code ────────────────
+# index.html is a public page that displays, under each video, the assertion
+# the test makes. Quoted code drifts silently: the restructure moved every
+# test onto page objects and the page went on showing the raw-selector style
+# the restructure had just deleted — on the very page built to show it off.
+# Nothing false was stated, but it advertised the wrong thing to exactly the
+# reader it was written for. These two tests make that drift a build failure.
+
+ASSERT_BLOCK = re.compile(r'<div class="assert">(.*?)</div>', re.DOTALL)
+CARD_NAME = re.compile(r'<span class="vname">(test_\w+)</span>')
+
+
+def walkthrough_html() -> str:
+    return WALKTHROUGH_PAGE.read_text(encoding="utf-8")
+
+
+def ui_test_source() -> str:
+    return "\n".join(
+        path.read_text(encoding="utf-8") for path in sorted(UI_TESTS_DIR.glob("test_*.py"))
+    )
+
+
+def quoted_assertion_lines() -> list[str]:
+    """Every non-blank line of every assertion block on the walkthrough page."""
+    lines = []
+    for block in ASSERT_BLOCK.findall(walkthrough_html()):
+        for line in html.unescape(block).splitlines():
+            if line.strip():
+                lines.append(line.strip())
+    return lines
+
+
+def test_the_walkthrough_page_quotes_assertions_it_can_be_checked_against():
+    """Guard the guard: no blocks found would make the check below vacuous."""
+    assert len(quoted_assertion_lines()) >= 10
+
+
+@pytest.mark.parametrize("quoted", quoted_assertion_lines(), ids=lambda line: line[:48])
+def test_every_assertion_shown_on_the_walkthrough_page_exists_in_the_suite(quoted):
+    """Each quoted line must appear verbatim in tests/ui/."""
+    assert quoted in ui_test_source(), (
+        f"index.html shows an assertion that is not in tests/ui/:\n    {quoted}\n"
+        "The page has drifted from the code it claims to show."
+    )
+
+
+def test_the_walkthrough_page_has_a_card_for_every_web_test():
+    """Cards and tests are the same set — no phantom cards, no quiet omissions."""
+    on_page = set(CARD_NAME.findall(walkthrough_html()))
+    in_suite = set(re.findall(r"^def (test_\w+)\(", ui_test_source(), re.MULTILINE))
+
+    assert on_page == in_suite, (
+        f"walkthrough page and web suite disagree — "
+        f"only on the page: {sorted(on_page - in_suite)}, "
+        f"only in the suite: {sorted(in_suite - on_page)}"
+    )

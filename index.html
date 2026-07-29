@@ -160,6 +160,12 @@
         The one test with no recording, and why, is listed at the bottom of the page — it is not hidden.
       </li>
       <li>
+        <b>The assertion shown under each video is the real line from <code>tests/ui/</code>.</b> They read as
+        page-object calls — <code>contact.success_message</code> rather than a CSS string — because selectors
+        live in <code>shopsmart/pages/</code> and nowhere else. A unit test fails the build if a raw selector
+        appears in a test file.
+      </li>
+      <li>
         <b>These recordings are automatic, not curated for looks.</b> A pytest fixture in
         <code>tests/conftest.py</code> hands each test a browser context configured for video and closes it
         afterwards, so a run records itself. Failing tests get recorded the same way passing ones do.
@@ -205,7 +211,7 @@
       <div class="vbody">
         <p>Logs in with valid credentials and verifies the site returns an authenticated session.</p>
         <div class="assert">expect(page).to_have_url(f"{settings.base_url}/")
-expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
+expect(login_page.logged_in_banner).to_contain_text(registered_account.name)</div>
         <p class="vnote">The account is created by the test run itself. A fixture registers a throwaway account
         before the test and deletes it afterwards, in a separate browser context so the test still has to log in
         for real. This test was previously dead — it depended on one hand-made account on a public practice site,
@@ -243,7 +249,8 @@ assert products.result_count() &gt; 0</div>
       </video>
       <div class="vbody">
         <p>Loads the Women &rsaquo; Dress category and verifies the correct category page is served.</p>
-        <div class="assert">expect(page.get_by_text("Women - Dress Products")).to_be_visible()</div>
+        <div class="assert">expect(category.heading).to_be_visible()
+assert category.current_url == category.url</div>
         <p class="vnote">Navigates straight to the category URL rather than clicking through the menu — the
         practice site injects ads over the nav, and a click path there tests the ad network, not the site.</p>
       </div>
@@ -262,7 +269,7 @@ assert products.result_count() &gt; 0</div>
       <div class="vbody">
         <p>Adds the first product to the cart, follows the confirmation modal's <b>View Cart</b> link, and
         verifies the browser lands on the cart page.</p>
-        <div class="assert">expect(page).to_have_url("https://www.automationexercise.com/view_cart")</div>
+        <div class="assert">expect(page).to_have_url(cart.url)</div>
       </div>
     </div>
 
@@ -279,9 +286,7 @@ assert products.result_count() &gt; 0</div>
       <div class="vbody">
         <p>Adds an item as a guest and attempts checkout, verifying the site blocks it and demands an account
         instead of letting an unauthenticated order through.</p>
-        <div class="assert">expect(page.get_by_text(
-    "Register / Login account to proceed on checkout."
-)).to_be_visible()</div>
+        <div class="assert">expect(cart.login_required_prompt).to_be_visible()</div>
       </div>
     </div>
 
@@ -297,7 +302,7 @@ assert products.result_count() &gt; 0</div>
       </video>
       <div class="vbody">
         <p>Fills and submits the contact form, then verifies the success banner appears.</p>
-        <div class="assert">expect(page.locator(".status.alert.alert-success")).to_be_visible()</div>
+        <div class="assert">expect(contact.success_message).to_be_visible()</div>
         <p class="vnote">The form fires a native browser confirm dialog on submit. The page object arms a dialog
         handler beforehand — <code>page.on("dialog", …accept())</code> — because an unhandled dialog blocks
         Playwright and the test would hang rather than fail cleanly.</p>
@@ -318,7 +323,7 @@ assert products.result_count() &gt; 0</div>
         <p>The same login flow under Playwright's iPhone 13 device emulation — viewport, user agent and touch
         support — verifying the mobile layout authenticates the same way the desktop one does.</p>
         <div class="assert">expect(mobile_page).to_have_url(f"{settings.base_url}/")
-expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
+expect(login_page.logged_in_banner).to_contain_text(registered_account.name)</div>
         <p class="vnote">Registers and deletes its own account, like <code>test_01_login</code>. The narrow
         viewport in the recording is the emulated device, not a resized window.</p>
       </div>
@@ -337,9 +342,7 @@ expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
       <div class="vbody">
         <p>Attempts login with an address that was never registered and verifies the site rejects it with the
         expected error rather than failing open.</p>
-        <div class="assert">expect(page.get_by_text(
-    "Your email or password is incorrect!"
-)).to_be_visible()</div>
+        <div class="assert">expect(login_page.error_message).to_be_visible()</div>
         <p class="vnote">Self-contained by design: the fake address is hardcoded in the test, not read from the
         environment. A negative-path test that needs real credentials to run is a test that stops working the
         moment the account does.</p>
@@ -359,7 +362,7 @@ expect(login_page.logged_in_banner).to_contain_text(account.name)</div>
       <div class="vbody">
         <p>Submits the login form with both fields empty and verifies the browser stays on the login page —
         field validation blocks the submit.</p>
-        <div class="assert">expect(page).to_have_url("https://www.automationexercise.com/login")</div>
+        <div class="assert">expect(page).to_have_url(f"{settings.base_url}/login")</div>
       </div>
     </div>
 

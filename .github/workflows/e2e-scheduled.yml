@@ -86,8 +86,10 @@ jobs:
   # minutes bill at roughly ten times Linux, and the app build is not
   # published, so the job could not be made to work at any price worth paying.
   #
-  # It is therefore carried by the `native` marker, which pytest.ini
-  # deselects by default and which no workflow in this repository ever
-  # selects. It is run locally and its recording is published. There is no
-  # scenario in which a CI run silently skips it and reports green as though
-  # it had passed.
+  # It is therefore carried by the `native` marker, which pytest.ini deselects
+  # by default. No workflow in this repository ever runs a native test —
+  # ci.yml passes `-m native` only to `pytest --collect-only`, to assert the
+  # test still exists so the exclusion cannot quietly become an omission.
+  #
+  # It is run locally and its recording is published. There is no scenario in
+  # which a CI run silently skips it and reports green as though it had passed.

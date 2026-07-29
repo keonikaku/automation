@@ -135,7 +135,9 @@ So it is excluded deliberately and visibly, in three places that agree with
 each other:
 
 1. `pytest.ini` deselects `-m "not native"` by default;
-2. no workflow in this repository ever passes `-m native`;
+2. no workflow in this repository ever *runs* it. `ci.yml` does pass
+   `-m native`, but only to `pytest --collect-only`, to count that the test
+   still exists. No workflow ever executes a native test;
 3. `ci.yml` asserts that exactly one native test exists and that zero are
    collected by default — so the test cannot quietly disappear and leave the
    exclusion looking like coverage.
