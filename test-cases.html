@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ShopSmart — All 54 test cases</title>
+<meta name="description" content="All 54 manually designed test cases for the ShopSmart practice exercise, with spec gaps flagged, defect traceability, and the automated subset marked." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#111826; --panel2:#161f2e; --line:#232e40; --line-soft:#1a2434;
+    --txt:#eef2f7; --muted:#8b9bb0; --muted-dim:#5c6c81;
+    --accent:#4fd1ff; --accent-2:#7c9cff; --green:#34d399; --red:#f87171; --amber:#fbbf24;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:
+      radial-gradient(1100px 520px at 10% -10%, rgba(79,209,255,.10), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(124,156,255,.07), transparent 55%),
+      var(--bg);
+    color:var(--txt);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{color:#fff;}
+  code{font-family:var(--mono);}
+  .wrap{max-width:1500px;margin:0 auto;padding:26px 22px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
+    flex-wrap:wrap;margin-bottom:22px;}
+  h1{font-size:clamp(21px,2.6vw,27px);font-weight:800;letter-spacing:-.02em;margin:0 0 8px;}
+  .sub{color:var(--muted);font-size:14.5px;max-width:820px;margin:0;}
+  .sub b{color:var(--txt);}
+  .head-links{display:flex;gap:10px;flex-wrap:wrap;}
+  .head-links a{font-size:13.5px;font-weight:600;color:var(--txt);background:var(--panel);
+    border:1px solid var(--line);padding:8px 14px;border-radius:9px;}
+  .head-links a:hover{border-color:var(--accent);background:var(--panel2);}
+  .runbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;padding:15px 20px;margin:16px 0;}
+  .stat{display:flex;flex-direction:column;gap:1px;}
+  .stat .k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.09em;color:var(--muted-dim);font-weight:700;}
+  .stat .v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--txt);}
+  .stat .v.amber{color:var(--amber);} .stat .v.ok{color:var(--green);}
+  .note-panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-bottom:16px;}
+  .note-panel.amber{border-left:2px solid var(--amber);}
+  .note-panel h2{font-size:14px;font-weight:700;margin:0 0 9px;}
+  .note-panel p{margin:0 0 9px;color:var(--muted);font-size:13.5px;max-width:900px;}
+  .note-panel p:last-child{margin-bottom:0;}
+  .note-panel b{color:var(--txt);}
+  .note-panel ul{margin:0;padding-left:19px;color:var(--muted);font-size:13.5px;}
+  .note-panel li{margin-bottom:6px;}
+  .dl-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px;}
+  .dl{font-size:12.5px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:8px;padding:7px 12px;color:var(--accent);}
+  .dl:hover{border-color:var(--accent);}
+  .dl.primary{border-color:rgba(52,211,153,.4);color:var(--green);
+    background:rgba(52,211,153,.08);}
+  .section-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:30px 0 12px;}
+  .section-head h2{font-size:16px;font-weight:700;margin:0;letter-spacing:-.01em;}
+  .section-head span{font-size:13px;color:var(--muted-dim);}
+  .tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    overflow-x:auto;}
+  table.cases{border-collapse:collapse;width:100%;font-size:13px;min-width:1100px;}
+  table.cases th{text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted-dim);
+    padding:11px 13px;border-bottom:1px solid var(--line);background:var(--panel2);}
+  table.cases td{padding:13px;border-bottom:1px solid var(--line-soft);
+    vertical-align:top;color:var(--muted);}
+  table.cases tr:last-child td{border-bottom:none;}
+  .case.is-gap{background:rgba(251,191,36,.035);}
+  .case.is-traced{background:rgba(79,209,255,.045);}
+  .case.is-gap td:first-child{box-shadow:inset 2px 0 0 var(--amber);}
+  .case.is-traced td:first-child{box-shadow:inset 2px 0 0 var(--accent);}
+  .cid{width:74px;} .cid code{font-size:11px;color:var(--muted-dim);}
+  .ctitle{width:230px;color:var(--txt);font-weight:600;}
+  .cpre{width:150px;} .csteps{width:290px;} .cexp{width:300px;}
+  .cmeta{width:96px;} .cauto{width:200px;}
+  .steps-list{margin:0;padding-left:16px;}
+  .steps-list li{margin-bottom:3px;}
+  .cexp p{margin:0 0 6px;} .cexp p:last-child{margin-bottom:0;}
+  .gaptext{color:var(--muted-dim);font-style:italic;}
+  .gapflag{margin:5px 0 !important;}
+  .pill{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
+    letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:6px;
+    margin:5px 6px 0 0;white-space:nowrap;}
+  .pill.gap{color:var(--amber);background:rgba(251,191,36,.1);
+    border:1px solid rgba(251,191,36,.32);}
+  .pill.trace{color:var(--accent);background:rgba(79,209,255,.1);
+    border:1px solid rgba(79,209,255,.32);}
+  .pill.yes{color:var(--green);background:rgba(52,211,153,.1);
+    border:1px solid rgba(52,211,153,.32);}
+  .pill.partial{color:var(--accent-2);background:rgba(124,156,255,.1);
+    border:1px solid rgba(124,156,255,.32);}
+  .pill.no{color:var(--muted-dim);background:var(--panel2);border:1px solid var(--line);}
+  .testlink{display:block;font-size:11px;margin-top:3px;}
+  .covnote{display:block;font-size:11.5px;color:var(--muted-dim);margin-top:5px;}
+  .pri{font-family:var(--mono);font-size:10.5px;font-weight:700;}
+  .p-critical{color:var(--red);} .p-high{color:var(--amber);} .p-medium{color:var(--muted);}
+  .ctype{font-size:11px;color:var(--muted-dim);}
+  footer{margin-top:38px;padding-top:20px;border-top:1px solid var(--line-soft);
+    color:var(--muted);font-size:13px;}
+  footer .note{font-size:12.5px;color:var(--muted-dim);max-width:900px;margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>ShopSmart — all 54 test cases</h1>
+      <p class="sub">
+        Every case, exactly as authored, with a derived column showing which ones the automated suite
+        covers. The summary and the featured defect trace are on the
+        <a href="index.html">project page</a>.
+      </p>
+      <p class="sub" style="margin-top:8px;">
+        <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b> — not a company, a client,
+        or a shipped product. The cases describe a fictional storefront; the automation runs against
+        <a href="https://www.automationexercise.com">automationexercise.com</a>, a public practice site.
+      </p>
+    </div>
+    <div class="head-links">
+      <a href="index.html">← Project page</a>
+      <a href="https://github.com/keonikaku/automation">View source</a>
+      <a href="https://keonikaku.github.io">Portfolio</a>
+    </div>
+  </header>
+
+  <div class="runbar">
+    <div class="stat"><span class="k">Cases designed</span><span class="v">54</span></div>
+    <div class="stat"><span class="k">Automated</span><span class="v ok">9 (6 full · 3 partial)</span></div>
+    <div class="stat"><span class="k">Spec gaps flagged</span><span class="v amber">19</span></div>
+    <div class="stat"><span class="k">Traced to SMART-201</span><span class="v">4</span></div>
+  </div>
+
+  <div class="note-panel amber">
+    <h2>19 cases say &ldquo;spec gap — awaiting PM&rdquo; instead of an expected result</h2>
+    <p>
+      That is the finished state of those cases, not an unfinished one. Where the specification did
+      not define a behaviour — what happens on an empty search, what the error is for an already
+      registered email, what the empty-cart screen says — the case <b>records that the spec is silent
+      and proposes an expectation</b>, rather than inventing an expected result and quietly turning
+      one person's guess into the standard the build gets measured against.
+    </p>
+    <p>
+      Every one of these rows still carries full steps and a proposed outcome, so it is executable
+      today and becomes final the moment a product owner answers.
+    </p>
+  </div>
+
+  <div class="note-panel">
+    <h2>What &ldquo;Automated&rdquo; means here, and what it does not</h2>
+    <p>
+      <b>9 of 54 cases have automated coverage</b> — 6 fully, 3 partially.
+      The other 45 are designed and run manually. That ratio is the point rather than a
+      shortfall: test design and test automation are different activities, and which cases get
+      automated is a risk decision. Automating all 54 against a practice site would cost more
+      than it could return.
+    </p>
+    <p>
+      The column is <b>derived, not asserted</b>. Each entry names the test that covers it, and a unit
+      test fails the build if a named test stops existing. <b>Partial</b> means an automated test
+      exercises the scenario but asserts something weaker than the case specifies — marking those
+      &ldquo;Yes&rdquo; would overclaim and &ldquo;No&rdquo; would hide real coverage.
+    </p>
+    <p>Four automated tests have no matching case in these files:</p>
+    <ul>
+        <li><code>test_06_contact_form</code> — No Contact Us case exists in these four files.</li>
+        <li><code>test_07_mobile_login</code> — No mobile-web case exists; these files cover desktop behaviour only.</li>
+        <li><code>test_09_empty_login_fields</code> — The published cases cover an empty email and an empty password separately; this test submits both empty at once.</li>
+        <li><code>test_11_ios_native</code> — Different application — the Sauce Labs demo app, not the site these cases describe.</li>
+    </ul>
+  </div>
+
+  <div class="note-panel">
+    <h2>Download</h2>
+    <p>
+      The combined file is all 54 cases in one CSV with a <code>Suite</code> column, ready to
+      import into TestRail, Xray, Zephyr, or a spreadsheet. It also carries the derived
+      <code>ID</code>, <code>Automated</code> and <code>Automated Test</code> columns.
+    </p>
+    <div class="dl-row">
+      <a class="dl primary" href="test-cases/all_test_cases_combined.csv" download><code>all_test_cases_combined.csv</code> — all 54 cases</a>
+    </div>
+    <p style="margin-top:13px;">
+      The four originals, unmodified and with their original six columns — what you download is what
+      was authored:
+    </p>
+    <div class="dl-row">
+      <a class="dl" href="test-cases/01_registration_login_FINAL.csv" download><code>01_registration_login_FINAL.csv</code></a>
+      <a class="dl" href="test-cases/02_catalog_search_FINAL.csv" download><code>02_catalog_search_FINAL.csv</code></a>
+      <a class="dl" href="test-cases/03_shopping_cart_FINAL.csv" download><code>03_shopping_cart_FINAL.csv</code></a>
+      <a class="dl" href="test-cases/04_smoke_test_suite_FINAL.csv" download><code>04_smoke_test_suite_FINAL.csv</code></a>
+    </div>
+  </div>
+
+  <div class="section-head" id="reg">
+    <h2>Registration & login</h2>
+    <span>20 cases ·
+      <a href="test-cases/01_registration_login_FINAL.csv" download><code>01_registration_login_FINAL.csv</code></a></span>
+  </div>
+
+  <div class="tablewrap">
+    <table class="cases">
+      <thead>
+        <tr>
+          <th>ID</th><th>Title</th><th>Preconditions</th><th>Steps</th>
+          <th>Expected result</th><th>Priority</th><th>Automated</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr class="case">
+        <td class="cid"><code>REG-01</code></td>
+        <td class="ctitle">Successful new user registration with all required fields</td>
+        <td class="cpre">User is not logged in. User does not have an existing account.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter a valid Name, Email, and Password in the Sign Up form.</li><li>Click Sign Up button.</li><li>Fill in all account information fields (Title, Name, Email, DOB, Address, Country, State, City, Zipcode, Mobile).</li><li>Select newsletter subscription preference.</li><li>Select special offers preference.</li><li>Click Create Account.</li></ol></td>
+        <td class="cexp"><p>Account Created! message displays. User is automatically logged in. Username appears in navigation header.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-02</code></td>
+        <td class="ctitle">Successful login with valid credentials</td>
+        <td class="cpre">User has an existing registered account. User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter valid email and password in the Login form.</li><li>Click Login button.</li></ol></td>
+        <td class="cexp"><p>User is redirected to the homepage. Username displays in the navigation header.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_01_login</code></a><span class="covnote">Asserts both clauses: redirect to the homepage and the username in the navigation header.</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-03</code></td>
+        <td class="ctitle">Successful logout from navigation header</td>
+        <td class="cpre">User is logged in.</td>
+        <td class="csteps"><p>1. Click Logout in the navigation header.</p></td>
+        <td class="cexp"><p>User is redirected to the Login page. Username no longer displays in navigation header.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-04</code></td>
+        <td class="ctitle">Login with invalid password</td>
+        <td class="cpre">User has an existing registered account. User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter valid email and incorrect password.</li><li>Click Login button.</li></ol></td>
+        <td class="cexp"><p>Error message displays: Your email or password is incorrect. User remains on Login page.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-05</code></td>
+        <td class="ctitle">Login with unregistered email address</td>
+        <td class="cpre">User is not logged in. Email address does not exist in the system.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter an email address that has not been registered.</li><li>Enter any password.</li><li>Click Login button.</li></ol></td>
+        <td class="cexp"><p>Error message displays: Your email or password is incorrect. User remains on Login page.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_08_invalid_login</code></a><span class="covnote">Asserts the incorrect-credentials error. Does not separately assert that the browser stayed on the login page.</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-06</code></td>
+        <td class="ctitle">Login with empty email field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Leave email field empty.</li><li>Enter any password.</li><li>Click Login button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define error message or behavior for empty email on login. Expected: form validation prevents submission and indicates required field.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-07</code></td>
+        <td class="ctitle">Login with empty password field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter a valid registered email.</li><li>Leave password field empty.</li><li>Click Login button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define error message or behavior for empty password on login. Expected: form validation prevents submission and indicates required field.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-08</code></td>
+        <td class="ctitle">Registration with missing required Name field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in. User does not have an existing account.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Leave Name field empty.</li><li>Enter valid Email and Password.</li><li>Click Sign Up button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Name on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-09</code></td>
+        <td class="ctitle">Registration with missing required Email field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter valid Name.</li><li>Leave Email field empty.</li><li>Enter Password.</li><li>Click Sign Up button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Email on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-10</code></td>
+        <td class="ctitle">Registration with already registered email address<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in. Email address is already registered in the system.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter a Name and an email address that already exists in the system.</li><li>Enter a Password.</li><li>Click Sign Up button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the error message for duplicate email registration. Expected: error message indicates email is already registered.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-11</code></td>
+        <td class="ctitle">Registration — verify username displays in nav after account creation</td>
+        <td class="cpre">User is not logged in. User does not have an existing account.</td>
+        <td class="csteps"><ol class="steps-list"><li>Complete full registration flow with valid data.</li><li>Click Create Account.</li><li>Observe navigation header after Account Created message.</li></ol></td>
+        <td class="cexp"><p>Username entered during registration displays in the navigation header confirming automatic login.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-12</code></td>
+        <td class="ctitle">Registration with missing account information fields on step 2<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User has completed Sign Up form and reached account information page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Leave required account information fields empty (Address, City, State, Zipcode, Mobile, Country).</li><li>Click Create Account.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define which fields on account information page are required vs optional. Expected: form prevents submission and flags required fields.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-13</code></td>
+        <td class="ctitle">Login with correct email — wrong case sensitivity<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User has a registered account with a lowercase email address.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter the registered email in all uppercase.</li><li>Enter correct password.</li><li>Click Login.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define whether email login is case sensitive. Expected: login succeeds as email fields are typically case insensitive.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-14</code></td>
+        <td class="ctitle">Verify Login and Sign Up forms are both present on the same page</td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Observe page layout.</li></ol></td>
+        <td class="cexp"><p>Two separate forms are visible on the same page — Login form on one side and Sign Up form on the other.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-15</code></td>
+        <td class="ctitle">Registration — newsletter and special offers preferences are selectable</td>
+        <td class="cpre">User is on the account information page during registration.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate newsletter subscription option.</li><li>Select a preference.</li><li>Locate special offers option.</li><li>Select a preference.</li></ol></td>
+        <td class="cexp"><p>Both preferences can be selected independently. Selection is reflected before clicking Create Account.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-16</code></td>
+        <td class="ctitle">Verify logged-in user cannot see Login/Register page content<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is logged in.</td>
+        <td class="csteps"><p>1. Attempt to navigate directly to the Login/Register page URL while logged in.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior when a logged-in user navigates to the login page. Expected: user is redirected to homepage or login form is hidden.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-17</code></td>
+        <td class="ctitle">Registration with invalid email format<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter a valid Name.</li><li>Enter an invalid email format (e.g. notanemail or user@ or @domain.com).</li><li>Enter a Password.</li><li>Click Sign Up.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define email format validation behavior. Expected: form prevents submission and indicates invalid email format.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-18</code></td>
+        <td class="ctitle">Registration — Title field accepts Mr and Mrs options only</td>
+        <td class="cpre">User is on account information page during registration.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on the Title field.</li><li>Observe available options.</li></ol></td>
+        <td class="cexp"><p>Title field displays exactly two options: Mr and Mrs. No other values are selectable.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>REG-19</code></td>
+        <td class="ctitle">Logout and verify session is cleared — cannot access account without logging in again<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click Logout in navigation header.</li><li>Attempt to navigate to account or order history page directly via URL.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior for accessing protected pages after logout. Expected: user is redirected to Login page and cannot access account content without re-authenticating.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>REG-20</code></td>
+        <td class="ctitle">Login with valid credentials — verify redirect to homepage</td>
+        <td class="cpre">User has a registered account. User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter valid email and password.</li><li>Click Login button.</li><li>Observe URL and page content after login.</li></ol></td>
+        <td class="cexp"><p>User is redirected to the ShopSmart homepage. Username is visible in the navigation header.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_01_login</code></a><span class="covnote">Same scenario as the first login case; one test covers both.</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head" id="cat">
+    <h2>Catalog & search</h2>
+    <span>18 cases ·
+      <a href="test-cases/02_catalog_search_FINAL.csv" download><code>02_catalog_search_FINAL.csv</code></a></span>
+  </div>
+
+  <div class="tablewrap">
+    <table class="cases">
+      <thead>
+        <tr>
+          <th>ID</th><th>Title</th><th>Preconditions</th><th>Steps</th>
+          <th>Expected result</th><th>Priority</th><th>Automated</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr class="case">
+        <td class="cid"><code>CAT-01</code></td>
+        <td class="ctitle">Verify featured products display on homepage</td>
+        <td class="cpre">User is on the ShopSmart homepage. User may be logged in or logged out.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the ShopSmart homepage.</li><li>Observe the product section on the page.</li></ol></td>
+        <td class="cexp"><p>Featured products display with image, name, and price for each product.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-02</code></td>
+        <td class="ctitle">Verify all products display on the All Products page</td>
+        <td class="cpre">User is on the ShopSmart homepage.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the All Products page.</li><li>Observe the product listing.</li></ol></td>
+        <td class="cexp"><p>Full product catalog displays. Each product shows image, name, and price.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-03</code></td>
+        <td class="ctitle">Filter products by Women category</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the category sidebar on the left.</li><li>Click on the Women category.</li></ol></td>
+        <td class="cexp"><p>Product listing updates to show only Women&#x27;s products. Non-Women products are no longer visible.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill partial">Partial</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_03_filter_by_category</code></a><span class="covnote">Asserts the correct category page is served. Does not assert that non-Women products are absent, which is what the case specifies.</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-04</code></td>
+        <td class="ctitle">Filter products by subcategory within Women category</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on the Women category in the left sidebar.</li><li>Click on a subcategory under Women (e.g. Dress, Tops, Saree).</li></ol></td>
+        <td class="cexp"><p>Product listing updates to show only products matching the selected subcategory. Products from other subcategories are not shown.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-05</code></td>
+        <td class="ctitle">Filter products by Men category</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the category sidebar on the left.</li><li>Click on the Men category.</li></ol></td>
+        <td class="cexp"><p>Product listing updates to show only Men&#x27;s products.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-06</code></td>
+        <td class="ctitle">Filter products by Kids category</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the category sidebar on the left.</li><li>Click on the Kids category.</li></ol></td>
+        <td class="cexp"><p>Product listing updates to show only Kids products.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-07</code></td>
+        <td class="ctitle">Filter products by brand</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the brand filter in the left sidebar.</li><li>Click on any brand name.</li></ol></td>
+        <td class="cexp"><p>Product listing updates to show only products matching the selected brand.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-08</code></td>
+        <td class="ctitle">View product detail page from product listing</td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on any product from the listing.</li><li>Observe the product detail page.</li></ol></td>
+        <td class="cexp"><p>Product detail page displays: image, name, category, price, availability, condition, and brand.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-09</code></td>
+        <td class="ctitle">Update quantity on product detail page before adding to cart</td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the quantity field on the product detail page.</li><li>Change the quantity to</li><li></li><li>Observe the quantity field.</li></ol></td>
+        <td class="cexp"><p>Quantity field updates to reflect the value entered. Add to Cart button is available.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CAT-10</code></td>
+        <td class="ctitle">Submit a product review with all required fields<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Enter a valid Name.</li><li>Enter a valid Email.</li><li>Enter review text.</li><li>Click Submit.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the success message or behavior after review submission. Expected: confirmation message displays indicating review was submitted successfully.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CAT-11</code></td>
+        <td class="ctitle">Submit product review with missing Name field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Leave Name field empty.</li><li>Enter valid Email and review text.</li><li>Click Submit.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Name in review form. Expected: form prevents submission and flags Name as required.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CAT-12</code></td>
+        <td class="ctitle">Submit product review with invalid email format<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Enter a valid Name.</li><li>Enter an invalid email format (e.g. notanemail).</li><li>Enter review text.</li><li>Click Submit.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define email validation behavior on review form. Expected: form prevents submission and indicates invalid email format.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CAT-13</code></td>
+        <td class="ctitle">Search for a product that exists — verify results match search term across full catalog</td>
+        <td class="cpre">User is on the All Products page. No category filter is active.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Ensure no category is selected in the left sidebar.</li><li>Enter a valid product name or keyword.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
+        <td class="cexp"><p>Search results page displays all products across all categories that match the search term. Each result shows product image, name, and price.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill partial">Partial</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_02_search</code></a><span class="covnote">Asserts that results came back at all. Does not assert that each result matches the search term.</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CAT-14</code></td>
+        <td class="ctitle">Search for a product that does not exist<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Enter a search term that does not match any product (e.g. zzzznotaproduct).</li><li>Click the Search button.</li></ol></td>
+        <td class="cexp"><p>Empty results page displays.</p><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the empty state message. Expected: a message indicates no products were found matching the search term.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_10_search_no_results</code></a><span class="covnote">Asserts the results grid is empty. The spec gap this case flags is about the empty-state message, which is not asserted because it is not yet defined.</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CAT-15</code></td>
+        <td class="ctitle">Search with empty search field<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Leave the search field empty.</li><li>Click the Search button.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior for submitting an empty search. Expected: either all products display or a validation message prompts the user to enter a search term.</p></td>
+        <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-traced">
+        <td class="cid"><code>CAT-16</code></td>
+        <td class="ctitle">Search within an active category filter returns only results from that category (SMART-201)<span class="pill trace">SMART-201</span></td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on Women category in the left sidebar.</li><li>Click on the Dress subcategory.</li><li>Verify product listing shows only Women&#x27;s Dresses.</li><li>Enter a search term in the search bar (e.g. blue).</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
+        <td class="cexp"><p>Search results display only products matching the search term within the Women &gt; Dress category. Products from Men, Kids, or other Women subcategories are not included in results.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-traced">
+        <td class="cid"><code>CAT-17</code></td>
+        <td class="ctitle">Clearing category filter after search returns results from all categories (SMART-201)<span class="pill trace">SMART-201</span></td>
+        <td class="cpre">User is on the All Products page. A category filter is active.</td>
+        <td class="csteps"><ol class="steps-list"><li>Select Women &gt; Dress from the left sidebar.</li><li>Enter a search term in the search bar.</li><li>Click Search.</li><li>Verify results are scoped to Women &gt; Dress.</li><li>Clear the category filter by clicking on another category or deselecting.</li><li>Search again using the same search term.</li><li>Observe the results.</li></ol></td>
+        <td class="cexp"><p>After clearing the category filter, search results return matching products from all categories — not scoped to the previously selected category.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-traced">
+        <td class="cid"><code>CAT-18</code></td>
+        <td class="ctitle">Search within Men category returns only Men&#x27;s products matching search term (SMART-201)<span class="pill trace">SMART-201</span></td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on the Men category in the left sidebar.</li><li>Enter a search term in the search bar.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
+        <td class="cexp"><p>Search results display only products matching the search term within the Men category. Women&#x27;s and Kids&#x27; products are not included in the results.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head" id="cart">
+    <h2>Shopping cart</h2>
+    <span>15 cases ·
+      <a href="test-cases/03_shopping_cart_FINAL.csv" download><code>03_shopping_cart_FINAL.csv</code></a></span>
+  </div>
+
+  <div class="tablewrap">
+    <table class="cases">
+      <thead>
+        <tr>
+          <th>ID</th><th>Title</th><th>Preconditions</th><th>Steps</th>
+          <th>Expected result</th><th>Priority</th><th>Automated</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr class="case">
+        <td class="cid"><code>CART-01</code></td>
+        <td class="ctitle">Add product to cart from product listing page</td>
+        <td class="cpre">User is on the All Products page. At least one product is available.</td>
+        <td class="csteps"><ol class="steps-list"><li>Hover over any product on the listing page.</li><li>Click the Add to Cart button that appears.</li><li>Observe the confirmation modal.</li></ol></td>
+        <td class="cexp"><p>Confirmation modal displays with two options: Continue Shopping and View Cart.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill partial">Partial</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_04_add_to_cart</code></a><span class="covnote">Exercises the confirmation modal but asserts the cart page it leads to, not that the modal offered both options.</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-02</code></td>
+        <td class="ctitle">Add product to cart from product detail page</td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click the Add to Cart button on the product detail page.</li><li>Observe the confirmation modal.</li></ol></td>
+        <td class="cexp"><p>Confirmation modal displays with two options: Continue Shopping and View Cart.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-03</code></td>
+        <td class="ctitle">Continue Shopping from confirmation modal returns user to previous page</td>
+        <td class="cpre">User has added a product to cart from the product listing page and the confirmation modal is displayed.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click Continue Shopping in the confirmation modal.</li><li>Observe the page the user lands on.</li></ol></td>
+        <td class="cexp"><p>User is returned to the exact product listing page they were on before adding to cart — not the homepage.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-04</code></td>
+        <td class="ctitle">View Cart from confirmation modal navigates to cart page</td>
+        <td class="cpre">User has added a product to cart and the confirmation modal is displayed.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click View Cart in the confirmation modal.</li><li>Observe the page the user lands on.</li></ol></td>
+        <td class="cexp"><p>User is taken to the Shopping Cart page. The added product is visible in the cart.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_04_add_to_cart</code></a><span class="covnote">Asserts the browser lands on the cart page.</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-05</code></td>
+        <td class="ctitle">Cart displays correct item details for each product</td>
+        <td class="cpre">User has at least one item in the cart.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Shopping Cart page.</li><li>Observe each item in the cart.</li></ol></td>
+        <td class="cexp"><p>Each cart item displays: image, name, price, quantity, and total for that item.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-06</code></td>
+        <td class="ctitle">Update product quantity directly on cart page</td>
+        <td class="cpre">User has at least one item in the cart. User is on the Shopping Cart page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Locate the quantity field for any item in the cart.</li><li>Change the quantity to a new valid value.</li><li>Observe the item total and cart subtotal.</li></ol></td>
+        <td class="cexp"><p>Item total updates immediately to reflect the new quantity. Cart subtotal updates immediately.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-07</code></td>
+        <td class="ctitle">Remove individual item from cart using X button</td>
+        <td class="cpre">User has at least two items in the cart. User is on the Shopping Cart page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click the X button next to any item in the cart.</li><li>Observe the cart contents.</li></ol></td>
+        <td class="cexp"><p>The selected item is removed from the cart. Remaining items are still displayed. Cart subtotal updates to reflect the removal.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CART-08</code></td>
+        <td class="ctitle">Empty cart state displays message and continue shopping button<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on the Shopping Cart page with no items in the cart.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the Shopping Cart page with an empty cart.</li><li>Observe the page content.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the exact empty cart message text. Expected: a message indicates the cart is empty and a Continue Shopping button is visible.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-09</code></td>
+        <td class="ctitle">Cart persists across pages during the same browser session</td>
+        <td class="cpre">User has added at least one item to the cart.</td>
+        <td class="csteps"><ol class="steps-list"><li>Add a product to the cart.</li><li>Navigate to several other pages (homepage, products page, contact page).</li><li>Return to the cart page.</li></ol></td>
+        <td class="cexp"><p>All previously added items are still present in the cart with correct quantities and totals.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-10</code></td>
+        <td class="ctitle">Cart icon in navigation header is accessible from all pages</td>
+        <td class="cpre">User has at least one item in the cart.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the homepage.</li><li>Observe the navigation header.</li><li>Navigate to the Products page.</li><li>Observe the navigation header.</li><li>Navigate to the Contact page.</li><li>Observe the navigation header.</li></ol></td>
+        <td class="cexp"><p>Cart icon is visible in the navigation header on every page. Cart icon reflects the current item count.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CART-11</code></td>
+        <td class="ctitle">Attempt to add more than 100 units of a single product to cart<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is on a product detail page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Enter 101 in the quantity field on the product detail page.</li><li>Click Add to Cart.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the error message or behavior when quantity exceeds 100. Expected: system prevents adding more than 100 units and displays an appropriate message.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CART-12</code></td>
+        <td class="ctitle">Out of stock product added to cart displays warning when stock status changes<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User has a product in their cart. The product&#x27;s stock status changes to out of stock after being added.</td>
+        <td class="csteps"><ol class="steps-list"><li>Add a product to the cart.</li><li>Simulate the product going out of stock (or verify with a known out of stock product).</li><li>Navigate to the cart page.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the exact warning message text or visual treatment for out of stock items in cart. Expected: out of stock item is flagged with a visible warning indicator.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-13</code></td>
+        <td class="ctitle">Integration — Guest user attempting to add to cart is not blocked but checkout requires login</td>
+        <td class="cpre">User is not logged in.</td>
+        <td class="csteps"><ol class="steps-list"><li>Navigate to the All Products page.</li><li>Add a product to the cart.</li><li>Proceed to checkout from the cart page.</li></ol></td>
+        <td class="cexp"><p>Guest user can add items to cart without logging in. When attempting to proceed to checkout, user is redirected to the Login page.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_05_checkout_requires_login</code></a><span class="covnote">Adds as a guest and asserts the register/login gate on checkout. The site presents a modal rather than the redirect the case describes; the test asserts the behaviour the site actually has.</span></td>
+      </tr>
+      <tr class="case">
+        <td class="cid"><code>CART-14</code></td>
+        <td class="ctitle">Integration — Cart item count in navigation updates correctly after adding products from catalog</td>
+        <td class="cpre">User is on the All Products page. Cart is empty.</td>
+        <td class="csteps"><ol class="steps-list"><li>Add one product to the cart from the listing page.</li><li>Observe the cart icon count in the navigation header.</li><li>Add a second product.</li><li>Observe the cart icon count again.</li></ol></td>
+        <td class="cexp"><p>Cart icon count increments correctly after each product is added. Count reflects the total number of items in the cart.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      <tr class="case is-gap">
+        <td class="cid"><code>CART-15</code></td>
+        <td class="ctitle">Integration — Logged in user cart persists after navigating away and returning<span class="pill gap">Spec gap</span></td>
+        <td class="cpre">User is logged in. User has items in the cart.</td>
+        <td class="csteps"><ol class="steps-list"><li>Add two products to the cart.</li><li>Log out of the account.</li><li>Log back in with the same credentials.</li><li>Navigate to the cart page.</li></ol></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec states cart persists for the duration of the browser session but does not define behavior after logout and re-login. Expected: cart contents are either retained or cleared — behavior needs to be defined by PM.</p></td>
+        <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head" id="smoke">
+    <h2>Smoke suite</h2>
+    <span>1 case ·
+      <a href="test-cases/04_smoke_test_suite_FINAL.csv" download><code>04_smoke_test_suite_FINAL.csv</code></a></span>
+  </div>
+
+  <div class="tablewrap">
+    <table class="cases">
+      <thead>
+        <tr>
+          <th>ID</th><th>Title</th><th>Preconditions</th><th>Steps</th>
+          <th>Expected result</th><th>Priority</th><th>Automated</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr class="case is-traced">
+        <td class="cid"><code>SMOKE-01</code></td>
+        <td class="ctitle">Smoke — Search respects active category filter (SMART-201)<span class="pill trace">SMART-201</span></td>
+        <td class="cpre">User is on the All Products page.</td>
+        <td class="csteps"><ol class="steps-list"><li>Click on Women category in the left sidebar.</li><li>Enter any valid search term in the search bar.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
+        <td class="cexp"><p>Search results contain only Women&#x27;s products matching the search term. Products from other categories are not displayed.</p></td>
+        <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Smoke</span></td>
+        <td class="cauto"><span class="pill no">No</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <footer>
+    <strong style="color:var(--txt)">Keoni Kakugawa</strong> · QA &amp; Release Management Leader ·
+    <a href="https://github.com/keonikaku/automation">github.com/keonikaku/automation</a> ·
+    <a href="https://keonikaku.github.io">Portfolio</a>
+    <p class="note">
+      This page and the combined CSV are generated from the four original files by
+      <a href="https://github.com/keonikaku/automation/blob/main/build_test_cases_page.py"><code>build_test_cases_page.py</code></a>, so they cannot drift from them; a unit test re-renders both and
+      fails the build if what is committed disagrees with the data. The automated-coverage mapping is
+      in <a href="https://github.com/keonikaku/automation/blob/main/shopsmart/testcases.py"><code>shopsmart/testcases.py</code></a>.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

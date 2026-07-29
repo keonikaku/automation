@@ -16,6 +16,9 @@ select = [
 ]
 
 [lint.per-file-ignores]
+# Holds an HTML template. Wrapping markup to satisfy a source line-length rule
+# makes the generated page harder to read, not the generator.
+"build_test_cases_page.py" = ["E501"]
 # Page objects deliberately import each other lazily inside methods to avoid
 # an import cycle between a listing page and the page it navigates to.
 "shopsmart/pages/*.py" = ["PLC0415"]

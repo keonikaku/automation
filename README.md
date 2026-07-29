@@ -95,6 +95,11 @@ automation/
 ├── pytest.ini                  # markers, default deselection, strict config
 ├── requirements.txt            # runtime deps, pinned
 ├── requirements-dev.txt        # + lint and retry plugin, pinned
+├── build_test_cases_page.py    # regenerates test-cases.html + the combined CSV
+├── test-cases/                 # the published manual test cases
+│   ├── *_FINAL.csv                 # the four originals, unmodified
+│   └── all_test_cases_combined.csv # generated: all 54 with a Suite column
+├── test-cases.html             # generated: all 54 cases, rendered
 ├── demo/                       # recording runners — NOT tests, never collected
 │   ├── record_web_walkthrough.py   # the whole web flow in one browser session
 │   └── record_ios_walkthrough.py   # simctl capture while Appium drives the app
@@ -124,6 +129,19 @@ The one deliberate exception is `test_08_invalid_login`, which hardcodes a fake
 unregistered address. Authenticating badly is the entire point of that test, so
 it must not depend on an account existing — or on the environment deciding which
 scenario it runs.
+
+**The manual test cases are published too.** `test-cases/` holds 54 functional
+test cases written before and alongside the automation, in their original CSV
+form and unmodified. 19 of them carry `PENDING PM CLARIFICATION` instead of an
+expected result — where the spec was silent, the case says so and proposes an
+expectation rather than inventing one. One defect, SMART-201, is traced through
+three catalog cases and is the whole smoke suite.
+
+`Automated` is a **derived** column: it exists only in the generated outputs and
+maps each case to the test in `tests/ui/` that covers it — 6 fully, 3 partially,
+45 not automated. Unit tests fail the build if a named test stops existing, if a
+mapped case title is not in the CSVs, or if the generated page and the data
+disagree. Regenerate with `python build_test_cases_page.py`.
 
 **Recording is a separate program from testing.** Each test in `tests/ui/` gets
 a fresh browser context, because isolation is what makes a test mean anything.

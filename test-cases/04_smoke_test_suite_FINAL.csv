@@ -1,0 +1,2 @@
+Title,Preconditions,Steps,Expected Result,Priority,Type
+"Smoke — Search respects active category filter (SMART-201)","User is on the All Products page.","1. Click on Women category in the left sidebar. 2. Enter any valid search term in the search bar. 3. Click the Search button. 4. Observe the search results.","Search results contain only Women's products matching the search term. Products from other categories are not displayed.","Critical","Smoke"
