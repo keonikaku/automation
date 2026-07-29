@@ -10,6 +10,7 @@ to avoid.
 from __future__ import annotations
 
 import csv
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -156,3 +157,83 @@ def test_the_headline_numbers_are_all_derived():
     assert total["traced"] == sum(is_traced(row) for _, _, row in cases)
     assert total["automated"] == total["yes"] + total["partial"] == len(COVERAGE)
     assert total["gaps"] > 0 and total["traced"] > 0
+
+
+# ── the originals are the one claim with no derivation behind it ──────
+#
+# Everything else on the published page is *derived* from these four files, so
+# a stale number fails a test. The claim "committed unmodified" is different in
+# kind: it is a claim about the files themselves, and nothing downstream
+# notices if one of them changes — the page and the combined CSV would simply
+# regenerate around the edit and every other guard would still pass.
+#
+# So it gets a checksum. These digests are the files as Keoni authored them.
+# A failure here means either an original was edited (fix the file, not the
+# digest) or the originals were deliberately republished (say so in the commit,
+# then update the digest).
+ORIGINAL_DIGESTS = {
+    "01_registration_login_FINAL.csv": (
+        "cf11ee432a4a77b3af4c9a6b06022a50ba8dfeab9939e948418ea145a810ea17"
+    ),
+    "02_catalog_search_FINAL.csv": (
+        "8528e2549ca6532ea17fd0141c65dfa2c32f1f320d6228a0122c97b5515a066b"
+    ),
+    "03_shopping_cart_FINAL.csv": (
+        "411db5ca296dcbf533eafdecfec7798276ef8ef871f47615001342157b2e53ea"
+    ),
+    "04_smoke_test_suite_FINAL.csv": (
+        "b31c8369a25b675c426e978d0690f06d9da5f56db2f3005d4d85464bd3a1ad61"
+    ),
+}
+
+
+def test_the_digest_list_covers_every_published_original():
+    """A new original must not slip in unguarded."""
+    assert sorted(ORIGINAL_DIGESTS) == sorted(
+        f for f in CSV_FILES if f != COMBINED_FILENAME
+    )
+
+
+@pytest.mark.parametrize("filename", sorted(ORIGINAL_DIGESTS))
+def test_every_original_csv_is_byte_for_byte_unmodified(filename):
+    digest = hashlib.sha256((TEST_CASES_DIR / filename).read_bytes()).hexdigest()
+    assert digest == ORIGINAL_DIGESTS[filename], (
+        f"{filename} has changed. The README and the published page both say "
+        "these files are committed unmodified, so either restore the file or "
+        "change the claim — do not just update the digest."
+    )
+
+
+# ── the README states the same numbers in prose ───────────────────────
+#
+# The generated surfaces cannot go stale; the README can, and hand-written
+# prose next to generated output is exactly where a number drifts first.
+NUMBER_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five"}
+
+
+def readme_prose() -> str:
+    """The README with line wrapping normalised away."""
+    return " ".join((REPO_ROOT / "README.md").read_text(encoding="utf-8").split())
+
+
+def test_the_readme_numbers_match_the_derived_counts():
+    total = counts()
+    prose = readme_prose()
+    not_automated = total["cases"] - total["automated"]
+    catalog_traced = sum(
+        1
+        for filename, _, row in all_cases()
+        if is_traced(row) and filename.startswith("02_")
+    )
+    expected = [
+        f"holds {total['cases']} functional test cases",
+        f"{total['gaps']} of them carry `PENDING PM CLARIFICATION`",
+        f"traced through {NUMBER_WORDS[catalog_traced]} catalog cases",
+        f"{total['yes']} fully, {total['partial']} partially, "
+        f"{not_automated} not automated",
+    ]
+    for sentence in expected:
+        assert sentence in prose, (
+            f"README.md no longer says {sentence!r}. The derived counts are "
+            f"{total} — update the README, not this test."
+        )

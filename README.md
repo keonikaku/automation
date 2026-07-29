@@ -138,10 +138,11 @@ expectation rather than inventing one. One defect, SMART-201, is traced through
 three catalog cases and is the whole smoke suite.
 
 `Automated` is a **derived** column: it exists only in the generated outputs and
-maps each case to the test in `tests/ui/` that covers it — 6 fully, 3 partially,
+maps each case to the test in `tests/ui/` that covers it — 5 fully, 4 partially,
 45 not automated. Unit tests fail the build if a named test stops existing, if a
-mapped case title is not in the CSVs, or if the generated page and the data
-disagree. Regenerate with `python build_test_cases_page.py`.
+mapped case title is not in the CSVs, if the generated page and the data
+disagree, if an original CSV changes, or if the numbers in this paragraph drift
+from the derived counts. Regenerate with `python build_test_cases_page.py`.
 
 **Recording is a separate program from testing.** Each test in `tests/ui/` gets
 a fresh browser context, because isolation is what makes a test mean anything.

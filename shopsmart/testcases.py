@@ -174,8 +174,11 @@ COVERAGE: list[Coverage] = [
         csv="03_shopping_cart_FINAL.csv",
         case="View Cart from confirmation modal navigates to cart page",
         test="test_04_add_to_cart",
-        state=YES,
-        note="Asserts the browser lands on the cart page.",
+        state=PARTIAL,
+        note="Asserts the browser lands on the cart page. Does not assert that "
+        "the added product is visible there, which is the case's second clause "
+        "and the half that would catch a cart which navigates but drops the "
+        "item.",
     ),
     Coverage(
         csv="03_shopping_cart_FINAL.csv",

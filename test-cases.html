@@ -133,7 +133,7 @@
 
   <div class="runbar">
     <div class="stat"><span class="k">Cases designed</span><span class="v">54</span></div>
-    <div class="stat"><span class="k">Automated</span><span class="v ok">9 (6 full · 3 partial)</span></div>
+    <div class="stat"><span class="k">Automated</span><span class="v ok">9 (5 full · 4 partial)</span></div>
     <div class="stat"><span class="k">Spec gaps flagged</span><span class="v amber">19</span></div>
     <div class="stat"><span class="k">Traced to SMART-201</span><span class="v">4</span></div>
   </div>
@@ -156,7 +156,7 @@
   <div class="note-panel">
     <h2>What &ldquo;Automated&rdquo; means here, and what it does not</h2>
     <p>
-      <b>9 of 54 cases have automated coverage</b> — 6 fully, 3 partially.
+      <b>9 of 54 cases have automated coverage</b> — 5 fully, 4 partially.
       The other 45 are designed and run manually. That ratio is the point rather than a
       shortfall: test design and test automation are different activities, and which cases get
       automated is a risk decision. Automating all 54 against a practice site would cost more
@@ -628,7 +628,7 @@
         <td class="csteps"><ol class="steps-list"><li>Click View Cart in the confirmation modal.</li><li>Observe the page the user lands on.</li></ol></td>
         <td class="cexp"><p>User is taken to the Shopping Cart page. The added product is visible in the cart.</p></td>
         <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
-        <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_04_add_to_cart</code></a><span class="covnote">Asserts the browser lands on the cart page.</span></td>
+        <td class="cauto"><span class="pill partial">Partial</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_04_add_to_cart</code></a><span class="covnote">Asserts the browser lands on the cart page. Does not assert that the added product is visible there, which is the case&#x27;s second clause and the half that would catch a cart which navigates but drops the item.</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>CART-05</code></td>
