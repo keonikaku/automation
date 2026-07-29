@@ -1,4 +1,4 @@
-"""iOS Simulator discovery for the native Appium test.
+"""iOS Simulator discovery and screen capture for the native Appium test.
 
 The native test used to carry a hardcoded UDID, which meant it only ran on the
 one Mac that UDID belonged to. Simulator UDIDs are generated per machine, so a
@@ -20,9 +20,12 @@ unit-tested without a Mac, which is what lets them run in CI.
 
 from __future__ import annotations
 
+import contextlib
 import json
+import signal
 import subprocess
 from collections.abc import Mapping, Sequence
+from pathlib import Path
 from typing import Any
 
 
@@ -118,3 +121,81 @@ def resolve_device(
     if explicit_udid:
         return {"udid": explicit_udid, "name": preferred_name or "", "state": "unknown"}
     return select_device(list_devices_json(runner=runner), preferred_name)
+
+
+# ── screen capture ────────────────────────────────────────────────────
+# Recording goes through `xcrun simctl io … recordVideo`, not Appium's
+# start_recording_screen(). Appium's version shells out to ffmpeg, and when
+# ffmpeg is absent it raises during setup — which took the native test from
+# "passing" to "cannot run at all" on a machine that had everything else it
+# needed, with nothing in the repository declaring the dependency. simctl ships
+# with Xcode, which this test already requires, and writes H.264 that plays in
+# a browser without transcoding.
+
+
+class ScreenRecordingFailed(RuntimeError):
+    """The simulator screen could not be captured."""
+
+
+def start_screen_recording(udid: str, destination: Path) -> subprocess.Popen:
+    """Begin capturing a simulator's screen to ``destination``."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        return subprocess.Popen(
+            [
+                "xcrun",
+                "simctl",
+                "io",
+                udid,
+                "recordVideo",
+                "--codec",
+                "h264",
+                "--force",
+                str(destination),
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except FileNotFoundError as exc:  # pragma: no cover - needs a non-Mac host
+        raise ScreenRecordingFailed("xcrun is not available") from exc
+
+
+def stop_screen_recording(recorder: subprocess.Popen) -> None:
+    """Stop capture cleanly.
+
+    SIGINT lets simctl finalise the container; SIGKILL leaves a file with no
+    moov atom, which no player will open.
+    """
+    recorder.send_signal(signal.SIGINT)
+    try:
+        recorder.wait(timeout=30)
+    except subprocess.TimeoutExpired:  # pragma: no cover - needs a wedged simctl
+        recorder.kill()
+        raise ScreenRecordingFailed("simctl did not exit cleanly") from None
+
+
+@contextlib.contextmanager
+def screen_recording(udid: str, destination: Path, required: bool = False):
+    """Record the simulator screen for the duration of the block.
+
+    ``required=False`` by default: a capture problem must not fail a test whose
+    subject is navigation. The failure is printed, never swallowed silently.
+    """
+    try:
+        recorder = start_screen_recording(udid, destination)
+    except ScreenRecordingFailed:
+        if required:
+            raise
+        print("WARNING: could not start screen recording; continuing without it")
+        yield None
+        return
+
+    try:
+        yield destination
+    finally:
+        try:
+            stop_screen_recording(recorder)
+        except ScreenRecordingFailed as exc:
+            if required:
+                raise
+            print(f"WARNING: {exc}")

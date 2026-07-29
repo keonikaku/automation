@@ -43,7 +43,7 @@ PAGE_CLASSES = [
 #: rather than an rglob of the repository root: a developer who creates a
 #: virtualenv inside the clone would otherwise have these guards scanning
 #: site-packages, and third-party code would fail rules it never agreed to.
-PROJECT_DIRECTORIES = ("shopsmart", "tests")
+PROJECT_DIRECTORIES = ("shopsmart", "tests", "demo")
 
 
 def python_sources() -> list[Path]:
@@ -59,7 +59,12 @@ def test_the_source_scan_finds_this_project_and_nothing_else():
     relative = {str(path.relative_to(REPO_ROOT)) for path in python_sources()}
 
     # It must reach the three layers the rules below are about.
-    for expected in ("conftest.py", "shopsmart/config.py", "tests/ui/test_auth.py"):
+    for expected in (
+        "conftest.py",
+        "shopsmart/config.py",
+        "tests/ui/test_auth.py",
+        "demo/record_web_walkthrough.py",
+    ):
         assert expected in relative, f"source scan missed {expected}"
 
     # And it must not reach anything vendored or installed.
@@ -119,10 +124,14 @@ def test_no_module_calls_a_test_function_at_import_time(source: Path):
 # ── defect 3: credentials in source ───────────────────────────────────
 CREDENTIAL_NAME = re.compile(r"(PASSWORD|SECRET|TOKEN|API_?KEY)", re.IGNORECASE)
 
-#: The one deliberate exception. ``test_08`` asserts that an unknown user with
-#: a wrong password is rejected; that scenario is only reproducible with a
-#: literal, and the literal is meaningless outside the test.
-ALLOWED_CREDENTIAL_LITERALS = {("tests/ui/test_auth.py", "WRONG_PASSWORD")}
+#: The deliberate exceptions, both the same one. ``test_08`` asserts that an
+#: unknown user with a wrong password is rejected, and the walkthrough recorder
+#: replays that step for the camera. The scenario is only reproducible with a
+#: literal, and the literal is meaningless outside it.
+ALLOWED_CREDENTIAL_LITERALS = {
+    ("tests/ui/test_auth.py", "WRONG_PASSWORD"),
+    ("demo/record_web_walkthrough.py", "WRONG_PASSWORD"),
+}
 
 #: Page objects name their locators after the field they drive, so
 #: ``PASSWORD = "[data-qa='password']"`` is a selector, not a secret.
@@ -239,6 +248,7 @@ def test_markers_are_declared_and_native_is_deselected_by_default():
 
 ASSERT_BLOCK = re.compile(r'<div class="assert">(.*?)</div>', re.DOTALL)
 CARD_NAME = re.compile(r'<span class="vname">(test_\w+)</span>')
+GAP_NAME = re.compile(r"<h3>(test_\w+)</h3>")
 
 
 def walkthrough_html() -> str:
@@ -275,13 +285,38 @@ def test_every_assertion_shown_on_the_walkthrough_page_exists_in_the_suite(quote
     )
 
 
-def test_the_walkthrough_page_has_a_card_for_every_web_test():
-    """Cards and tests are the same set — no phantom cards, no quiet omissions."""
-    on_page = set(CARD_NAME.findall(walkthrough_html()))
-    in_suite = set(re.findall(r"^def (test_\w+)\(", ui_test_source(), re.MULTILINE))
+def suite_test_names() -> set[str]:
+    """Every test function in the suite, web and native."""
+    sources = sorted(UI_TESTS_DIR.glob("test_*.py")) + sorted(
+        (REPO_ROOT / "tests" / "native").glob("test_*.py")
+    )
+    names: set[str] = set()
+    for path in sources:
+        names.update(
+            re.findall(r"^def (test_\w+)\(", path.read_text(encoding="utf-8"), re.MULTILINE)
+        )
+    return names
 
-    assert on_page == in_suite, (
-        f"walkthrough page and web suite disagree — "
-        f"only on the page: {sorted(on_page - in_suite)}, "
-        f"only in the suite: {sorted(in_suite - on_page)}"
+
+def test_the_walkthrough_page_accounts_for_every_test_in_the_suite():
+    """Every test is either shown in a video or explained as not shown.
+
+    The page presents two videos rather than one clip per test, so a test can
+    legitimately be absent from the footage. What it cannot be is *silently*
+    absent — that is how a suite quietly loses a test and a page goes on
+    implying full coverage. Each test must appear either as a step beside a
+    video or in the "Not in this set" list, and never in both.
+    """
+    page = walkthrough_html()
+    shown = set(CARD_NAME.findall(page))
+    explained = set(GAP_NAME.findall(page))
+    suite = suite_test_names()
+
+    assert not (shown & explained), (
+        f"tests both shown and excused on the page: {sorted(shown & explained)}"
+    )
+    assert shown | explained == suite, (
+        f"walkthrough page and suite disagree — "
+        f"unaccounted for on the page: {sorted(suite - (shown | explained))}, "
+        f"on the page but not in the suite: {sorted((shown | explained) - suite)}"
     )

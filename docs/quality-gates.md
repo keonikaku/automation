@@ -1,8 +1,15 @@
 # Quality gates
 
-What blocks a merge, what does not, and why. Every rule below is implemented
-in a file in this repository; the file is named next to the rule so the two
-can be checked against each other.
+What has to be green before a change lands, what does not, and why. Every
+rule below is implemented in a file in this repository; the file is named next
+to the rule so the two can be checked against each other.
+
+**On enforcement, plainly:** `main` has no branch protection and no rulesets.
+Nothing on the platform *prevents* a merge over a red CI run. The rule below
+is a standard this repository is held to, enforced by convention — by the
+person merging — not by GitHub. That is stated here rather than implied,
+because a document that claims an enforcement mechanism it does not have is
+worse than one that admits the mechanism is a human.
 
 ---
 
@@ -27,20 +34,22 @@ So the gates are split by **what the result actually means**:
 | Trigger | every push and pull request | nightly schedule + manual dispatch |
 | Depends on a third party? | no | yes |
 | Red means | this repository is broken | this repository **or** the practice site |
-| Blocks merge | yes | no |
+| Required green before merging | yes, by convention | no |
 | Badge on the portfolio site | yes | no |
 
 ---
 
-## Gate 1 — deterministic checks (blocking)
+## Gate 1 — deterministic checks (required green)
 
-`ci.yml`. Runs on Python 3.12 and 3.13, on every push and pull request. Must
-be green to merge. This is the badge published on the portfolio site.
+`ci.yml`. Runs on Python 3.12 and 3.13, on every push and pull request. It is
+the standard for merging: a change does not land on `main` with this red. That
+is a convention held by whoever merges, not a branch-protection rule — see the
+note at the top. This is the badge published on the portfolio site.
 
 Nothing in it touches the practice site, and it never installs browser
 binaries. Every step is a pure function of the commit.
 
-| Check | Command | Why it blocks |
+| Check | Command | Why it is required |
 |---|---|---|
 | Dependencies resolve | `pip install -r requirements-dev.txt` | The README promises a clean clone installs. This proves it on a machine that is not the author's, twice. |
 | Lint | `ruff check .` | Unused imports, shadowed names, mutable default arguments, bare `except`. |
@@ -96,7 +105,7 @@ Enforced in the `Collection integrity` step of `ci.yml`:
 
 ---
 
-## Gate 2 — live E2E (reported, not blocking)
+## Gate 2 — live E2E (reported, never required)
 
 `e2e-scheduled.yml`. Nightly at 11:17 UTC, plus manual dispatch. Runs
 `pytest -m ui` against the live site, headless, with video recording on, and
@@ -156,6 +165,10 @@ claims it runs in CI.
 4. Exclusions are asserted, not assumed.
 5. Every threshold in this document is enforced by a command in a workflow
    file, so the document cannot quietly drift away from the pipeline.
+6. Where a rule is held by a human rather than by the platform, this document
+   says so. Rule 5 covers thresholds, which are machine-checked; the decision
+   not to merge over a red run is not, and pretending otherwise would make
+   every other claim here worth less.
 
 ---
 

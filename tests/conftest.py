@@ -14,16 +14,14 @@ a browser or touch the network.
 from __future__ import annotations
 
 import shutil
-import uuid
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
 import pytest
 from playwright.sync_api import Browser, BrowserContext, Error, Page, sync_playwright
 
+from shopsmart import accounts
 from shopsmart.config import Settings
-from shopsmart.pages import AccountDetails, BasePage, LoginPage
 
 RECORDINGS_DIR = Path(__file__).resolve().parent.parent / "recordings"
 
@@ -113,43 +111,21 @@ def mobile_page(context_factory, settings: Settings) -> Page:
 
 
 # ── test data ─────────────────────────────────────────────────────────
-@dataclass(frozen=True)
-class Account:
-    """Credentials for a throwaway account this run created."""
-
-    name: str
-    email: str
-    password: str
-
-
 @pytest.fixture
 def registered_account(context_factory, settings: Settings):
     """Register a throwaway account, hand it to the test, delete it afterwards.
-
-    The valid-login tests used to depend on one hand-made account on a public
-    practice site. When that account was deleted the tests died, and there was
-    no way for anyone else to run them. Now the suite creates what it needs.
 
     Registration happens in its own browser context, so the session it leaves
     behind is invisible to the test's context — the test gets a genuinely
     logged-out browser and has to log in for real. That same context is still
     authenticated at teardown, which is what lets it delete the account.
-    """
-    token = uuid.uuid4().hex[:12]
-    account = Account(
-        name="ShopSmart Test Account",
-        # example.com is IANA-reserved and cannot receive mail, so this can
-        # never collide with a real person's address.
-        email=f"shopsmart-suite-{token}@example.com",
-        password=f"Sh0pSmart-{token}",
-    )
 
+    The account itself is built by ``shopsmart.accounts``, which the
+    walkthrough recorder in ``demo/`` also uses, so the published video cannot
+    drift from what the suite does.
+    """
     context = context_factory(record=False)
-    setup_page = context.new_page()
-    login_page = LoginPage(setup_page, settings.base_url).open()
-    signup_page = login_page.start_signup(account.name, account.email)
-    signup_page.create_account(AccountDetails(password=account.password))
-    signup_page.continue_to_site()
+    account, setup_page = accounts.register(context, settings.base_url)
 
     try:
         yield account
@@ -157,6 +133,6 @@ def registered_account(context_factory, settings: Settings):
         # Best effort: a failure to clean up must not turn a passing test red,
         # but it must be visible in the run output.
         try:
-            BasePage(setup_page, settings.base_url).delete_account()
+            accounts.delete(setup_page, settings.base_url)
         except Exception as exc:  # noqa: BLE001
             print(f"WARNING: could not delete throwaway account {account.email}: {exc}")

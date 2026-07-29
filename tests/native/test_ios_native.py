@@ -20,14 +20,13 @@ file, which meant the test only ran on the one Mac that UDID belonged to.
 
 from __future__ import annotations
 
-import base64
 import time
 from datetime import datetime
 from pathlib import Path
 
 import pytest
 
-from shopsmart.ios import SimulatorNotFound, resolve_device
+from shopsmart.ios import SimulatorNotFound, resolve_device, screen_recording
 
 appium_webdriver = pytest.importorskip(
     "appium.webdriver",
@@ -62,33 +61,30 @@ def ios_driver(settings):
     options.automation_name = "XCUITest"
     options.no_reset = True
 
-    driver = appium_webdriver.Remote(settings.appium_server, options=options)
-    driver.implicitly_wait(10)
-    driver.start_recording_screen()
-    try:
-        yield driver
-    finally:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    destination = RECORDINGS_DIR / f"ios_native_{timestamp}.mp4"
+
+    # Capture is best-effort: this test is about navigation, and a recording
+    # problem must not be reported as a navigation defect.
+    with screen_recording(device["udid"], destination) as recorded:
+        driver = appium_webdriver.Remote(settings.appium_server, options=options)
+        driver.implicitly_wait(10)
         try:
-            _save_recording(driver)
+            yield driver
         finally:
             driver.quit()
 
-
-def _save_recording(driver) -> None:
-    """Decode Appium's base64 screen recording into ``recordings/``."""
-    video_base64 = driver.stop_recording_screen()
-    RECORDINGS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    destination = RECORDINGS_DIR / f"ios_native_{timestamp}.mp4"
-    destination.write_bytes(base64.b64decode(video_base64))
-    print(f"Screen recording saved — {destination}")
+    if recorded and destination.exists():
+        print(f"Screen recording saved — {destination}")
 
 
 def test_11_ios_native(ios_driver):
     """Footer navigation — verify each tab bar item is reachable and taps."""
     for accessibility_id in FOOTER_TABS:
-        tab = ios_driver.find_element(AppiumBy.ACCESSIBILITY_ID, accessibility_id)
-        tab.click()
+        ios_driver.find_element(AppiumBy.ACCESSIBILITY_ID, accessibility_id).click()
         # The tab bar has no completion event to await; the app animates in.
         time.sleep(2)
+        # Re-find rather than reuse the reference: switching tabs rebuilds the
+        # bar, and XCUITest treats the old handle as stale.
+        tab = ios_driver.find_element(AppiumBy.ACCESSIBILITY_ID, accessibility_id)
         assert tab.is_displayed(), f"{accessibility_id} disappeared after tapping it"

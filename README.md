@@ -95,7 +95,10 @@ automation/
 ├── pytest.ini                  # markers, default deselection, strict config
 ├── requirements.txt            # runtime deps, pinned
 ├── requirements-dev.txt        # + lint and retry plugin, pinned
-├── docs/quality-gates.md       # what blocks a merge, what doesn't, why
+├── demo/                       # recording runners — NOT tests, never collected
+│   ├── record_web_walkthrough.py   # the whole web flow in one browser session
+│   └── record_ios_walkthrough.py   # simctl capture while Appium drives the app
+├── docs/quality-gates.md       # what must be green before a change lands, and why
 ├── index.html                  # walkthrough page — the published recordings
 └── recordings/                 # raw run output (gitignored)
     └── published/              # curated recordings backing the page (tracked)
@@ -121,6 +124,14 @@ The one deliberate exception is `test_08_invalid_login`, which hardcodes a fake
 unregistered address. Authenticating badly is the entire point of that test, so
 it must not depend on an account existing — or on the environment deciding which
 scenario it runs.
+
+**Recording is a separate program from testing.** Each test in `tests/ui/` gets
+a fresh browser context, because isolation is what makes a test mean anything.
+That produces ten short clips of a browser starting up, which shows nothing. So
+`demo/` holds runners that drive the *same page objects* through one continuous
+session for the camera. The suite was not loosened to get a better video; a
+second caller of the same framework was added. Run them with
+`python demo/record_web_walkthrough.py`.
 
 **Simulator discovery.** The native iOS test used to carry a hardcoded UDID,
 which meant it ran on exactly one Mac. `shopsmart/ios.py` now discovers a
@@ -163,9 +174,12 @@ hand into **`recordings/published/`**, which *is* tracked — so publishing a
 recording is always a deliberate act rather than a side effect of running the
 suite.
 
-The ten files there are the unedited output of one headless run on 2026-07-28 in
-which all ten web tests passed. They back the
-[walkthrough page](https://keonikaku.github.io/automation/).
+The two files there back the
+[walkthrough page](https://keonikaku.github.io/automation/): one continuous
+recording of the web suite's flows in a single browser session, and one screen
+capture of an iPhone Simulator while Appium drives the native app. Both are
+unedited, both were recorded on 2026-07-28, and both were produced by the
+runners in `demo/`.
 
 ## Test report
 
