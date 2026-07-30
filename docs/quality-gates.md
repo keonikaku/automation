@@ -31,7 +31,7 @@ So the gates are split by **what the result actually means**:
 | | Deterministic gate | Live E2E |
 |---|---|---|
 | Workflow | `.github/workflows/ci.yml` | `.github/workflows/e2e-scheduled.yml` |
-| Trigger | every push and pull request | nightly schedule + manual dispatch |
+| Trigger | every push and pull request | manual dispatch only |
 | Depends on a third party? | no | yes |
 | Red means | this repository is broken | this repository **or** the practice site |
 | Required green before merging | yes, by convention | no |
@@ -107,7 +107,7 @@ Enforced in the `Collection integrity` step of `ci.yml`:
 
 ## Gate 2 — live E2E (reported, never required)
 
-`e2e-scheduled.yml`. Nightly at 11:17 UTC, plus manual dispatch. Runs
+`e2e-scheduled.yml`. Manual dispatch only, triggered by a person. Runs
 `pytest -m ui` against the live site, headless, with video recording on, and
 uploads the HTML report and the `.webm` recordings as artifacts.
 
@@ -126,9 +126,15 @@ a retry — it fails all three attempts and the job goes red.
 - No retry count above 2. If something needs four attempts it is broken, and
   the honest fix is to make the test deterministic or drop it.
 
-**Escalation.** Two consecutive scheduled failures on the same test means the
-test is presumed broken rather than flaky, and it is fixed before the next
-release of this repository is linked anywhere.
+**Why there is no schedule.** A nightly cron would make this suite look like
+something a robot keeps alive, and what this repository is evidence of is a
+person building and running it. Every entry in the run history was triggered by
+hand, deliberately. It also means the practice site cannot produce red at 3am
+for reasons no commit here controls.
+
+**Escalation.** Two consecutive failures on the same test means the test is
+presumed broken rather than flaky, and it is fixed before the next release of
+this repository is linked anywhere.
 
 ---
 

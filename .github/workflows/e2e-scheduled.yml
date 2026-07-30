@@ -1,10 +1,10 @@
-name: E2E (scheduled)
+name: E2E (on demand)
 
 # The live end-to-end run: the real Playwright suite against the real
 # automationexercise.com.
 #
-# It runs on a schedule rather than on every pull request, and it is reported
-# rather than gated. The target is a third-party practice site that serves
+# It runs when a person asks for it, never on a schedule and never on a pull
+# request, and it is reported rather than gated. The target is a third-party practice site that serves
 # interstitial ads and periodically goes down. Wiring a pull-request gate — or
 # a public badge — to it would produce red for reasons that have nothing to do
 # with this repository, and a badge nobody trusts is worse than no badge.
@@ -15,11 +15,13 @@ name: E2E (scheduled)
 #
 # See docs/quality-gates.md.
 
+# Manual dispatch only. The schedule was removed on 2026-07-30: a nightly cron
+# makes this suite look like something a robot keeps alive, and the one thing
+# this repository exists to show is that a person built it and runs it. A run
+# history in which every entry was triggered by hand is the better artifact. It
+# also stops the practice site producing 3am red for reasons no commit here
+# controls.
 on:
-  schedule:
-    # 11:17 UTC — early morning US Pacific. Off the hour, because scheduled
-    # jobs queue at :00 and get delayed.
-    - cron: "17 11 * * *"
   workflow_dispatch:
 
 permissions:
