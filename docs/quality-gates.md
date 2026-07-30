@@ -128,9 +128,13 @@ a retry — it fails all three attempts and the job goes red.
 
 **Why there is no schedule.** A nightly cron would make this suite look like
 something a robot keeps alive, and what this repository is evidence of is a
-person building and running it. Every entry in the run history was triggered by
-hand, deliberately. It also means the practice site cannot produce red at 3am
-for reasons no commit here controls.
+person building and running it. It also means the practice site cannot produce
+red at 3am for reasons no commit here controls.
+
+The schedule was removed on 2026-07-30, so the run history is not all hand
+triggered and this document does not claim that it is. The three entries that
+predate the change are one scheduled run and two triggered by pushes. Every run
+after it happens because someone asked for one.
 
 **Escalation.** Two consecutive failures on the same test means the test is
 presumed broken rather than flaky, and it is fixed before the next release of
