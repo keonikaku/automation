@@ -1,16 +1,16 @@
 # ShopSmart QA Automation Suite
 
 [![CI](https://github.com/keonikaku/automation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/keonikaku/automation/actions/workflows/ci.yml)
-[![E2E (scheduled)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml/badge.svg)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml)
+[![E2E (on demand)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml/badge.svg)](https://github.com/keonikaku/automation/actions/workflows/e2e-scheduled.yml)
 
 Playwright + pytest automation covering desktop web, mobile web, and native iOS
 against a public practice e-commerce site.
 
 **Two badges, deliberately.** `CI` is the deterministic gate — lint, unit tests,
 and collection integrity, on every commit, dependent on nothing but this
-repository. `E2E (scheduled)` drives the live third-party practice site nightly;
-it can go amber for reasons no commit here controls, so it reports rather than
-gates. Only the first is published on the portfolio site. The reasoning is in
+repository. `E2E (on demand)` drives the live third-party practice site when
+it is asked to; it can go amber for reasons no commit here controls, so it
+reports rather than gates. Only the first is published on the portfolio site. The reasoning is in
 [`docs/quality-gates.md`](docs/quality-gates.md).
 
 ## Quick start
@@ -81,7 +81,7 @@ covers and why.
 automation/
 ├── .github/workflows/
 │   ├── ci.yml                  # deterministic gate — every push and PR
-│   └── e2e-scheduled.yml       # live web suite — nightly, reported not gated
+│   └── e2e-scheduled.yml       # live web suite, on demand, reported not gated
 ├── shopsmart/
 │   ├── config.py               # settings resolution (headless default, base URL)
 │   ├── ios.py                  # Simulator discovery — no hardcoded UDIDs
@@ -181,8 +181,8 @@ flushes the file; recordings land in `recordings/` as
 `<test_name>_<timestamp>.webm`. **Failing tests are recorded the same way
 passing ones are** — which is usually when you most want the video.
 
-Recording works headless, which is what makes the scheduled CI run able to
-upload video artifacts.
+Recording works headless, which is what makes the CI run able to upload video
+artifacts.
 
 ### What gets committed
 
@@ -206,7 +206,7 @@ runners in `demo/`.
 pytest -m ui --html=report.html --self-contained-html
 ```
 
-`report.html` is generated output and is not committed. The scheduled CI run
+`report.html` is generated output and is not committed. The on demand CI run
 produces one on every execution and uploads it as a build artifact.
 
 ## Tools
