@@ -6,7 +6,7 @@
 Playwright + pytest automation covering desktop web, mobile web, and native iOS
 against a public practice e-commerce site.
 
-**Two badges, deliberately.** `CI` is the deterministic gate — lint, unit tests,
+**Two badges, deliberately.** `CI` is the deterministic gate: lint, unit tests,
 and collection integrity, on every commit, dependent on nothing but this
 repository. `E2E (on demand)` drives the live third-party practice site when
 it is asked to; it can go amber for reasons no commit here controls, so it
@@ -24,7 +24,7 @@ pytest
 ```
 
 That is the whole setup. No account to create, no credentials to supply, no
-`.env` to fill in — the suite registers the accounts it needs and deletes them
+`.env` to fill in: the suite registers the accounts it needs and deletes them
 again. `pytest` runs the unit suite and the 10 web tests; the native iOS test is
 deselected by default because it needs macOS and a running Appium server.
 
@@ -49,28 +49,28 @@ Headless is the default so the suite runs unattended.
 
 ## Test coverage
 
-Web suite — `tests/ui/`:
+Web suite, `tests/ui/`:
 
 | Test | Type | Description |
 |------|------|-------------|
-| test_01_login | Happy path | Valid credentials — successful login |
+| test_01_login | Happy path | Valid credentials: successful login |
 | test_02_search | Happy path | Search returns matching products |
 | test_03_filter_by_category | Happy path | Women › Dress category page |
-| test_04_add_to_cart | Happy path | Add product to cart — cart page loads |
+| test_04_add_to_cart | Happy path | Add product to cart: cart page loads |
 | test_05_checkout_requires_login | Negative | Guest checkout is blocked |
 | test_06_contact_form | Happy path | Contact form success message |
-| test_07_mobile_login | Mobile web | iPhone 13 emulation — login flow |
+| test_07_mobile_login | Mobile web | iPhone 13 emulation: login flow |
 | test_08_invalid_login | Negative | Unregistered account is rejected |
 | test_09_empty_login_fields | Negative | Empty form does not submit |
 | test_10_search_no_results | Negative | Non-matching term returns nothing |
 
-Native — `tests/native/`:
+Native, `tests/native/`:
 
 | Test | Type | Description |
 |------|------|-------------|
-| test_11_ios_native | Native iOS | Appium XCUITest — footer navigation, Sauce Labs demo app |
+| test_11_ios_native | Native iOS | Appium XCUITest: footer navigation, Sauce Labs demo app |
 
-Framework — `tests/unit/`: settings resolution, simulator-selection rules, and
+Framework, `tests/unit/`: settings resolution, simulator-selection rules, and
 static contracts on the repository itself. These are the tests that gate every
 commit. See [`docs/quality-gates.md`](docs/quality-gates.md) for what each one
 covers and why.
@@ -80,15 +80,15 @@ covers and why.
 ```
 automation/
 ├── .github/workflows/
-│   ├── ci.yml                  # deterministic gate — every push and PR
+│   ├── ci.yml                  # deterministic gate: every push and PR
 │   └── e2e-scheduled.yml       # live web suite, on demand, reported not gated
 ├── shopsmart/
 │   ├── config.py               # settings resolution (headless default, base URL)
-│   ├── ios.py                  # Simulator discovery — no hardcoded UDIDs
+│   ├── ios.py                  # Simulator discovery: no hardcoded UDIDs
 │   └── pages/                  # page objects; the only place selectors live
 ├── tests/
 │   ├── conftest.py             # browser, context, page and account fixtures
-│   ├── unit/                   # deterministic — no network, no browser
+│   ├── unit/                   # deterministic: no network, no browser
 │   ├── ui/                     # Playwright web tests
 │   └── native/                 # Appium iOS
 ├── conftest.py                 # CLI options and location-based markers
@@ -100,11 +100,11 @@ automation/
 │   ├── *_FINAL.csv                 # the four originals, unmodified
 │   └── all_test_cases_combined.csv # generated: all 54 with a Suite column
 ├── test-cases.html             # generated: all 54 cases, rendered
-├── demo/                       # recording runners — NOT tests, never collected
+├── demo/                       # recording runners: NOT tests, never collected
 │   ├── record_web_walkthrough.py   # the whole web flow in one browser session
 │   └── record_ios_walkthrough.py   # simctl capture while Appium drives the app
 ├── docs/quality-gates.md       # what must be green before a change lands, and why
-├── index.html                  # walkthrough page — the published recordings
+├── index.html                  # walkthrough page: the published recordings
 └── recordings/                 # raw run output (gitignored)
     └── published/              # curated recordings backing the page (tracked)
 ```
@@ -117,7 +117,7 @@ unit test that fails the build if a raw selector appears in a test file.
 video recording onto tests that managed their own browsers. Nothing is patched
 now. `tests/conftest.py` owns the browser lifecycle, and because a fixture
 closes each context before the test finishes, Playwright flushes video to disk
-on its own — which is the only thing the patch was buying.
+on its own, which is the only thing the patch was buying.
 
 **Self-registering accounts.** The `registered_account` fixture creates a
 throwaway account on the practice site, hands the credentials to the test, and
@@ -127,18 +127,18 @@ this repository and none to configure.
 
 The one deliberate exception is `test_08_invalid_login`, which hardcodes a fake
 unregistered address. Authenticating badly is the entire point of that test, so
-it must not depend on an account existing — or on the environment deciding which
+it must not depend on an account existing, or on the environment deciding which
 scenario it runs.
 
 **The manual test cases are published too.** `test-cases/` holds 54 functional
 test cases written before and alongside the automation, in their original CSV
 form and unmodified. 19 of them carry `PENDING PM CLARIFICATION` instead of an
-expected result — where the spec was silent, the case says so and proposes an
+expected result. Where the spec was silent, the case says so and proposes an
 expectation rather than inventing one. One defect, SMART-201, is traced through
 three catalog cases and is the whole smoke suite.
 
 `Automated` is a **derived** column: it exists only in the generated outputs and
-maps each case to the test in `tests/ui/` that covers it — 5 fully, 4 partially,
+maps each case to the test in `tests/ui/` that covers it: 5 fully, 4 partially,
 45 not automated. Unit tests fail the build if a named test stops existing, if a
 mapped case title is not in the CSVs, if the generated page and the data
 disagree, if an original CSV changes, or if the numbers in this paragraph drift
@@ -154,8 +154,8 @@ second caller of the same framework was added. Run them with
 
 **Simulator discovery.** The native iOS test used to carry a hardcoded UDID,
 which meant it ran on exactly one Mac. `shopsmart/ios.py` now discovers a
-simulator at runtime — preferring one that is already booted, then the model
-named by `IOS_DEVICE_NAME`, then any available iPhone — and the selection rules
+simulator at runtime: preferring one that is already booted, then the model
+named by `IOS_DEVICE_NAME`, then any available iPhone, and the selection rules
 are unit-tested on Linux because parsing is split from the `xcrun` call.
 
 ## Configuration
@@ -179,7 +179,7 @@ Every web test records itself. The context fixture configures Playwright's
 built-in video recording and closes the context at teardown, which is what
 flushes the file; recordings land in `recordings/` as
 `<test_name>_<timestamp>.webm`. **Failing tests are recorded the same way
-passing ones are** — which is usually when you most want the video.
+passing ones are**, which is usually when you most want the video.
 
 Recording works headless, which is what makes the CI run able to upload video
 artifacts.
@@ -189,7 +189,7 @@ artifacts.
 Raw run output is **not** committed: `recordings/*.webm` and `recordings/*.mp4`
 are gitignored, and those patterns are deliberately non-recursive so a stray run
 can't sweep itself into the repo. Recordings chosen for publication are moved by
-hand into **`recordings/published/`**, which *is* tracked — so publishing a
+hand into **`recordings/published/`**, which *is* tracked, so publishing a
 recording is always a deliberate act rather than a side effect of running the
 suite.
 
@@ -211,7 +211,7 @@ produces one on every execution and uploads it as a build artifact.
 
 ## Tools
 
-Python 3.12–3.14 · Playwright · pytest · pytest-html · Appium (native iOS) ·
+Python 3.12-3.14 · Playwright · pytest · pytest-html · Appium (native iOS) ·
 ruff · GitHub Actions
 
 Versions are pinned in `requirements.txt` and `requirements-dev.txt`; CI proves
@@ -220,7 +220,7 @@ author's.
 
 ## Author
 
-Keoni Kakugawa — QA & Release Management Leader
+Keoni Kakugawa, QA & Release Management Leader
 20+ years in software, 15 in QA, ~6 in release management
 [github.com/keonikaku/automation](https://github.com/keonikaku/automation) ·
 [LinkedIn](https://www.linkedin.com/in/keonikaku)

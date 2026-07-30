@@ -6,8 +6,8 @@ to the rule so the two can be checked against each other.
 
 **On enforcement, plainly:** `main` has no branch protection and no rulesets.
 Nothing on the platform *prevents* a merge over a red CI run. The rule below
-is a standard this repository is held to, enforced by convention — by the
-person merging — not by GitHub. That is stated here rather than implied,
+is a standard this repository is held to, enforced by convention: by the
+person merging: not by GitHub. That is stated here rather than implied,
 because a document that claims an enforcement mechanism it does not have is
 worse than one that admits the mechanism is a human.
 
@@ -23,7 +23,7 @@ down from time to time. Nothing in this repository can prevent either.
 If a public badge were wired to that suite, the badge would go red for
 reasons that have nothing to do with the code. A badge that goes red for
 reasons the author cannot control teaches everyone who looks at it to ignore
-it — at which point it is worse than no badge, because it also costs
+it, at which point it is worse than no badge, because it also costs
 credibility when someone does look.
 
 So the gates are split by **what the result actually means**:
@@ -39,11 +39,11 @@ So the gates are split by **what the result actually means**:
 
 ---
 
-## Gate 1 — deterministic checks (required green)
+## Gate 1: deterministic checks (required green)
 
 `ci.yml`. Runs on Python 3.12 and 3.13, on every push and pull request. It is
 the standard for merging: a change does not land on `main` with this red. That
-is a convention held by whoever merges, not a branch-protection rule — see the
+is a convention held by whoever merges, not a branch-protection rule: see the
 note at the top. This is the badge published on the portfolio site.
 
 Nothing in it touches the practice site, and it never installs browser
@@ -54,14 +54,14 @@ binaries. Every step is a pure function of the commit.
 | Dependencies resolve | `pip install -r requirements-dev.txt` | The README promises a clean clone installs. This proves it on a machine that is not the author's, twice. |
 | Lint | `ruff check .` | Unused imports, shadowed names, mutable default arguments, bare `except`. |
 | Format | `ruff format --check .` | Diffs stay about behaviour, not whitespace. |
-| Unit tests | `pytest -m unit` | See below — these are the tests of the framework itself. |
+| Unit tests | `pytest -m unit` | See below: these are the tests of the framework itself. |
 | Collection integrity | `pytest --collect-only` | See below. |
 
 ### Why there are no browser binaries in this job
 
 This suite once had a root-level script that called its own test function at
-module scope. `pytest --collect-only` — a command that is supposed to list
-tests without running anything — launched a real browser window.
+module scope. `pytest --collect-only` (a command that is supposed to list tests without
+running anything) launched a real browser window.
 
 The deterministic job installs the `playwright` **package** but never runs
 `playwright install`, and asserts up front that no browser binaries are
@@ -75,18 +75,18 @@ structural: it cannot be commented out without the assertion noticing.
 have to be right for the E2E tests to mean anything, and each file encodes a
 defect this repository has actually shipped:
 
-- **`test_config.py`** — headless is the default and an explicit `--headed`
+- **`test_config.py`**: headless is the default and an explicit `--headed`
   beats a stale environment variable; malformed settings fall back rather
   than exploding; no credential is read from the environment at all.
-- **`test_ios_device.py`** — simulator selection rules. Previously a
+- **`test_ios_device.py`**: simulator selection rules. Previously a
   hardcoded UDID, so the native test ran on exactly one Mac. Discovery is
   split from the `xcrun` call precisely so the rules can be tested on Linux.
-- **`test_framework_contracts.py`** — static guards on the repository:
+- **`test_framework_contracts.py`**, static guards on the repository:
   - no source file hardcodes a headed browser launch;
   - no module calls a `test_*` function at import time;
   - nothing that looks like a credential is assigned a literal (one
     documented exception: the negative-login test's fake password);
-  - no test under `tests/ui/` contains a raw selector — selectors live in
+  - no test under `tests/ui/` contains a raw selector: selectors live in
     page objects;
   - every dependency in both requirements files is pinned with `==`;
   - `pytest.ini` declares its markers and deselects `native` by default.
@@ -105,7 +105,7 @@ Enforced in the `Collection integrity` step of `ci.yml`:
 
 ---
 
-## Gate 2 — live E2E (reported, never required)
+## Gate 2: live E2E (reported, never required)
 
 `e2e-scheduled.yml`. Manual dispatch only, triggered by a person. Runs
 `pytest -m ui` against the live site, headless, with video recording on, and
@@ -115,7 +115,7 @@ uploads the HTML report and the `.webm` recordings as artifacts.
 call and here is the reasoning: an ad overlay or a 502 from a free practice
 site is not information about this code, and a suite that reports it as a
 defect trains its owner to ignore failures. A real defect is not absorbed by
-a retry — it fails all three attempts and the job goes red.
+a retry: it fails all three attempts and the job goes red.
 
 **What is explicitly not allowed:**
 
@@ -128,9 +128,13 @@ a retry — it fails all three attempts and the job goes red.
 
 **Why there is no schedule.** A nightly cron would make this suite look like
 something a robot keeps alive, and what this repository is evidence of is a
-person building and running it. Every entry in the run history was triggered by
-hand, deliberately. It also means the practice site cannot produce red at 3am
-for reasons no commit here controls.
+person building and running it. It also means the practice site cannot produce
+red at 3am for reasons no commit here controls.
+
+The schedule was removed on 2026-07-30, so the run history is not all hand
+triggered and this document does not claim it is: the entries before that date
+are one scheduled run and two triggered by pushes. Everything from that date on
+is a person asking for it.
 
 **Escalation.** Two consecutive failures on the same test means the test is
 presumed broken rather than flaky, and it is fixed before the next release of
@@ -143,7 +147,7 @@ this repository is linked anywhere.
 `tests/native/test_ios_native.py` needs macOS, Xcode, a booted iPhone
 Simulator, the Sauce Labs demo app installed on it, and a running Appium
 server. GitHub-hosted macOS minutes bill at roughly ten times Linux, and the
-app build is not published — the job could not be made to work at any price
+app build is not published: the job could not be made to work at any price
 worth paying.
 
 So it is excluded deliberately and visibly, in three places that agree with
@@ -154,7 +158,7 @@ each other:
    `-m native`, but only to `pytest --collect-only`, to count that the test
    still exists. No workflow ever executes a native test;
 3. `ci.yml` asserts that exactly one native test exists and that zero are
-   collected by default — so the test cannot quietly disappear and leave the
+   collected by default, so the test cannot quietly disappear and leave the
    exclusion looking like coverage.
 
 It is run locally and its screen recording is published. Nothing anywhere
@@ -180,8 +184,8 @@ claims it runs in CI.
 
 ## Related
 
-Test-strategy thinking at the programme level — validation categories,
-risk-based prioritisation, entry/exit and cutover go/no-go criteria — is
+Test-strategy thinking at the programme level: validation categories,
+risk-based prioritisation, entry/exit and cutover go/no-go criteria: is
 written up in the data-migration project rather than restated here:
 [Migration Test Strategy](https://github.com/keonikaku/sql-data-validation/blob/main/strategy/migration_test_strategy.md).
 This document is the narrower question of what gates a commit in *this*

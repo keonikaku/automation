@@ -11,7 +11,7 @@ select = [
     "F",   # pyflakes
     "W",   # pycodestyle warnings
     "I",   # import ordering
-    "B",   # bugbear — mutable defaults, silent excepts, loop-variable capture
+    "B",   # bugbear: mutable defaults, silent excepts, loop-variable capture
     "UP",  # pyupgrade
 ]
 

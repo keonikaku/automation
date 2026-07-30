@@ -1,8 +1,8 @@
 """Structural guards on the repository itself.
 
 Each test here encodes a defect this suite has actually shipped, so that the
-defect cannot come back quietly. They are pure static analysis — no network,
-no browser — which is what lets them gate every pull request.
+defect cannot come back quietly. They are pure static analysis: no network,
+no browser, which is what lets them gate every pull request.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ from __future__ import annotations
 import ast
 import html
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -78,7 +79,7 @@ def test_the_source_scan_finds_this_project_and_nothing_else():
 
 # ── defect 1: every browser launched with a visible window ────────────
 #: Assembled from fragments so that this file does not itself contain the
-#: literal it forbids — a guard that trips on its own source is useless.
+#: literal it forbids: a guard that trips on its own source is useless.
 HEADED_LAUNCH = re.compile(r"headless\s*=\s*" + "False")
 
 
@@ -106,8 +107,8 @@ def test_no_source_file_launches_a_headed_browser():
 def test_no_module_calls_a_test_function_at_import_time(source: Path):
     """A root-level script used to call ``test_add_to_cart()`` at module scope.
 
-    That launched a real browser during *collection* — before pytest had run a
-    single test — so ``pytest --collect-only`` opened a window and could hang.
+    That launched a real browser during *collection*: before pytest had run a
+    single test, so ``pytest --collect-only`` opened a window and could hang.
     """
     tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
     for node in tree.body:
@@ -242,7 +243,7 @@ def test_markers_are_declared_and_native_is_deselected_by_default():
 # index.html is a public page that displays, under each video, the assertion
 # the test makes. Quoted code drifts silently: the restructure moved every
 # test onto page objects and the page went on showing the raw-selector style
-# the restructure had just deleted — on the very page built to show it off.
+# the restructure had just deleted: on the very page built to show it off.
 # Nothing false was stated, but it advertised the wrong thing to exactly the
 # reader it was written for. These two tests make that drift a build failure.
 
@@ -303,7 +304,7 @@ def test_the_walkthrough_page_accounts_for_every_test_in_the_suite():
 
     The page presents two videos rather than one clip per test, so a test can
     legitimately be absent from the footage. What it cannot be is *silently*
-    absent — that is how a suite quietly loses a test and a page goes on
+    absent: that is how a suite quietly loses a test and a page goes on
     implying full coverage. Each test must appear either as a step beside a
     video or in the "Not in this set" list, and never in both.
     """
@@ -316,7 +317,88 @@ def test_the_walkthrough_page_accounts_for_every_test_in_the_suite():
         f"tests both shown and excused on the page: {sorted(shown & explained)}"
     )
     assert shown | explained == suite, (
-        f"walkthrough page and suite disagree — "
+        f"walkthrough page and suite disagree: "
         f"unaccounted for on the page: {sorted(suite - (shown | explained))}, "
         f"on the page but not in the suite: {sorted((shown | explained) - suite)}"
     )
+
+# ---------------------------------------------------------------------------
+# House style: no em dashes, no en dashes
+# ---------------------------------------------------------------------------
+
+EM_DASH = "\u2014"
+EN_DASH = "\u2013"
+
+TEXT_SUFFIXES = {".py", ".md", ".yml", ".yaml", ".toml", ".txt", ".ini", ".cfg", ".html"}
+
+# Two exemptions, both narrow, both for the same reason: this text has to match
+# the published originals byte for byte.
+#
+# The CSVs under test-cases/ are the 54 manual cases as they were written,
+# including the combined export of them. A unit test above holds them byte for
+# byte, and editing them to remove punctuation would cost the stronger claim
+# (these are the cases as written) to buy a typographic one. The rendered page
+# normalises the dashes instead and says so on the page.
+#
+# shopsmart/testcases.py keys the coverage mapping on the case titles, which
+# have no ID column to key on instead, so those literals have to match the CSVs
+# character for character. Only lines that are such a literal are exempt; the
+# prose in that file is not.
+EXEMPT_PATHS = {"test-cases"}
+
+
+def _tracked_files() -> list[Path]:
+    """Every file git is tracking, so nothing untracked or generated is judged."""
+    listing = subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    return [REPO_ROOT / name for name in listing.splitlines()]
+
+
+def _is_case_title_literal(line: str) -> bool:
+    """True for a line that quotes a published case title verbatim."""
+    stripped = line.strip()
+    return stripped.startswith(("case=", '"', "'")) and (
+        EM_DASH in stripped or EN_DASH in stripped
+    )
+
+
+def test_no_em_or_en_dash_reaches_a_published_file():
+    """House style, enforced rather than remembered.
+
+    An em dash is the clearest tell that prose was not typed by the person
+    whose name is on it, so it does not appear in this repository. Hyphens in
+    ranges and in identifiers are unaffected.
+    """
+    offenders = []
+    for path in _tracked_files():
+        if path.suffix not in TEXT_SUFFIXES:
+            continue
+        if EXEMPT_PATHS & set(path.parts):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, FileNotFoundError):
+            continue
+        for number, line in enumerate(text.splitlines(), start=1):
+            if EM_DASH not in line and EN_DASH not in line:
+                continue
+            if path.name == "testcases.py" and _is_case_title_literal(line):
+                continue
+            offenders.append(f"{path.relative_to(REPO_ROOT)}:{number}")
+    assert offenders == [], f"em or en dash found at: {offenders}"
+
+
+def test_the_dash_guard_would_catch_one():
+    """The guard matches the thing it is for.
+
+    A guard that has never matched anything is indistinguishable from a broken
+    one, so it is proved against a sample rather than trusted.
+    """
+    assert EM_DASH in "a sentence with an em dash \u2014 like this one"
+    assert not _is_case_title_literal("# a comment with an em dash \u2014 in it")
+    assert _is_case_title_literal('        case="A title \u2014 with a dash",')

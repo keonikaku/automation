@@ -8,7 +8,7 @@ from shopsmart.pages import ContactPage
 
 
 def test_06_contact_form(page, settings):
-    """Submit the contact form — verify the success message displays."""
+    """Submit the contact form: verify the success message displays."""
     contact = ContactPage(page, settings.base_url).open()
     contact.submit_enquiry(
         name="ShopSmart Test Account",

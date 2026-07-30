@@ -13,7 +13,7 @@ venv/
 
 # Test run output / build artifacts
 #
-# Raw recordings land in recordings/ on every run and are never committed —
+# Raw recordings land in recordings/ on every run and are never committed:
 # these patterns are deliberately non-recursive so a stray run can't sweep
 # itself into the repo. Recordings that back the published walkthrough are
 # moved by hand into recordings/published/, which IS tracked. Publishing a

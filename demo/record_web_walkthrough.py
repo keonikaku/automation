@@ -1,7 +1,7 @@
 """Record one continuous walkthrough of the web suite, for publication.
 
 **This is not a test and pytest never collects it.** The suite in ``tests/ui/``
-gives every test a fresh browser context, because isolation is the point — a
+gives every test a fresh browser context, because isolation is the point: a
 test that inherits another test's session is not testing what it says it is.
 That is what CI runs and what a reviewer should read.
 
@@ -24,7 +24,7 @@ Run it::
 Output lands in ``recordings/`` as ``web_walkthrough_<timestamp>.webm``.
 
 ``SLOW_MO`` defaults to 400ms here so the result is watchable. That is a
-recording choice, not a measurement — nothing produced by this script is a
+recording choice, not a measurement: nothing produced by this script is a
 timing, and no duration from it is ever published.
 """
 
@@ -88,7 +88,7 @@ def main() -> int:
 
         # A second, unrecorded context creates the account. It exists only so
         # the recorded session is genuinely logged out and has to log in for
-        # real — exactly what the registered_account fixture does.
+        # real: exactly what the registered_account fixture does.
         setup_context = browser.new_context()
         account, setup_page = accounts.register(setup_context, settings.base_url)
 
@@ -101,22 +101,22 @@ def main() -> int:
             page.wait_for_timeout(STEP_PAUSE_MS)
 
         try:
-            # 1 — a login that should fail (test_08_invalid_login)
-            announce(1, "Login rejected — unregistered account")
+            # 1: a login that should fail (test_08_invalid_login)
+            announce(1, "Login rejected: unregistered account")
             login_page = LoginPage(page, settings.base_url).open()
             login_page.login(UNREGISTERED_EMAIL, WRONG_PASSWORD)
             expect(login_page.error_message).to_be_visible()
             beat()
 
-            # 2 — the same form, with credentials that work (test_01_login)
-            announce(2, "Login succeeds — account registered by this run")
+            # 2: the same form, with credentials that work (test_01_login)
+            announce(2, "Login succeeds: account registered by this run")
             login_page = LoginPage(page, settings.base_url).open()
             login_page.login(account.email, account.password)
             expect(page).to_have_url(f"{settings.base_url}/")
             expect(login_page.logged_in_banner).to_contain_text(account.name)
             beat()
 
-            # 3 — search returns matches (test_02_search)
+            # 3: search returns matches (test_02_search)
             announce(3, "Search returns matching products")
             products = ProductsPage(page, settings.base_url).open()
             products.search("dress")
@@ -124,27 +124,27 @@ def main() -> int:
             assert products.result_count() > 0
             beat()
 
-            # 4 — category filter (test_03_filter_by_category)
-            announce(4, "Category filter — Women > Dress")
+            # 4: category filter (test_03_filter_by_category)
+            announce(4, "Category filter: Women > Dress")
             category = CategoryPage(page, settings.base_url).open()
             expect(category.heading).to_be_visible()
             beat()
 
-            # 5 — add to cart (test_04_add_to_cart)
+            # 5: add to cart (test_04_add_to_cart)
             announce(5, "Add to cart")
             products = ProductsPage(page, settings.base_url).open()
             cart = products.add_first_product_to_cart()
             expect(page).to_have_url(cart.url)
             beat()
 
-            # 6 — checkout gate (test_05_checkout_requires_login)
+            # 6: checkout gate (test_05_checkout_requires_login)
             #
             # This one asserts that a *guest* cannot check out, so the session
-            # has to be signed out first — the walkthrough logged in at step 2
+            # has to be signed out first: the walkthrough logged in at step 2
             # and a logged-in user is, correctly, not blocked. Logging out on
             # camera is the honest way to show it: the alternative is claiming
             # a gate that the recorded session never actually hit.
-            announce(6, "Checkout requires an account — verified as a guest")
+            announce(6, "Checkout requires an account: verified as a guest")
             BasePage(page, settings.base_url).logout()
             products = ProductsPage(page, settings.base_url).open()
             cart = products.add_first_product_to_cart()
@@ -152,7 +152,7 @@ def main() -> int:
             expect(cart.login_required_prompt).to_be_visible()
             beat()
 
-            # 7 — contact form (test_06_contact_form)
+            # 7: contact form (test_06_contact_form)
             announce(7, "Contact form submits")
             contact = ContactPage(page, settings.base_url).open()
             contact.submit_enquiry(
@@ -164,7 +164,7 @@ def main() -> int:
             expect(contact.success_message).to_be_visible()
             beat()
 
-            # 8 — a search that matches nothing (test_10_search_no_results)
+            # 8: a search that matches nothing (test_10_search_no_results)
             announce(8, "Search with no matches returns nothing")
             products = ProductsPage(page, settings.base_url).open()
             products.search("zzzznotaproduct")
@@ -194,7 +194,7 @@ def main() -> int:
     shutil.rmtree(staging, ignore_errors=True)
 
     size_kb = destination.stat().st_size // 1024
-    print(f"\nWalkthrough saved — {destination} ({size_kb} KB)")
+    print(f"\nWalkthrough saved: {destination} ({size_kb} KB)")
     return 0
 
 

@@ -1,7 +1,7 @@
 """Page objects for automationexercise.com.
 
 One class per page, each owning its own selectors. Tests never contain a raw
-selector — when the site moves an element, exactly one file changes.
+selector, when the site moves an element, exactly one file changes.
 """
 
 from shopsmart.pages.base_page import BasePage

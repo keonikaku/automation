@@ -8,7 +8,7 @@ from shopsmart.pages import CategoryPage
 
 
 def test_03_filter_by_category(page, settings):
-    """Filter products by Women > Dress — verify the category page renders."""
+    """Filter products by Women > Dress: verify the category page renders."""
     category = CategoryPage(page, settings.base_url).open()
 
     expect(category.heading).to_be_visible()

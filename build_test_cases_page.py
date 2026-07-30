@@ -1,6 +1,6 @@
 """Generate the full test-case page and the combined CSV export.
 
-Both outputs are committed and served as plain static files — nothing builds at
+Both outputs are committed and served as plain static files: nothing builds at
 page load. They are generated rather than hand-written so they cannot drift
 from the CSVs, the same reason the walkthrough page's quoted assertions are
 checked against the suite.
@@ -46,8 +46,30 @@ STEP_SPLIT = re.compile(r"(?=\b\d+\.\s)")
 LEADING_NUMBER = re.compile(r"^\d+\.\s*")
 
 
+EM_DASH = "\u2014"
+EN_DASH = "\u2013"
+
+
+def normalise_dashes(value: str) -> str:
+    """Render an em or en dash as punctuation a person would type.
+
+    The published CSVs are the originals, unmodified, and a unit test holds them
+    byte for byte. They were written by hand in 2026 and some of them use em
+    dashes, so the choice is between editing the originals and rendering them
+    differently. Editing them would cost the stronger claim (these are the cases
+    as written) to buy a typographic one, so the rendering normalises instead
+    and the page says so.
+    """
+    text = re.sub(r"(?<=\d)\s*[" + EM_DASH + EN_DASH + r"]\s*(?=\d)", "-", value or "")
+    for dash in (EM_DASH, EN_DASH):
+        while dash in text:
+            at = text.index(dash)
+            text = text[:at].rstrip() + ": " + text[at + 1 :].lstrip()
+    return text
+
+
 def esc(value: str) -> str:
-    return html.escape(value or "", quote=True)
+    return html.escape(normalise_dashes(value or ""), quote=True)
 
 
 def render_steps(raw: str) -> str:
@@ -66,11 +88,11 @@ def render_expected(raw: str) -> str:
         return f"<p>{esc(text)}</p>"
 
     before, _, after = text.partition(PENDING_MARKER)
-    after = after.lstrip(" —-–").strip()
+    after = after.lstrip(": -: ").strip()
     lead = f"<p>{esc(before.strip())}</p>" if before.strip() else ""
     return (
         f"{lead}"
-        f'<p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p>'
+        f'<p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p>'
         f'<p class="gaptext">{esc(after)}</p>'
     )
 
@@ -148,7 +170,7 @@ def build() -> str:
         for name in CSV_FILES
     )
     orphans = "\n".join(
-        f"        <li><code>{esc(name)}</code> — {esc(reason)}</li>"
+        f"        <li><code>{esc(name)}</code>: {esc(reason)}</li>"
         for name, reason in sorted(AUTOMATED_WITHOUT_A_CASE.items())
     )
 
@@ -167,7 +189,7 @@ TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ShopSmart — All {cases} test cases</title>
+<title>ShopSmart: All {cases} test cases</title>
 <meta name="description" content="All {cases} manually designed test cases for the ShopSmart practice \
 exercise, with spec gaps flagged, defect traceability, and the automated subset marked." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -278,14 +300,14 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <header>
     <div>
-      <h1>ShopSmart — all {cases} test cases</h1>
+      <h1>ShopSmart: all {cases} test cases</h1>
       <p class="sub">
         Every case, exactly as authored, with a derived column showing which ones the automated suite
         covers. The summary and the featured defect trace are on the
         <a href="index.html">project page</a>.
       </p>
       <p class="sub" style="margin-top:8px;">
-        <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b> — not a company, a client,
+        <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b>: not a company, a client,
         or a shipped product. The cases describe a fictional storefront; the automation runs against
         <a href="https://www.automationexercise.com">automationexercise.com</a>, a public practice site.
       </p>
@@ -306,11 +328,11 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   </div>
 
   <div class="note-panel amber">
-    <h2>{gaps} cases say &ldquo;spec gap — awaiting PM&rdquo; instead of an expected result</h2>
+    <h2>{gaps} cases say &ldquo;spec gap: awaiting PM&rdquo; instead of an expected result</h2>
     <p>
       That is the finished state of those cases, not an unfinished one. Where the specification did
-      not define a behaviour — what happens on an empty search, what the error is for an already
-      registered email, what the empty-cart screen says — the case <b>records that the spec is silent
+      not define a behaviour: what happens on an empty search, what the error is for an already
+      registered email, what the empty-cart screen says: the case <b>records that the spec is silent
       and proposes an expectation</b>, rather than inventing an expected result and quietly turning
       one person's guess into the standard the build gets measured against.
     </p>
@@ -323,7 +345,7 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <div class="note-panel">
     <h2>What &ldquo;Automated&rdquo; means here, and what it does not</h2>
     <p>
-      <b>{automated} of {cases} cases have automated coverage</b> — {yes} fully, {partial} partially.
+      <b>{automated} of {cases} cases have automated coverage</b>: {yes} fully, {partial} partially.
       The other {not_automated} are designed and run manually. That ratio is the point rather than a
       shortfall: test design and test automation are different activities, and which cases get
       automated is a risk decision. Automating all {cases} against a practice site would cost more
@@ -332,7 +354,7 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <p>
       The column is <b>derived, not asserted</b>. Each entry names the test that covers it, and a unit
       test fails the build if a named test stops existing. <b>Partial</b> means an automated test
-      exercises the scenario but asserts something weaker than the case specifies — marking those
+      exercises the scenario but asserts something weaker than the case specifies: marking those
       &ldquo;Yes&rdquo; would overclaim and &ldquo;No&rdquo; would hide real coverage.
     </p>
     <p>Four automated tests have no matching case in these files:</p>
@@ -350,10 +372,10 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     </p>
     <div class="dl-row">
       <a class="dl primary" href="test-cases/{combined}" download><code>{combined}</code> \
-— all {cases} cases</a>
+: all {cases} cases</a>
     </div>
     <p style="margin-top:13px;">
-      The four originals, unmodified and with their original six columns — what you download is what
+      The four originals, unmodified and with their original six columns: what you download is what
       was authored:
     </p>
     <div class="dl-row">
@@ -368,6 +390,9 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <a href="https://github.com/keonikaku/automation">github.com/keonikaku/automation</a> ·
     <a href="https://keonikaku.github.io">Portfolio</a>
     <p class="note">
+      The CSV downloads are the cases as written. This page renders them with em and en dashes
+      replaced by ordinary punctuation, which is the only difference between what you read here and
+      what you download.
       This page and the combined CSV are generated from the four original files by
       <a href="https://github.com/keonikaku/automation/blob/main/build_test_cases_page.py"><code>\
 build_test_cases_page.py</code></a>, so they cannot drift from them; a unit test re-renders both and
@@ -397,7 +422,7 @@ def main() -> int:
 # markers, which is generated from the CSVs like the full page. That keeps the
 # numbers on the project page derived rather than typed.
 
-PREVIEW_START = "<!-- TEST-CASE-PREVIEW:START — generated by build_test_cases_page.py -->"
+PREVIEW_START = "<!-- TEST-CASE-PREVIEW:START: generated by build_test_cases_page.py -->"
 PREVIEW_END = "<!-- TEST-CASE-PREVIEW:END -->"
 
 INDEX = REPO_ROOT / "index.html"
@@ -443,10 +468,10 @@ def build_preview() -> str:
   </div>
 
   <div class="scope" style="border-left:2px solid var(--accent);">
-    <h2>SMART-201 — one defect, traced through {total["traced"]} cases into the smoke suite</h2>
+    <h2>SMART-201: one defect, traced through {total["traced"]} cases into the smoke suite</h2>
     <p class="tc-lead">
       Search ignored the active category filter: filter to Women, search, and results came back from
-      every category. Rather than log it and move on, the issue was traced into coverage —
+      every category. Rather than log it and move on, the issue was traced into coverage:
       {" and ".join([", ".join(traced_refs[:-1]), traced_refs[-1]]) if len(traced_refs) > 1 else traced_refs[0]}
       pin the behaviour from different angles, and <b>the smoke suite is this one case</b>.
       A one-case smoke suite is a decision, not a thin result: smoke exists to answer
@@ -468,7 +493,7 @@ def build_preview() -> str:
         <dt>Priority / Type</dt><dd><span class="pri p-{esc(featured["Priority"]).lower()}">{esc(featured["Priority"])}</span> · {esc(featured["Type"])}</dd>
       </dl>
       <p class="vnote">Designed, prioritised Critical, and <b>not automated</b>. Nothing in the suite
-      yet combines a category filter with a search. It sits in the backlog — an ordinary state for
+      yet combines a category filter with a search. It sits in the backlog: an ordinary state for
       real work, and more useful published honestly than quietly closed.</p>
     </div>
   </div>
@@ -492,17 +517,17 @@ def build_preview() -> str:
   <div class="scope" style="margin-top:16px;">
     <h2>All {total["cases"]} cases, and the files</h2>
     <p class="tc-lead">
-      <b>{total["automated"]} of {total["cases"]} cases have automated coverage</b> — {total["yes"]} fully,
+      <b>{total["automated"]} of {total["cases"]} cases have automated coverage</b>: {total["yes"]} fully,
       {total["partial"]} partially. The other {total["cases"] - total["automated"]} are designed and run
       manually, which is the point rather than a shortfall: test design and automation are different
       activities, and which cases get automated is a risk decision. The
-      <b>{total["gaps"]} &ldquo;spec gap&rdquo; rows</b> are finished cases, not blank ones — where the
+      <b>{total["gaps"]} &ldquo;spec gap&rdquo; rows</b> are finished cases, not blank ones, where the
       specification was silent, the case records that and proposes an expectation instead of inventing
       one and turning a guess into the standard the build gets measured against.
     </p>
     <div class="dl-row">
       <a class="dl primary" href="test-cases.html">Browse all {total["cases"]} cases →</a>
-      <a class="dl" href="test-cases/{COMBINED_FILENAME}" download><code>{COMBINED_FILENAME}</code> — one file, all {total["cases"]}</a>
+      <a class="dl" href="test-cases/{COMBINED_FILENAME}" download><code>{COMBINED_FILENAME}</code>: one file, all {total["cases"]}</a>
     </div>
     <p class="tc-lead" style="margin-top:11px;font-size:12.5px;">
       The four original files are published unmodified with their original columns and are linked from

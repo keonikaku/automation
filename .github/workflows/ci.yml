@@ -1,7 +1,7 @@
 name: CI
 
 # The deterministic gate. Everything in this workflow is a function of the
-# code in the commit — no third-party site, no browser binaries, no
+# code in the commit: no third-party site, no browser binaries, no
 # simulator, no network beyond installing dependencies. That is deliberate:
 # this is the badge published on keonikaku.github.io, and a badge is only
 # worth having if red always means "something in this repo is wrong."
@@ -54,8 +54,8 @@ jobs:
 
       # NOTE: `playwright install` is deliberately absent from this job.
       # No browser binaries exist here, so if any module ever launches a
-      # browser at import time — the defect that used to open a window during
-      # `pytest --collect-only` — the collection step below fails hard rather
+      # browser at import time: the defect that used to open a window during
+      # `pytest --collect-only`: the collection step below fails hard rather
       # than hanging.
       - name: Assert no browser binaries are present
         run: |
@@ -63,7 +63,7 @@ jobs:
             echo "Browsers are installed; the collection guard below would be toothless."
             exit 1
           fi
-          echo "No browser binaries — collection must be side-effect free to pass."
+          echo "No browser binaries: collection must be side-effect free to pass."
 
       - name: Lint
         run: ruff check .
@@ -91,7 +91,7 @@ jobs:
           # commit that says so.
           [ "$ui" -eq 10 ] || { echo "expected 10 ui tests, found $ui"; exit 1; }
 
-          # Exactly one native test, and it must not be collected by default —
+          # Exactly one native test, and it must not be collected by default:
           # a clean clone has no Appium server to talk to.
           [ "$native" -eq 1 ] || { echo "expected 1 native test, found $native"; exit 1; }
 

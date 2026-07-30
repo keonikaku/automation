@@ -8,7 +8,7 @@ from shopsmart.config import BASE_URL, Settings, as_bool, load_settings
 
 
 def test_default_is_headless():
-    """The default must be headless — CI has no display server."""
+    """The default must be headless: CI has no display server."""
     assert load_settings(env={}).headless is True
 
 
@@ -60,7 +60,7 @@ def test_url_composition():
 
 
 def test_ios_udid_is_not_hardcoded_but_can_be_pinned():
-    """No UDID by default — it is discovered per machine. Override is opt-in."""
+    """No UDID by default: it is discovered per machine. Override is opt-in."""
     assert load_settings(env={}).ios_udid is None
     assert load_settings(env={"IOS_UDID": "ABC-123"}).ios_udid == "ABC-123"
 

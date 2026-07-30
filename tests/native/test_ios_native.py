@@ -1,4 +1,4 @@
-"""Native iOS — Appium / XCUITest against the Sauce Labs demo app.
+"""Native iOS: Appium / XCUITest against the Sauce Labs demo app.
 
 **This test never runs in CI, by design.** It needs macOS, Xcode, a booted
 iPhone Simulator and a running Appium server; GitHub-hosted macOS runners cost
@@ -75,11 +75,11 @@ def ios_driver(settings):
             driver.quit()
 
     if recorded and destination.exists():
-        print(f"Screen recording saved — {destination}")
+        print(f"Screen recording saved: {destination}")
 
 
 def test_11_ios_native(ios_driver):
-    """Footer navigation — verify each tab bar item is reachable and taps."""
+    """Footer navigation: verify each tab bar item is reachable and taps."""
     for accessibility_id in FOOTER_TABS:
         ios_driver.find_element(AppiumBy.ACCESSIBILITY_ID, accessibility_id).click()
         # The tab bar has no completion event to await; the app animates in.

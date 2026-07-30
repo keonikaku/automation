@@ -53,7 +53,7 @@ def register(context: BrowserContext, base_url: str = BASE_URL) -> tuple[Account
 
     The returned page is left authenticated so the caller can hand it back to
     :func:`delete` at teardown. Callers that want the account tested from a
-    logged-out browser should pass a context of their own — contexts do not
+    logged-out browser should pass a context of their own: contexts do not
     share cookies, which is what makes that isolation free.
     """
     account = new_credentials()

@@ -6,7 +6,7 @@ how to read them consistently, and which cases the automated suite covers.
 
 The CSVs have no "Automated" column. It is *derived* here by mapping each case
 to the test in ``tests/ui/`` that exercises it, so the claim is checkable
-rather than asserted — unit tests verify that every ``case`` below exists in
+rather than asserted: unit tests verify that every ``case`` below exists in
 the CSVs and every ``test`` below exists in the suite.
 
 Three coverage states, because two would force a lie somewhere:
@@ -18,7 +18,7 @@ Three coverage states, because two would force a lie somewhere:
     property than the case specifies. "Yes" would overclaim; "No" would hide
     real coverage.
 ``NO``
-    Everything else, and the default — a case is not automated unless listed.
+    Everything else, and the default: a case is not automated unless listed.
 
 Coverage is deliberately narrow. Test design and automation are different
 activities, and which cases get automated is a risk decision, not a backlog.
@@ -194,7 +194,7 @@ COVERAGE: list[Coverage] = [
     ),
 ]
 
-#: Automated tests with no matching published case. Named rather than omitted —
+#: Automated tests with no matching published case. Named rather than omitted:
 #: an unexplained gap in either direction is what makes a coverage claim
 #: untrustworthy.
 AUTOMATED_WITHOUT_A_CASE = {
@@ -219,7 +219,7 @@ FEATURED_CASE = (
     "Smoke — Search respects active category filter (SMART-201)",
 )
 
-#: Four rows chosen to show the shape of the set rather than its size — one of
+#: Four rows chosen to show the shape of the set rather than its size: one of
 #: each coverage state, and one spec gap.
 PREVIEW_CASES = [
     ("01_registration_login_FINAL.csv", "Successful login with valid credentials"),
@@ -232,7 +232,7 @@ PREVIEW_CASES = [
 ]
 
 #: Columns of the combined export. Suite, ID and the two automation columns are
-#: derived and exist only here — the four original files keep their own six
+#: derived and exist only here: the four original files keep their own six
 #: columns and are published unmodified.
 COMBINED_COLUMNS = [
     "Suite",

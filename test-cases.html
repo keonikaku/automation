@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ShopSmart — All 54 test cases</title>
+<title>ShopSmart: All 54 test cases</title>
 <meta name="description" content="All 54 manually designed test cases for the ShopSmart practice exercise, with spec gaps flagged, defect traceability, and the automated subset marked." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -112,14 +112,14 @@
 
   <header>
     <div>
-      <h1>ShopSmart — all 54 test cases</h1>
+      <h1>ShopSmart: all 54 test cases</h1>
       <p class="sub">
         Every case, exactly as authored, with a derived column showing which ones the automated suite
         covers. The summary and the featured defect trace are on the
         <a href="index.html">project page</a>.
       </p>
       <p class="sub" style="margin-top:8px;">
-        <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b> — not a company, a client,
+        <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b>: not a company, a client,
         or a shipped product. The cases describe a fictional storefront; the automation runs against
         <a href="https://www.automationexercise.com">automationexercise.com</a>, a public practice site.
       </p>
@@ -139,11 +139,11 @@
   </div>
 
   <div class="note-panel amber">
-    <h2>19 cases say &ldquo;spec gap — awaiting PM&rdquo; instead of an expected result</h2>
+    <h2>19 cases say &ldquo;spec gap: awaiting PM&rdquo; instead of an expected result</h2>
     <p>
       That is the finished state of those cases, not an unfinished one. Where the specification did
-      not define a behaviour — what happens on an empty search, what the error is for an already
-      registered email, what the empty-cart screen says — the case <b>records that the spec is silent
+      not define a behaviour: what happens on an empty search, what the error is for an already
+      registered email, what the empty-cart screen says: the case <b>records that the spec is silent
       and proposes an expectation</b>, rather than inventing an expected result and quietly turning
       one person's guess into the standard the build gets measured against.
     </p>
@@ -156,7 +156,7 @@
   <div class="note-panel">
     <h2>What &ldquo;Automated&rdquo; means here, and what it does not</h2>
     <p>
-      <b>9 of 54 cases have automated coverage</b> — 5 fully, 4 partially.
+      <b>9 of 54 cases have automated coverage</b>: 5 fully, 4 partially.
       The other 45 are designed and run manually. That ratio is the point rather than a
       shortfall: test design and test automation are different activities, and which cases get
       automated is a risk decision. Automating all 54 against a practice site would cost more
@@ -165,15 +165,15 @@
     <p>
       The column is <b>derived, not asserted</b>. Each entry names the test that covers it, and a unit
       test fails the build if a named test stops existing. <b>Partial</b> means an automated test
-      exercises the scenario but asserts something weaker than the case specifies — marking those
+      exercises the scenario but asserts something weaker than the case specifies: marking those
       &ldquo;Yes&rdquo; would overclaim and &ldquo;No&rdquo; would hide real coverage.
     </p>
     <p>Four automated tests have no matching case in these files:</p>
     <ul>
-        <li><code>test_06_contact_form</code> — No Contact Us case exists in these four files.</li>
-        <li><code>test_07_mobile_login</code> — No mobile-web case exists; these files cover desktop behaviour only.</li>
-        <li><code>test_09_empty_login_fields</code> — The published cases cover an empty email and an empty password separately; this test submits both empty at once.</li>
-        <li><code>test_11_ios_native</code> — Different application — the Sauce Labs demo app, not the site these cases describe.</li>
+        <li><code>test_06_contact_form</code>: No Contact Us case exists in these four files.</li>
+        <li><code>test_07_mobile_login</code>: No mobile-web case exists; these files cover desktop behaviour only.</li>
+        <li><code>test_09_empty_login_fields</code>: The published cases cover an empty email and an empty password separately; this test submits both empty at once.</li>
+        <li><code>test_11_ios_native</code>: Different application: the Sauce Labs demo app, not the site these cases describe.</li>
     </ul>
   </div>
 
@@ -185,10 +185,10 @@
       <code>ID</code>, <code>Automated</code> and <code>Automated Test</code> columns.
     </p>
     <div class="dl-row">
-      <a class="dl primary" href="test-cases/all_test_cases_combined.csv" download><code>all_test_cases_combined.csv</code> — all 54 cases</a>
+      <a class="dl primary" href="test-cases/all_test_cases_combined.csv" download><code>all_test_cases_combined.csv</code> : all 54 cases</a>
     </div>
     <p style="margin-top:13px;">
-      The four originals, unmodified and with their original six columns — what you download is what
+      The four originals, unmodified and with their original six columns: what you download is what
       was authored:
     </p>
     <div class="dl-row">
@@ -264,7 +264,7 @@
         <td class="ctitle">Login with empty email field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Leave email field empty.</li><li>Enter any password.</li><li>Click Login button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define error message or behavior for empty email on login. Expected: form validation prevents submission and indicates required field.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define error message or behavior for empty email on login. Expected: form validation prevents submission and indicates required field.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -273,7 +273,7 @@
         <td class="ctitle">Login with empty password field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter a valid registered email.</li><li>Leave password field empty.</li><li>Click Login button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define error message or behavior for empty password on login. Expected: form validation prevents submission and indicates required field.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define error message or behavior for empty password on login. Expected: form validation prevents submission and indicates required field.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -282,7 +282,7 @@
         <td class="ctitle">Registration with missing required Name field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in. User does not have an existing account.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Leave Name field empty.</li><li>Enter valid Email and Password.</li><li>Click Sign Up button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Name on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define validation behavior for missing Name on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -291,7 +291,7 @@
         <td class="ctitle">Registration with missing required Email field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter valid Name.</li><li>Leave Email field empty.</li><li>Enter Password.</li><li>Click Sign Up button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Email on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define validation behavior for missing Email on Sign Up form. Expected: form prevents submission and flags required field.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -300,13 +300,13 @@
         <td class="ctitle">Registration with already registered email address<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in. Email address is already registered in the system.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Enter a Name and an email address that already exists in the system.</li><li>Enter a Password.</li><li>Click Sign Up button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the error message for duplicate email registration. Expected: error message indicates email is already registered.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the error message for duplicate email registration. Expected: error message indicates email is already registered.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>REG-11</code></td>
-        <td class="ctitle">Registration — verify username displays in nav after account creation</td>
+        <td class="ctitle">Registration: verify username displays in nav after account creation</td>
         <td class="cpre">User is not logged in. User does not have an existing account.</td>
         <td class="csteps"><ol class="steps-list"><li>Complete full registration flow with valid data.</li><li>Click Create Account.</li><li>Observe navigation header after Account Created message.</li></ol></td>
         <td class="cexp"><p>Username entered during registration displays in the navigation header confirming automatic login.</p></td>
@@ -318,16 +318,16 @@
         <td class="ctitle">Registration with missing account information fields on step 2<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User has completed Sign Up form and reached account information page.</td>
         <td class="csteps"><ol class="steps-list"><li>Leave required account information fields empty (Address, City, State, Zipcode, Mobile, Country).</li><li>Click Create Account.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define which fields on account information page are required vs optional. Expected: form prevents submission and flags required fields.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define which fields on account information page are required vs optional. Expected: form prevents submission and flags required fields.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case is-gap">
         <td class="cid"><code>REG-13</code></td>
-        <td class="ctitle">Login with correct email — wrong case sensitivity<span class="pill gap">Spec gap</span></td>
+        <td class="ctitle">Login with correct email: wrong case sensitivity<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User has a registered account with a lowercase email address.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter the registered email in all uppercase.</li><li>Enter correct password.</li><li>Click Login.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define whether email login is case sensitive. Expected: login succeeds as email fields are typically case insensitive.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define whether email login is case sensitive. Expected: login succeeds as email fields are typically case insensitive.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -336,13 +336,13 @@
         <td class="ctitle">Verify Login and Sign Up forms are both present on the same page</td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Login/Register page.</li><li>Observe page layout.</li></ol></td>
-        <td class="cexp"><p>Two separate forms are visible on the same page — Login form on one side and Sign Up form on the other.</p></td>
+        <td class="cexp"><p>Two separate forms are visible on the same page: Login form on one side and Sign Up form on the other.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>REG-15</code></td>
-        <td class="ctitle">Registration — newsletter and special offers preferences are selectable</td>
+        <td class="ctitle">Registration: newsletter and special offers preferences are selectable</td>
         <td class="cpre">User is on the account information page during registration.</td>
         <td class="csteps"><ol class="steps-list"><li>Locate newsletter subscription option.</li><li>Select a preference.</li><li>Locate special offers option.</li><li>Select a preference.</li></ol></td>
         <td class="cexp"><p>Both preferences can be selected independently. Selection is reflected before clicking Create Account.</p></td>
@@ -354,7 +354,7 @@
         <td class="ctitle">Verify logged-in user cannot see Login/Register page content<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is logged in.</td>
         <td class="csteps"><p>1. Attempt to navigate directly to the Login/Register page URL while logged in.</p></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior when a logged-in user navigates to the login page. Expected: user is redirected to homepage or login form is hidden.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define behavior when a logged-in user navigates to the login page. Expected: user is redirected to homepage or login form is hidden.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -363,13 +363,13 @@
         <td class="ctitle">Registration with invalid email format<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter a valid Name.</li><li>Enter an invalid email format (e.g. notanemail or user@ or @domain.com).</li><li>Enter a Password.</li><li>Click Sign Up.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define email format validation behavior. Expected: form prevents submission and indicates invalid email format.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define email format validation behavior. Expected: form prevents submission and indicates invalid email format.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>REG-18</code></td>
-        <td class="ctitle">Registration — Title field accepts Mr and Mrs options only</td>
+        <td class="ctitle">Registration: Title field accepts Mr and Mrs options only</td>
         <td class="cpre">User is on account information page during registration.</td>
         <td class="csteps"><ol class="steps-list"><li>Click on the Title field.</li><li>Observe available options.</li></ol></td>
         <td class="cexp"><p>Title field displays exactly two options: Mr and Mrs. No other values are selectable.</p></td>
@@ -378,16 +378,16 @@
       </tr>
       <tr class="case is-gap">
         <td class="cid"><code>REG-19</code></td>
-        <td class="ctitle">Logout and verify session is cleared — cannot access account without logging in again<span class="pill gap">Spec gap</span></td>
+        <td class="ctitle">Logout and verify session is cleared: cannot access account without logging in again<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Click Logout in navigation header.</li><li>Attempt to navigate to account or order history page directly via URL.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior for accessing protected pages after logout. Expected: user is redirected to Login page and cannot access account content without re-authenticating.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define behavior for accessing protected pages after logout. Expected: user is redirected to Login page and cannot access account content without re-authenticating.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>REG-20</code></td>
-        <td class="ctitle">Login with valid credentials — verify redirect to homepage</td>
+        <td class="ctitle">Login with valid credentials: verify redirect to homepage</td>
         <td class="cpre">User has a registered account. User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to Login/Register page.</li><li>Enter valid email and password.</li><li>Click Login button.</li><li>Observe URL and page content after login.</li></ol></td>
         <td class="cexp"><p>User is redirected to the ShopSmart homepage. Username is visible in the navigation header.</p></td>
@@ -499,7 +499,7 @@
         <td class="ctitle">Submit a product review with all required fields<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on a product detail page.</td>
         <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Enter a valid Name.</li><li>Enter a valid Email.</li><li>Enter review text.</li><li>Click Submit.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the success message or behavior after review submission. Expected: confirmation message displays indicating review was submitted successfully.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the success message or behavior after review submission. Expected: confirmation message displays indicating review was submitted successfully.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -508,7 +508,7 @@
         <td class="ctitle">Submit product review with missing Name field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on a product detail page.</td>
         <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Leave Name field empty.</li><li>Enter valid Email and review text.</li><li>Click Submit.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define validation behavior for missing Name in review form. Expected: form prevents submission and flags Name as required.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define validation behavior for missing Name in review form. Expected: form prevents submission and flags Name as required.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -517,13 +517,13 @@
         <td class="ctitle">Submit product review with invalid email format<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on a product detail page.</td>
         <td class="csteps"><ol class="steps-list"><li>Scroll to the Write Your Review section.</li><li>Enter a valid Name.</li><li>Enter an invalid email format (e.g. notanemail).</li><li>Enter review text.</li><li>Click Submit.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define email validation behavior on review form. Expected: form prevents submission and indicates invalid email format.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define email validation behavior on review form. Expected: form prevents submission and indicates invalid email format.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>CAT-13</code></td>
-        <td class="ctitle">Search for a product that exists — verify results match search term across full catalog</td>
+        <td class="ctitle">Search for a product that exists: verify results match search term across full catalog</td>
         <td class="cpre">User is on the All Products page. No category filter is active.</td>
         <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Ensure no category is selected in the left sidebar.</li><li>Enter a valid product name or keyword.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
         <td class="cexp"><p>Search results page displays all products across all categories that match the search term. Each result shows product image, name, and price.</p></td>
@@ -535,7 +535,7 @@
         <td class="ctitle">Search for a product that does not exist<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on the All Products page.</td>
         <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Enter a search term that does not match any product (e.g. zzzznotaproduct).</li><li>Click the Search button.</li></ol></td>
-        <td class="cexp"><p>Empty results page displays.</p><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the empty state message. Expected: a message indicates no products were found matching the search term.</p></td>
+        <td class="cexp"><p>Empty results page displays.</p><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the empty state message. Expected: a message indicates no products were found matching the search term.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill yes">Yes</span><a class="testlink" href="https://github.com/keonikaku/automation/tree/main/tests/ui"><code>test_10_search_no_results</code></a><span class="covnote">Asserts the results grid is empty. The spec gap this case flags is about the empty-state message, which is not asserted because it is not yet defined.</span></td>
       </tr>
@@ -544,7 +544,7 @@
         <td class="ctitle">Search with empty search field<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on the All Products page.</td>
         <td class="csteps"><ol class="steps-list"><li>Locate the search bar on the Products page.</li><li>Leave the search field empty.</li><li>Click the Search button.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define behavior for submitting an empty search. Expected: either all products display or a validation message prompts the user to enter a search term.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define behavior for submitting an empty search. Expected: either all products display or a validation message prompts the user to enter a search term.</p></td>
         <td class="cmeta"><span class="pri p-medium">Medium</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -562,7 +562,7 @@
         <td class="ctitle">Clearing category filter after search returns results from all categories (SMART-201)<span class="pill trace">SMART-201</span></td>
         <td class="cpre">User is on the All Products page. A category filter is active.</td>
         <td class="csteps"><ol class="steps-list"><li>Select Women &gt; Dress from the left sidebar.</li><li>Enter a search term in the search bar.</li><li>Click Search.</li><li>Verify results are scoped to Women &gt; Dress.</li><li>Clear the category filter by clicking on another category or deselecting.</li><li>Search again using the same search term.</li><li>Observe the results.</li></ol></td>
-        <td class="cexp"><p>After clearing the category filter, search results return matching products from all categories — not scoped to the previously selected category.</p></td>
+        <td class="cexp"><p>After clearing the category filter, search results return matching products from all categories: not scoped to the previously selected category.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -617,7 +617,7 @@
         <td class="ctitle">Continue Shopping from confirmation modal returns user to previous page</td>
         <td class="cpre">User has added a product to cart from the product listing page and the confirmation modal is displayed.</td>
         <td class="csteps"><ol class="steps-list"><li>Click Continue Shopping in the confirmation modal.</li><li>Observe the page the user lands on.</li></ol></td>
-        <td class="cexp"><p>User is returned to the exact product listing page they were on before adding to cart — not the homepage.</p></td>
+        <td class="cexp"><p>User is returned to the exact product listing page they were on before adding to cart: not the homepage.</p></td>
         <td class="cmeta"><span class="pri p-critical">Critical</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -662,7 +662,7 @@
         <td class="ctitle">Empty cart state displays message and continue shopping button<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on the Shopping Cart page with no items in the cart.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the Shopping Cart page with an empty cart.</li><li>Observe the page content.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the exact empty cart message text. Expected: a message indicates the cart is empty and a Continue Shopping button is visible.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the exact empty cart message text. Expected: a message indicates the cart is empty and a Continue Shopping button is visible.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -689,7 +689,7 @@
         <td class="ctitle">Attempt to add more than 100 units of a single product to cart<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is on a product detail page.</td>
         <td class="csteps"><ol class="steps-list"><li>Enter 101 in the quantity field on the product detail page.</li><li>Click Add to Cart.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the error message or behavior when quantity exceeds 100. Expected: system prevents adding more than 100 units and displays an appropriate message.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the error message or behavior when quantity exceeds 100. Expected: system prevents adding more than 100 units and displays an appropriate message.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -698,13 +698,13 @@
         <td class="ctitle">Out of stock product added to cart displays warning when stock status changes<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User has a product in their cart. The product&#x27;s stock status changes to out of stock after being added.</td>
         <td class="csteps"><ol class="steps-list"><li>Add a product to the cart.</li><li>Simulate the product going out of stock (or verify with a known out of stock product).</li><li>Navigate to the cart page.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the exact warning message text or visual treatment for out of stock items in cart. Expected: out of stock item is flagged with a visible warning indicator.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the exact warning message text or visual treatment for out of stock items in cart. Expected: out of stock item is flagged with a visible warning indicator.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
       <tr class="case">
         <td class="cid"><code>CART-13</code></td>
-        <td class="ctitle">Integration — Guest user attempting to add to cart is not blocked but checkout requires login</td>
+        <td class="ctitle">Integration: Guest user attempting to add to cart is not blocked but checkout requires login</td>
         <td class="cpre">User is not logged in.</td>
         <td class="csteps"><ol class="steps-list"><li>Navigate to the All Products page.</li><li>Add a product to the cart.</li><li>Proceed to checkout from the cart page.</li></ol></td>
         <td class="cexp"><p>Guest user can add items to cart without logging in. When attempting to proceed to checkout, user is redirected to the Login page.</p></td>
@@ -713,7 +713,7 @@
       </tr>
       <tr class="case">
         <td class="cid"><code>CART-14</code></td>
-        <td class="ctitle">Integration — Cart item count in navigation updates correctly after adding products from catalog</td>
+        <td class="ctitle">Integration: Cart item count in navigation updates correctly after adding products from catalog</td>
         <td class="cpre">User is on the All Products page. Cart is empty.</td>
         <td class="csteps"><ol class="steps-list"><li>Add one product to the cart from the listing page.</li><li>Observe the cart icon count in the navigation header.</li><li>Add a second product.</li><li>Observe the cart icon count again.</li></ol></td>
         <td class="cexp"><p>Cart icon count increments correctly after each product is added. Count reflects the total number of items in the cart.</p></td>
@@ -722,10 +722,10 @@
       </tr>
       <tr class="case is-gap">
         <td class="cid"><code>CART-15</code></td>
-        <td class="ctitle">Integration — Logged in user cart persists after navigating away and returning<span class="pill gap">Spec gap</span></td>
+        <td class="ctitle">Integration: Logged in user cart persists after navigating away and returning<span class="pill gap">Spec gap</span></td>
         <td class="cpre">User is logged in. User has items in the cart.</td>
         <td class="csteps"><ol class="steps-list"><li>Add two products to the cart.</li><li>Log out of the account.</li><li>Log back in with the same credentials.</li><li>Navigate to the cart page.</li></ol></td>
-        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec states cart persists for the duration of the browser session but does not define behavior after logout and re-login. Expected: cart contents are either retained or cleared — behavior needs to be defined by PM.</p></td>
+        <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec states cart persists for the duration of the browser session but does not define behavior after logout and re-login. Expected: cart contents are either retained or cleared: behavior needs to be defined by PM.</p></td>
         <td class="cmeta"><span class="pri p-high">High</span><br /><span class="ctype">Functional</span></td>
         <td class="cauto"><span class="pill no">No</span></td>
       </tr>
@@ -750,7 +750,7 @@
       <tbody>
       <tr class="case is-traced">
         <td class="cid"><code>SMOKE-01</code></td>
-        <td class="ctitle">Smoke — Search respects active category filter (SMART-201)<span class="pill trace">SMART-201</span></td>
+        <td class="ctitle">Smoke: Search respects active category filter (SMART-201)<span class="pill trace">SMART-201</span></td>
         <td class="cpre">User is on the All Products page.</td>
         <td class="csteps"><ol class="steps-list"><li>Click on Women category in the left sidebar.</li><li>Enter any valid search term in the search bar.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></td>
         <td class="cexp"><p>Search results contain only Women&#x27;s products matching the search term. Products from other categories are not displayed.</p></td>
@@ -767,6 +767,9 @@
     <a href="https://github.com/keonikaku/automation">github.com/keonikaku/automation</a> ·
     <a href="https://keonikaku.github.io">Portfolio</a>
     <p class="note">
+      The CSV downloads are the cases as written. This page renders them with em and en dashes
+      replaced by ordinary punctuation, which is the only difference between what you read here and
+      what you download.
       This page and the combined CSV are generated from the four original files by
       <a href="https://github.com/keonikaku/automation/blob/main/build_test_cases_page.py"><code>build_test_cases_page.py</code></a>, so they cannot drift from them; a unit test re-renders both and
       fails the build if what is committed disagrees with the data. The automated-coverage mapping is

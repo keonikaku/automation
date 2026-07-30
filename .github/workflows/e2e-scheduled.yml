@@ -5,8 +5,8 @@ name: E2E (on demand)
 #
 # It runs when a person asks for it, never on a schedule and never on a pull
 # request, and it is reported rather than gated. The target is a third-party practice site that serves
-# interstitial ads and periodically goes down. Wiring a pull-request gate — or
-# a public badge — to it would produce red for reasons that have nothing to do
+# interstitial ads and periodically goes down. Wiring a pull-request gate, or
+# a public badge: to it would produce red for reasons that have nothing to do
 # with this repository, and a badge nobody trusts is worse than no badge.
 #
 # What this job does NOT do: hide failures. There is no continue-on-error
@@ -56,7 +56,7 @@ jobs:
       - name: Install Chromium
         run: playwright install --with-deps chromium
 
-      # Headless by default — nothing here sets HEADED. Video recording is on,
+      # Headless by default: nothing here sets HEADED. Video recording is on,
       # which is the point: the artifact below is produced by the same code
       # path that produces the recordings published on the site.
       #
@@ -89,7 +89,7 @@ jobs:
   # published, so the job could not be made to work at any price worth paying.
   #
   # It is therefore carried by the `native` marker, which pytest.ini deselects
-  # by default. No workflow in this repository ever runs a native test —
+  # by default. No workflow in this repository ever runs a native test:
   # ci.yml passes `-m native` only to `pytest --collect-only`, to assert the
   # test still exists so the exclusion cannot quietly become an omission.
   #

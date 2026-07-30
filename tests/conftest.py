@@ -7,7 +7,7 @@ the fixtures own the browser lifecycle, and because a fixture closes each
 context before the test finishes, Playwright flushes video to disk on its own.
 That was the only thing the patch was buying.
 
-Fixtures are lazy, so unit tests — which request none of these — never launch
+Fixtures are lazy, so unit tests (which request none of these) never launch
 a browser or touch the network.
 """
 
@@ -57,7 +57,7 @@ def browser(playwright, settings: Settings):
 
 @pytest.fixture
 def context_factory(playwright, browser: Browser, settings: Settings, request, tmp_path):
-    """Create browser contexts that clean up — and flush their video — for you.
+    """Create browser contexts that clean up (and flush their video) for you.
 
     Every context this hands out is closed during teardown. Playwright only
     writes a video file when the *context* closes, so closing here is what
@@ -116,7 +116,7 @@ def registered_account(context_factory, settings: Settings):
     """Register a throwaway account, hand it to the test, delete it afterwards.
 
     Registration happens in its own browser context, so the session it leaves
-    behind is invisible to the test's context — the test gets a genuinely
+    behind is invisible to the test's context: the test gets a genuinely
     logged-out browser and has to log in for real. That same context is still
     authenticated at teardown, which is what lets it delete the account.
 

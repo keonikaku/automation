@@ -30,7 +30,7 @@ class LoginPage(BasePage):
         return self.submit()
 
     def submit(self):
-        """Submit the sign-in form as-is — used by the empty-fields test."""
+        """Submit the sign-in form as-is: used by the empty-fields test."""
         self.page.click(self.SUBMIT)
         self.page.wait_for_load_state("domcontentloaded")
         return self

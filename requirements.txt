@@ -11,5 +11,5 @@ pytest-html==4.2.0
 # Native iOS (tests/native). Pure Python, so it installs everywhere; the test
 # it supports is deselected by default and never runs in CI. It is pinned here
 # rather than left optional so that `pytest --collect-only` can import every
-# test module on any platform — collection integrity is a CI gate.
+# test module on any platform: collection integrity is a CI gate.
 Appium-Python-Client==5.3.1

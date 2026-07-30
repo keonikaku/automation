@@ -1,6 +1,6 @@
 """Guards on the published test cases.
 
-The page states numbers — 54 designed, 9 automated, 19 spec gaps — and marks
+The page states numbers (54 designed, 9 automated, 19 spec gaps) and marks
 cases as covered by named tests. Every one of those claims is derived from the
 CSVs or from ``tests/ui/``, and every one is checked here, because a published
 number nobody can source is the failure mode this whole repository is trying
@@ -49,7 +49,7 @@ def suite_source() -> str:
 # ── the source files ──────────────────────────────────────────────────
 @pytest.mark.parametrize("filename", CSV_FILES)
 def test_every_published_csv_parses_with_the_original_columns(filename):
-    """The originals are published unmodified — including their columns."""
+    """The originals are published unmodified: including their columns."""
     rows = read_cases(filename)
     assert rows, f"{filename} has no rows"
     assert list(rows[0].keys()) == EXPECTED_COLUMNS, (
@@ -127,7 +127,7 @@ def test_the_combined_csv_matches_the_originals():
     )
     assert list(committed[0].keys()) == COMBINED_COLUMNS
     assert committed == combined_rows(), (
-        f"{COMBINED_FILENAME} is stale — run `python build_test_cases_page.py`"
+        f"{COMBINED_FILENAME} is stale: run `python build_test_cases_page.py`"
     )
     assert len(committed) == counts()["cases"]
 
@@ -136,7 +136,7 @@ def test_the_combined_csv_matches_the_originals():
 def test_the_full_test_case_page_is_not_stale():
     committed = (REPO_ROOT / "test-cases.html").read_text(encoding="utf-8")
     assert committed == builder.build(), (
-        "test-cases.html is stale — run `python build_test_cases_page.py`"
+        "test-cases.html is stale: run `python build_test_cases_page.py`"
     )
 
 
@@ -145,7 +145,7 @@ def test_the_preview_section_in_index_is_not_stale():
     start = page.index(builder.PREVIEW_START)
     end = page.index(builder.PREVIEW_END) + len(builder.PREVIEW_END)
     assert page[start:end] == builder.build_preview(), (
-        "the preview in index.html is stale — run `python build_test_cases_page.py`"
+        "the preview in index.html is stale: run `python build_test_cases_page.py`"
     )
 
 
@@ -164,7 +164,7 @@ def test_the_headline_numbers_are_all_derived():
 # Everything else on the published page is *derived* from these four files, so
 # a stale number fails a test. The claim "committed unmodified" is different in
 # kind: it is a claim about the files themselves, and nothing downstream
-# notices if one of them changes — the page and the combined CSV would simply
+# notices if one of them changes: the page and the combined CSV would simply
 # regenerate around the edit and every other guard would still pass.
 #
 # So it gets a checksum. These digests are the files as Keoni authored them.
@@ -200,7 +200,7 @@ def test_every_original_csv_is_byte_for_byte_unmodified(filename):
     assert digest == ORIGINAL_DIGESTS[filename], (
         f"{filename} has changed. The README and the published page both say "
         "these files are committed unmodified, so either restore the file or "
-        "change the claim — do not just update the digest."
+        "change the claim: do not just update the digest."
     )
 
 
@@ -235,5 +235,5 @@ def test_the_readme_numbers_match_the_derived_counts():
     for sentence in expected:
         assert sentence in prose, (
             f"README.md no longer says {sentence!r}. The derived counts are "
-            f"{total} — update the README, not this test."
+            f"{total}: update the README, not this test."
         )

@@ -21,7 +21,7 @@ WRONG_PASSWORD = "wrongpassword123"
 
 
 def test_01_login(page, registered_account, settings):
-    """Valid credentials — verify successful login.
+    """Valid credentials: verify successful login.
 
     The account is registered by the fixture at setup and deleted at teardown,
     so this test depends on nothing that exists before the run starts.
@@ -34,7 +34,7 @@ def test_01_login(page, registered_account, settings):
 
 
 def test_07_mobile_login(mobile_page, registered_account, settings):
-    """iPhone 13 emulation — verify login works on mobile web."""
+    """iPhone 13 emulation: verify login works on mobile web."""
     login_page = LoginPage(mobile_page, settings.base_url).open()
     login_page.login(registered_account.email, registered_account.password)
 
@@ -43,7 +43,7 @@ def test_07_mobile_login(mobile_page, registered_account, settings):
 
 
 def test_08_invalid_login(page, settings):
-    """Unregistered account — verify the incorrect-credentials error displays.
+    """Unregistered account: verify the incorrect-credentials error displays.
 
     Self-contained: uses a hardcoded fake address, no account required.
     """
@@ -54,7 +54,7 @@ def test_08_invalid_login(page, settings):
 
 
 def test_09_empty_login_fields(page, settings):
-    """Empty email and password — verify the form does not submit."""
+    """Empty email and password: verify the form does not submit."""
     login_page = LoginPage(page, settings.base_url).open()
     login_page.submit()
 

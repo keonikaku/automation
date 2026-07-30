@@ -2,7 +2,7 @@
 
 Every page object owns its own selectors. Tests call methods and read
 properties; no test file contains a raw selector string. That boundary is the
-whole point — when the practice site moves an element, exactly one file
+whole point, when the practice site moves an element, exactly one file
 changes.
 
 The site header (login state, logout, delete account) is present on every

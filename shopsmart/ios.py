@@ -6,7 +6,7 @@ literal in the source is a guarantee the test is unrunnable by anyone else.
 
 Discovery order, most specific first:
 
-1. ``IOS_UDID`` — an explicit override, for when you know exactly which
+1. ``IOS_UDID``: an explicit override, for when you know exactly which
    simulator you want.
 2. A **booted** simulator matching the requested model name. If a human has
    already booted the device they want to watch, use it.
@@ -126,7 +126,7 @@ def resolve_device(
 # ── screen capture ────────────────────────────────────────────────────
 # Recording goes through `xcrun simctl io … recordVideo`, not Appium's
 # start_recording_screen(). Appium's version shells out to ffmpeg, and when
-# ffmpeg is absent it raises during setup — which took the native test from
+# ffmpeg is absent it raises during setup, which took the native test from
 # "passing" to "cannot run at all" on a machine that had everything else it
 # needed, with nothing in the repository declaring the dependency. simctl ships
 # with Xcode, which this test already requires, and writes H.264 that plays in

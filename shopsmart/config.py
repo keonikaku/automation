@@ -26,7 +26,7 @@ BASE_URL = "https://www.automationexercise.com"
 #: Playwright device descriptor used by the mobile-web tests.
 MOBILE_DEVICE = "iPhone 13"
 
-#: Default simulator model for the native iOS test. Overridable, never a UDID —
+#: Default simulator model for the native iOS test. Overridable, never a UDID.
 #: UDIDs are machine-specific and are discovered at runtime instead.
 DEFAULT_IOS_DEVICE_NAME = "iPhone 17"
 

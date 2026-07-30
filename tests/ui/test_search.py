@@ -11,7 +11,7 @@ NO_MATCH_TERM = "zzzznotaproduct"
 
 
 def test_02_search(page, settings):
-    """Search for a product — verify the results page displays matches."""
+    """Search for a product: verify the results page displays matches."""
     products = ProductsPage(page, settings.base_url).open()
     products.search("dress")
 
@@ -20,7 +20,7 @@ def test_02_search(page, settings):
 
 
 def test_10_search_no_results(page, settings):
-    """Search a non-matching term — verify the results grid comes back empty.
+    """Search a non-matching term: verify the results grid comes back empty.
 
     The 'Searched Products' heading renders whether or not anything matched, so
     asserting on the heading alone would pass even if the site returned the

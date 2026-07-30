@@ -16,7 +16,7 @@ class ProductsPage(BasePage):
     RESULTS_HEADING = "Searched Products"
 
     #: One card per matching product inside the results grid. Counting these is
-    #: how the suite tells "results returned" from "no results" — the heading
+    #: how the suite tells "results returned" from "no results": the heading
     #: renders either way, so asserting on the heading alone proves nothing.
     RESULT_CARDS = ".features_items .product-image-wrapper"
 

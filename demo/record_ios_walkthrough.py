@@ -1,8 +1,8 @@
 """Record the native iOS test running on an iPhone Simulator, for publication.
 
 **This is not a test and pytest never collects it.** It drives the same flow
-``tests/native/test_ios_native.py`` asserts — footer navigation through the
-Sauce Labs demo app — at a pace a human can follow, and captures the simulator
+``tests/native/test_ios_native.py`` asserts: footer navigation through the
+Sauce Labs demo app: at a pace a human can follow, and captures the simulator
 screen while it happens.
 
 Deliberately the same flow and nothing more. A demo that explored screens the
@@ -10,7 +10,7 @@ suite does not assert would show capability the repository cannot back up.
 
 Screen capture is ``xcrun simctl io … recordVideo`` rather than Appium's own
 ``start_recording_screen``, which shells out to ffmpeg and fails outright when
-ffmpeg is absent. simctl ships with Xcode — already required here — and records
+ffmpeg is absent. simctl ships with Xcode (already required here) and records
 the whole device rather than just the app's render surface. The capture is then
 re-encoded down to a web-servable size with avconvert; see compress_for_web.
 
@@ -100,7 +100,7 @@ def main() -> int:
     try:
         # Let the app settle in the foreground *before* recording starts.
         # Capturing the session handshake instead would open the video on the
-        # iOS home screen and the WebDriverAgent icon — test scaffolding, not
+        # iOS home screen and the WebDriverAgent icon: test scaffolding, not
         # the thing being demonstrated.
         driver.find_element(AppiumBy.ACCESSIBILITY_ID, FOOTER_TABS[0])
         time.sleep(1.5)
@@ -132,15 +132,15 @@ def main() -> int:
         return 1
 
     compress_for_web(destination)
-    print(f"\nWalkthrough saved — {destination} ({destination.stat().st_size // 1024} KB)")
+    print(f"\nWalkthrough saved: {destination} ({destination.stat().st_size // 1024} KB)")
     return 0
 
 
 def compress_for_web(video: Path) -> None:
     """Re-encode a simulator capture down to something a web page can serve.
 
-    simctl records at the simulator's native resolution — around 1200x2600 for
-    a current iPhone — which lands at roughly 3.5 Mbps and 10 MB for twenty
+    simctl records at the simulator's native resolution: around 1200x2600 for
+    a current iPhone, which lands at roughly 3.5 Mbps and 10 MB for twenty
     seconds. That is far too heavy for a portfolio page, especially on mobile
     data.
 
@@ -181,7 +181,7 @@ def compress_for_web(video: Path) -> None:
         return
 
     compressed.replace(video)
-    print(f"Compressed for web — {before // 1024} KB -> {after // 1024} KB")
+    print(f"Compressed for web: {before // 1024} KB -> {after // 1024} KB")
 
 
 if __name__ == "__main__":

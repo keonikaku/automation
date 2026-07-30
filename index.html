@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ShopSmart QA Automation Suite — Recorded test runs</title>
-<meta name="description" content="Real screen recordings of the ShopSmart QA automation suite — one continuous Playwright walkthrough of the web suite plus a native iOS run on an iPhone Simulator, recorded 2026-07-28, unedited." />
+<title>ShopSmart QA Automation Suite: Recorded test runs</title>
+<meta name="description" content="Real screen recordings of the ShopSmart QA automation suite: one continuous Playwright walkthrough of the web suite plus a native iOS run on an iPhone Simulator, recorded 2026-07-28, unedited." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -204,12 +204,12 @@
       </div>
       <p class="sub">
         Unedited screen recordings produced by this repository's own code. Nothing here is a re-enactment,
-        an animation, or a narrated demo — the browser and the simulator below are being driven by
+        an animation, or a narrated demo: the browser and the simulator below are being driven by
         Playwright and Appium against
         <a href="https://www.automationexercise.com">automationexercise.com</a> and the Sauce Labs demo app.
       </p>
       <p class="sub" style="margin-top:8px;">
-        <b style="color:var(--txt)">&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b> — not a
+        <b style="color:var(--txt)">&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b>: not a
         company, client, or shipped product. It is a personal project built to automate a public practice site.
       </p>
     </div>
@@ -238,7 +238,7 @@
       </li>
       <li>
         <b>The suite and the recording are separate programs, on purpose.</b> The tests in
-        <code>tests/ui/</code> each get a <em>fresh</em> browser context, because isolation is the point — a
+        <code>tests/ui/</code> each get a <em>fresh</em> browser context, because isolation is the point: a
         test that inherits another test's session isn't testing what it claims. That is what CI runs. A
         recording needs the opposite, so a separate runner in
         <a href="https://github.com/keonikaku/automation/tree/main/demo"><code>demo/</code></a> drives the
@@ -247,7 +247,7 @@
       </li>
       <li>
         <b>The assertion under each step is the real line from <code>tests/ui/</code>.</b> They read as
-        page-object calls — <code>contact.success_message</code> rather than a CSS string — because selectors
+        page-object calls (<code>contact.success_message</code> rather than a CSS string) because selectors
         live in <code>shopsmart/pages/</code> and nowhere else. Unit tests fail the build if a raw selector
         appears in a test file, or if a line quoted on this page drifts from the suite.
       </li>
@@ -257,7 +257,7 @@
         a duration as a measurement.
       </li>
       <li>
-        <b>Recorded headless</b> — the same way it runs unattended. The suite defaults to headless and takes
+        <b>Recorded headless</b>: the same way it runs unattended. The suite defaults to headless and takes
         <code>--headed</code> when a human wants to watch.
       </li>
       <li>
@@ -271,7 +271,7 @@
         The videos here are a recording of one local run on a stated date, not a live status.
       </li>
       <li>
-        <b>No audio and no cursor overlay</b> — the capture is the browser viewport and the device screen,
+        <b>No audio and no cursor overlay</b>: the capture is the browser viewport and the device screen,
         which is why input focus and page transitions are the only visible signal.
       </li>
     </ul>
@@ -296,7 +296,7 @@
           <a href="recordings/published/web_walkthrough_20260728_165037.webm">Download the recording</a>.
         </video>
         <div class="vbody">
-          <p>One browser session from a rejected login through to an empty search result — no relaunch
+          <p>One browser session from a rejected login through to an empty search result: no relaunch
           between steps. Produced by
           <a href="https://github.com/keonikaku/automation/blob/main/demo/record_web_walkthrough.py"><code>demo/record_web_walkthrough.py</code></a>,
           which drives the same page objects the test suite uses.</p>
@@ -320,7 +320,7 @@
             <span class="vname">test_01_login</span>
             <span class="tag happy">Happy path</span>
           </div>
-          <p>The same form, with credentials that work. The account is registered by the run itself moments earlier, in a separate browser context, and deleted afterwards — so this depends on nothing that existed before the run started.</p>
+          <p>The same form, with credentials that work. The account is registered by the run itself moments earlier, in a separate browser context, and deleted afterwards, so this depends on nothing that existed before the run started.</p>
           <div class="assert">expect(page).to_have_url(f&quot;{settings.base_url}/&quot;)
 expect(login_page.logged_in_banner).to_contain_text(registered_account.name)</div>
         </div>
@@ -330,7 +330,7 @@ expect(login_page.logged_in_banner).to_contain_text(registered_account.name)</di
             <span class="vname">test_02_search</span>
             <span class="tag happy">Happy path</span>
           </div>
-          <p>Search the catalogue and verify results actually came back — not merely that a results heading rendered.</p>
+          <p>Search the catalogue and verify results actually came back: not merely that a results heading rendered.</p>
           <div class="assert">expect(products.results_heading).to_be_visible()
 assert products.result_count() &gt; 0</div>
         </div>
@@ -359,7 +359,7 @@ assert category.current_url == category.url</div>
             <span class="vname">test_05_checkout_requires_login</span>
             <span class="tag neg">Negative</span>
           </div>
-          <p>Checkout as a guest must be blocked. The walkthrough signs out first — it logged in at step 2, and a logged-in user is correctly <em>not</em> blocked, so the gate would never appear. Showing the sign-out on camera is the honest way to reach it.</p>
+          <p>Checkout as a guest must be blocked. The walkthrough signs out first: it logged in at step 2, and a logged-in user is correctly <em>not</em> blocked, so the gate would never appear. Showing the sign-out on camera is the honest way to reach it.</p>
           <div class="assert">expect(cart.login_required_prompt).to_be_visible()</div>
         </div>
         <div class="step">
@@ -368,7 +368,7 @@ assert category.current_url == category.url</div>
             <span class="vname">test_06_contact_form</span>
             <span class="tag happy">Happy path</span>
           </div>
-          <p>Fill and submit the contact form, then verify the success banner. The form fires a native confirm dialog, so the page object arms a handler before clicking — an unhandled dialog blocks Playwright and the test would hang rather than fail.</p>
+          <p>Fill and submit the contact form, then verify the success banner. The form fires a native confirm dialog, so the page object arms a handler before clicking: an unhandled dialog blocks Playwright and the test would hang rather than fail.</p>
           <div class="assert">expect(contact.success_message).to_be_visible()</div>
         </div>
         <div class="step">
@@ -405,7 +405,7 @@ assert products.result_count() == 0</div>
       Simulator. The whole device is captured with <code>xcrun simctl</code>, not just the app's render
       surface.</p>
       <p class="vnote">No code panel here on purpose: this is a different app on a different stack, and the
-      point of the video is that the device is real. The simulator is discovered at runtime — this test used
+      point of the video is that the device is real. The simulator is discovered at runtime: this test used
       to carry a hardcoded UDID and therefore ran on exactly one Mac.</p>
     </div>
   </div>
@@ -420,7 +420,7 @@ assert products.result_count() == 0</div>
       <div class="gap">
         <span class="why">Different context</span>
         <h3>test_07_mobile_login</h3>
-        <p>The login flow under Playwright's iPhone 13 device emulation — its own viewport, user agent and
+        <p>The login flow under Playwright's iPhone 13 device emulation: its own viewport, user agent and
         touch support. It needs a separate browser context, which is exactly what the single-session
         walkthrough does not have. It runs in the suite and in the nightly CI job like everything else.</p>
       </div>
@@ -428,7 +428,7 @@ assert products.result_count() == 0</div>
       <div class="gap">
         <span class="why">Not filmable</span>
         <h3>test_09_empty_login_fields</h3>
-        <p>Submits the login form with both fields empty and verifies the browser stays put — the field's own
+        <p>Submits the login form with both fields empty and verifies the browser stays put: the field's own
         required/type=email validation blocks the submit. The entire result is that nothing happens, which
         makes for a real test and a useless three seconds of video. It runs in the suite and in CI.</p>
       </div>
@@ -436,7 +436,7 @@ assert products.result_count() == 0</div>
     </div>
   </div>
 
-  <!-- TEST-CASE-PREVIEW:START — generated by build_test_cases_page.py -->
+  <!-- TEST-CASE-PREVIEW:START: generated by build_test_cases_page.py -->
   <div class="section-head" style="margin-top:34px;">
     <h2>Test design</h2>
     <span>54 cases written before and alongside the automation</span>
@@ -449,10 +449,10 @@ assert products.result_count() == 0</div>
   </div>
 
   <div class="scope" style="border-left:2px solid var(--accent);">
-    <h2>SMART-201 — one defect, traced through 4 cases into the smoke suite</h2>
+    <h2>SMART-201: one defect, traced through 4 cases into the smoke suite</h2>
     <p class="tc-lead">
       Search ignored the active category filter: filter to Women, search, and results came back from
-      every category. Rather than log it and move on, the issue was traced into coverage —
+      every category. Rather than log it and move on, the issue was traced into coverage:
       <code>CAT-16</code>, <code>CAT-17</code> and <code>CAT-18</code>
       pin the behaviour from different angles, and <b>the smoke suite is this one case</b>.
       A one-case smoke suite is a decision, not a thin result: smoke exists to answer
@@ -466,7 +466,7 @@ assert products.result_count() == 0</div>
         <span class="pill trace">SMART-201</span>
         <span class="pill no">Automated: No</span>
       </div>
-      <h3>Smoke — Search respects active category filter (SMART-201)</h3>
+      <h3>Smoke: Search respects active category filter (SMART-201)</h3>
       <dl class="fdl">
         <dt>Preconditions</dt><dd>User is on the All Products page.</dd>
         <dt>Steps</dt><dd><ol class="steps-list"><li>Click on Women category in the left sidebar.</li><li>Enter any valid search term in the search bar.</li><li>Click the Search button.</li><li>Observe the search results.</li></ol></dd>
@@ -474,7 +474,7 @@ assert products.result_count() == 0</div>
         <dt>Priority / Type</dt><dd><span class="pri p-critical">Critical</span> · Smoke</dd>
       </dl>
       <p class="vnote">Designed, prioritised Critical, and <b>not automated</b>. Nothing in the suite
-      yet combines a category filter with a search. It sits in the backlog — an ordinary state for
+      yet combines a category filter with a search. It sits in the backlog: an ordinary state for
       real work, and more useful published honestly than quietly closed.</p>
     </div>
   </div>
@@ -500,7 +500,7 @@ assert products.result_count() == 0</div>
         <tr class="case is-gap">
           <td class="cid"><code>REG-10</code></td>
           <td class="ctitle">Registration with already registered email address<span class="pill gap">Spec gap</span></td>
-          <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap — awaiting PM</span></p><p class="gaptext">Spec does not define the error message for duplicate email registration. Expected: error message indicates email is already registered.</p></td>
+          <td class="cexp"><p class="gapflag"><span class="pill gap">Spec gap: awaiting PM</span></p><p class="gaptext">: Spec does not define the error message for duplicate email registration. Expected: error message indicates email is already registered.</p></td>
           <td class="cmeta"><span class="pri p-high">High</span></td>
           <td class="cauto"><span class="pill no">No</span></td>
         </tr>
@@ -525,17 +525,17 @@ assert products.result_count() == 0</div>
   <div class="scope" style="margin-top:16px;">
     <h2>All 54 cases, and the files</h2>
     <p class="tc-lead">
-      <b>9 of 54 cases have automated coverage</b> — 5 fully,
+      <b>9 of 54 cases have automated coverage</b>: 5 fully,
       4 partially. The other 45 are designed and run
       manually, which is the point rather than a shortfall: test design and automation are different
       activities, and which cases get automated is a risk decision. The
-      <b>19 &ldquo;spec gap&rdquo; rows</b> are finished cases, not blank ones — where the
+      <b>19 &ldquo;spec gap&rdquo; rows</b> are finished cases, not blank ones, where the
       specification was silent, the case records that and proposes an expectation instead of inventing
       one and turning a guess into the standard the build gets measured against.
     </p>
     <div class="dl-row">
       <a class="dl primary" href="test-cases.html">Browse all 54 cases →</a>
-      <a class="dl" href="test-cases/all_test_cases_combined.csv" download><code>all_test_cases_combined.csv</code> — one file, all 54</a>
+      <a class="dl" href="test-cases/all_test_cases_combined.csv" download><code>all_test_cases_combined.csv</code>: one file, all 54</a>
     </div>
     <p class="tc-lead" style="margin-top:11px;font-size:12.5px;">
       The four original files are published unmodified with their original columns and are linked from

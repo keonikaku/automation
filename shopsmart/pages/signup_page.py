@@ -19,7 +19,7 @@ class AccountDetails:
     """The fields the practice site requires to create an account.
 
     All values are synthetic. Nothing here is, or resembles, real personal
-    data — this is a throwaway account on a public practice site.
+    data: this is a throwaway account on a public practice site.
     """
 
     password: str
