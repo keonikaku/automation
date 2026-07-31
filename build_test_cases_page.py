@@ -285,6 +285,11 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
         <a href="index.html">project page</a>.
       </p>
       <p class="sub" style="margin-top:8px;">
+        These {cases} cases were written by hand in <b>TestRail</b> during the exercise, one at a
+        time, with the steps, preconditions and expected results filled in there. The CSVs below are
+        the export. That TestRail instance is no longer active, so the export is what remains of it.
+      </p>
+      <p class="sub" style="margin-top:8px;">
         <b>&ldquo;ShopSmart&rdquo; is the name of this practice exercise</b> — not a company, a client,
         or a shipped product. The cases describe a fictional storefront; the automation runs against
         <a href="https://www.automationexercise.com">automationexercise.com</a>, a public practice site.
