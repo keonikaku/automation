@@ -19,7 +19,6 @@ import re
 from pathlib import Path
 
 from shopsmart.testcases import (
-    AUTOMATED_WITHOUT_A_CASE,
     COMBINED_FILENAME,
     CSV_FILES,
     FEATURED_CASE,
@@ -147,15 +146,9 @@ def build() -> str:
         f'      <a class="dl" href="test-cases/{name}" download><code>{name}</code></a>'
         for name in CSV_FILES
     )
-    orphans = "\n".join(
-        f"        <li><code>{esc(name)}</code> — {esc(reason)}</li>"
-        for name, reason in sorted(AUTOMATED_WITHOUT_A_CASE.items())
-    )
-
     return TEMPLATE.format(
         combined=COMBINED_FILENAME,
         downloads=downloads,
-        orphans=orphans,
         sections="\n".join(sections),
         not_automated=total["cases"] - total["automated"],
         **total,
@@ -340,10 +333,6 @@ family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
       exercises the scenario but asserts something weaker than the case specifies — marking those
       &ldquo;Yes&rdquo; would overclaim and &ldquo;No&rdquo; would hide real coverage.
     </p>
-    <p>Four automated tests have no matching case in these files:</p>
-    <ul>
-{orphans}
-    </ul>
   </div>
 
   <div class="note-panel">
